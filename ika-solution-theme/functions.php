@@ -156,3 +156,69 @@ add_action( 'init', 'ika_solution_custom_post_types' );
 function ika_asset( $path ) {
     return get_template_directory_uri() . '/assets/' . ltrim( $path, '/' );
 }
+
+/**
+ * Create the theme's default pages on activation.
+ *
+ * Pages created (only if they don't already exist):
+ *  - Société       -> page-presentation.php
+ *  - Équipe        -> page-equipe.php
+ *  - Réalisations  -> page-realisations.php
+ *  - Actualités    -> page-actualites.php
+ */
+function ika_solution_create_default_pages() {
+    $default_pages = array(
+        'Société'      => array(
+            'template' => 'page-presentation.php',
+            'slug'     => 'presentation',
+        ),
+        'Équipe'       => array(
+            'template' => 'page-equipe.php',
+            'slug'     => 'equipe',
+        ),
+        'Réalisations' => array(
+            'template' => 'page-realisations.php',
+            'slug'     => 'realisations',
+        ),
+        'Actualités'   => array(
+            'template' => 'page-actualites.php',
+            'slug'     => 'actualites',
+        ),
+    );
+
+    foreach ( $default_pages as $title => $args ) {
+        if ( ika_solution_page_exists( $title ) ) {
+            continue;
+        }
+
+        wp_insert_post( array(
+            'post_title'    => $title,
+            'post_name'     => $args['slug'],
+            'post_content'  => '',
+            'post_status'   => 'publish',
+            'post_type'     => 'page',
+            'page_template' => $args['template'],
+        ) );
+    }
+}
+add_action( 'after_switch_theme', 'ika_solution_create_default_pages' );
+
+/**
+ * Helper: check whether a published page with the given title already exists.
+ */
+function ika_solution_page_exists( $title ) {
+    if ( function_exists( 'get_page_by_title' ) ) {
+        $page = get_page_by_title( $title, OBJECT, 'page' );
+        return ! empty( $page );
+    }
+
+    $query = new WP_Query( array(
+        'post_type'      => 'page',
+        'title'          => $title,
+        'posts_per_page' => 1,
+        'fields'         => 'ids',
+        'no_found_rows'  => true,
+    ) );
+
+    return $query->have_posts();
+}
