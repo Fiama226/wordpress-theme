@@ -1,8 +1,45 @@
 <?php
 /**
- * The front page template file
+ * The front page template file.
+ * Hero slides, expertises, product solutions and client logos are all
+ * driven by editable Custom Post Types (ika_slide, ika_expertise,
+ * ika_solution, ika_client) — no content is hard-coded here.
  */
 get_header();
+
+$ika_slides = get_posts( array(
+    'post_type'      => 'ika_slide',
+    'posts_per_page' => 10,
+    'orderby'        => 'menu_order',
+    'order'          => 'ASC',
+) );
+$hero_data = array();
+if ( $ika_slides ) {
+    foreach ( $ika_slides as $slide ) {
+        $slide_title = get_the_title( $slide );
+        $title_lines = preg_split( '/\R/', $slide_title );
+        $title_html  = '<span class="block">' . implode( '</span> <span class="block">', array_map( 'esc_html', $title_lines ) ) . '</span>';
+        $hero_data[] = array(
+            'eyebrow'   => get_post_meta( $slide->ID, 'ika_slide_eyebrow', true ),
+            'titleHtml' => $title_html,
+            'text'      => get_post_meta( $slide->ID, 'ika_slide_text', true ),
+            'primary'   => array(
+                'text' => get_post_meta( $slide->ID, 'ika_slide_primary_text', true ),
+                'href' => get_post_meta( $slide->ID, 'ika_slide_primary_url', true ),
+            ),
+            'secondary' => array(
+                'text' => get_post_meta( $slide->ID, 'ika_slide_secondary_text', true ),
+                'href' => get_post_meta( $slide->ID, 'ika_slide_secondary_url', true ),
+            ),
+            'image'     => ika_asset( get_post_meta( $slide->ID, 'ika_slide_image', true ) ),
+            'metric'    => array(
+                'label' => get_post_meta( $slide->ID, 'ika_slide_metric_label', true ),
+                'value' => get_post_meta( $slide->ID, 'ika_slide_metric_value', true ),
+                'text'  => get_post_meta( $slide->ID, 'ika_slide_metric_text', true ),
+            ),
+        );
+    }
+}
 ?>
 
   <main>
@@ -54,82 +91,83 @@ get_header();
         </div>
 
         <div class="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <?php
+          $expertises = get_posts( array(
+              'post_type'      => 'ika_expertise',
+              'posts_per_page' => 20,
+              'orderby'        => 'menu_order',
+              'order'          => 'ASC',
+          ) );
+          foreach ( $expertises as $i => $exp ) :
+              $exp_img  = get_post_meta( $exp->ID, 'ika_expertise_image', true );
+              $exp_link = get_post_meta( $exp->ID, 'ika_expertise_link', true );
+              $cut      = 'expertise-cut-' . chr( ord( 'a' ) + ( $i % 8 ) );
+          ?>
           <article class="expertise-card reveal rounded-3xl bg-white p-7 shadow-clean">
-            <div class="expertise-visual expertise-cut-a">
-              <img src="<?php echo ika_asset('images/development2.jpg'); ?>" alt="Développement d'applications">
+            <div class="expertise-visual <?php echo esc_attr( $cut ); ?>">
+              <img src="<?php echo esc_url( ika_asset( $exp_img ) ); ?>" alt="<?php echo esc_attr( get_the_title( $exp ) ); ?>">
             </div>
-            <h3 class="text-xl font-black text-ikaBlueDark">Développement d'applications</h3>
-            <p class="mt-3 text-sm leading-7 text-slate-600">Conception de logiciels sur mesure, portails web et applications mobiles adaptés à vos métiers.</p>
-            <a href="developpement-app.php" class="mt-5 inline-flex items-center gap-2 text-sm font-extrabold text-ikaRed transition hover:translate-x-1">En savoir plus &rarr;</a>
+            <h3 class="text-xl font-black text-ikaBlueDark"><?php echo esc_html( get_the_title( $exp ) ); ?></h3>
+            <p class="mt-3 text-sm leading-7 text-slate-600"><?php echo wp_kses_post( wp_trim_words( $exp->post_content, 24, '…' ) ); ?></p>
+            <a href="<?php echo esc_url( $exp_link ?: '#' ); ?>" class="mt-5 inline-flex items-center gap-2 text-sm font-extrabold text-ikaRed transition hover:translate-x-1">En savoir plus &rarr;</a>
           </article>
-
-          <article class="expertise-card reveal rounded-3xl bg-white p-7 shadow-clean">
-            <div class="expertise-visual expertise-cut-b">
-              <img src="<?php echo ika_asset('images/slide4.jpg'); ?>" alt="Infrastructure serveur et réseau">
-            </div>
-            <h3 class="text-xl font-black text-ikaBlueDark">Infrastructure serveur et réseau</h3>
-            <p class="mt-3 text-sm leading-7 text-slate-600">Installation, câblage, interconnexion de sites, déploiement de serveurs et administration réseau.</p>
-            <a href="infrastructures-serveurs-reseaux.php" class="mt-5 inline-flex items-center gap-2 text-sm font-extrabold text-ikaRed transition hover:translate-x-1">En savoir plus &rarr;</a>
-          </article>
-
-          <article class="expertise-card reveal rounded-3xl bg-white p-7 shadow-clean">
-            <div class="expertise-visual expertise-cut-c">
-              <img src="<?php echo ika_asset('images/cloud2.jpg'); ?>" alt="Solutions cloud et licences">
-            </div>
-            <h3 class="text-xl font-black text-ikaBlueDark">Solutions cloud et licences</h3>
-            <p class="mt-3 text-sm leading-7 text-slate-600">Hébergement cloud sécurisé, messagerie professionnelle et fourniture de licences logicielles officielles.</p>
-            <a href="solutions-cloud-licences.php" class="mt-5 inline-flex items-center gap-2 text-sm font-extrabold text-ikaRed transition hover:translate-x-1">En savoir plus &rarr;</a>
-          </article>
-
-          <article class="expertise-card reveal rounded-3xl bg-white p-7 shadow-clean">
-            <div class="expertise-visual expertise-cut-d">
-              <img src="<?php echo ika_asset('images/conseil2.jpg'); ?>" alt="Conseil et stratégie IT">
-            </div>
-            <h3 class="text-xl font-black text-ikaBlueDark">Conseil et stratégie IT</h3>
-            <p class="mt-3 text-sm leading-7 text-slate-600">Audit des systèmes d'information, accompagnement au choix technologique et schémas directeurs.</p>
-            <a href="conseil-audit-strategie-it.php" class="mt-5 inline-flex items-center gap-2 text-sm font-extrabold text-ikaRed transition hover:translate-x-1">En savoir plus &rarr;</a>
-          </article>
-
-          <article class="expertise-card reveal rounded-3xl bg-white p-7 shadow-clean">
-            <div class="expertise-visual expertise-cut-e">
-              <img src="<?php echo ika_asset('images/securite.jpg'); ?>" alt="Cybersécurité et données">
-            </div>
-            <h3 class="text-xl font-black text-ikaBlueDark">Cybersécurité et données</h3>
-            <p class="mt-3 text-sm leading-7 text-slate-600">Protection des réseaux, sécurisation des accès, pare-feu et politiques de sauvegarde et conformité.</p>
-            <a href="cybersecurite-donnees.php" class="mt-5 inline-flex items-center gap-2 text-sm font-extrabold text-ikaRed transition hover:translate-x-1">En savoir plus &rarr;</a>
-          </article>
-
-          <article class="expertise-card reveal rounded-3xl bg-white p-7 shadow-clean">
-            <div class="expertise-visual expertise-cut-f">
-              <img src="<?php echo ika_asset('images/support2.png'); ?>" alt="Support technique et infogérance">
-            </div>
-            <h3 class="text-xl font-black text-ikaBlueDark">Support technique & infogérance</h3>
-            <p class="mt-3 text-sm leading-7 text-slate-600">Contrats de maintenance préventive et curative, assistance aux utilisateurs et infogérance globale.</p>
-            <a href="support-technique-infogerance.php" class="mt-5 inline-flex items-center gap-2 text-sm font-extrabold text-ikaRed transition hover:translate-x-1">En savoir plus &rarr;</a>
-          </article>
-
-          <article class="expertise-card reveal rounded-3xl bg-white p-7 shadow-clean">
-            <div class="expertise-visual expertise-cut-g">
-              <img src="<?php echo ika_asset('images/energie2.jpg'); ?>" alt="Équipements et services énergétiques">
-            </div>
-            <h3 class="text-xl font-black text-ikaBlueDark">Équipements & énergie</h3>
-            <p class="mt-3 text-sm leading-7 text-slate-600">Fourniture de matériels informatiques, onduleurs, solutions solaires pour salles serveurs et sites isolés.</p>
-            <a href="equipements-services-energetiques.php" class="mt-5 inline-flex items-center gap-2 text-sm font-extrabold text-ikaRed transition hover:translate-x-1">En savoir plus &rarr;</a>
-          </article>
-
-          <article class="expertise-card reveal rounded-3xl bg-white p-7 shadow-clean">
-            <div class="expertise-visual expertise-cut-h">
-              <img src="<?php echo ika_asset('images/formation2.jpg'); ?>" alt="Formation et accompagnement">
-            </div>
-            <h3 class="text-xl font-black text-ikaBlueDark">Formation utilisateurs</h3>
-            <p class="mt-3 text-sm leading-7 text-slate-600">Programmes de formation sur mesure pour maîtriser vos outils logiciels, progiciels et bonnes pratiques IT.</p>
-            <a href="formation-utilisateurs.php" class="mt-5 inline-flex items-center gap-2 text-sm font-extrabold text-ikaRed transition hover:translate-x-1">En savoir plus &rarr;</a>
-          </article>
+          <?php endforeach; ?>
         </div>
       </div>
     </section>
 
-    <?php get_template_part( 'template-parts/solutions' ); ?>
+    <section id="produits" class="bg-white py-20 sm:py-28">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="reveal text-center max-w-3xl mx-auto">
+          <p class="text-sm font-black uppercase tracking-[0.2em] text-ikaRed">Logiciels phares</p>
+          <h2 class="mt-4 text-4xl font-black tracking-normal text-ikaBlueDark sm:text-5xl">Nos solutions logicielles métiers</h2>
+          <p class="mt-4 text-base text-slate-600">Des progiciels conçus et développés pour automatiser vos processus administratifs, sécuriser vos accueils et valoriser vos archives.</p>
+        </div>
+
+        <?php
+        $solutions = get_posts( array(
+            'post_type'      => 'ika_solution',
+            'posts_per_page' => 20,
+            'orderby'        => 'menu_order',
+            'order'          => 'ASC',
+        ) );
+        if ( $solutions ) :
+        ?>
+        <div class="mt-14 flex flex-wrap justify-center gap-3">
+          <?php foreach ( $solutions as $i => $sol ) : ?>
+            <button class="product-tab rounded-full px-7 py-3 text-sm font-black transition <?php echo $i === 0 ? 'bg-ikaBlue text-white shadow-clean' : 'bg-ikaSoft text-slate-700 hover:bg-slate-200'; ?>" data-target="<?php echo esc_attr( $sol->post_name ); ?>"><?php echo esc_html( get_the_title( $sol ) ); ?></button>
+          <?php endforeach; ?>
+        </div>
+
+        <div class="mt-12 rounded-[2.5rem] bg-ikaSoft p-6 sm:p-10 lg:p-14">
+          <?php foreach ( $solutions as $i => $sol ) :
+            $sol_img      = ika_asset( get_post_meta( $sol->ID, 'ika_image', true ) );
+            $sol_eyebrow  = get_post_meta( $sol->ID, 'ika_eyebrow', true );
+            $sol_features = ika_get_list_meta( $sol->ID, 'ika_features' );
+          ?>
+          <div id="<?php echo esc_attr( $sol->post_name ); ?>" class="product-slide <?php echo $i === 0 ? 'active' : ''; ?> grid gap-10 lg:grid-cols-2 lg:items-center">
+            <div class="reveal">
+              <span class="inline-flex rounded-full bg-ikaBlue/10 px-4 py-1.5 text-xs font-black text-ikaBlue"><?php echo esc_html( $sol_eyebrow ); ?></span>
+              <h3 class="mt-4 text-3xl font-black text-ikaBlueDark sm:text-4xl"><?php echo esc_html( get_the_title( $sol ) ); ?></h3>
+              <p class="mt-4 text-base leading-7 text-slate-600"><?php echo esc_html( get_the_excerpt( $sol ) ); ?></p>
+              <ul class="mt-6 grid gap-3 text-sm font-semibold text-slate-700">
+                <?php foreach ( $sol_features as $feature ) : ?>
+                  <li class="flex items-center gap-3"><span class="h-2 w-2 rounded-full bg-ikaRed"></span> <?php echo esc_html( $feature ); ?></li>
+                <?php endforeach; ?>
+              </ul>
+              <div class="mt-8 flex flex-wrap gap-4">
+                <a href="<?php echo esc_url( get_permalink( $sol ) ); ?>" class="rounded-full bg-ikaBlue px-7 py-4 text-sm font-bold text-white transition hover:bg-ikaBlueDark">Découvrir <?php echo esc_html( get_the_title( $sol ) ); ?></a>
+              </div>
+            </div>
+            <div class="reveal relative">
+              <img class="h-80 w-full object-cover rounded-[1.5rem] shadow-premium lg:h-[520px]" src="<?php echo esc_url( $sol_img ); ?>" alt="<?php echo esc_attr( get_the_title( $sol ) ); ?>">
+            </div>
+          </div>
+          <?php endforeach; ?>
+        </div>
+        <?php endif; ?>
+      </div>
+    </section>
 
     <!-- Client Marquee & References Section -->
     <section class="bg-ikaSoft py-16 overflow-hidden">
@@ -137,22 +175,27 @@ get_header();
         <p class="text-xs font-black uppercase tracking-[0.2em] text-slate-500">Ils nous font confiance</p>
         <div class="mt-10 overflow-hidden relative">
           <div class="animate-marquee flex gap-12 items-center">
-            <div class="flex items-center gap-12 shrink-0">
-              <div class="client-logo bg-white px-6 py-4 rounded-xl shadow-clean"><img class="h-12 w-auto object-contain" src="<?php echo ika_asset('images/clients/APEC.png'); ?>" alt="APEC"></div>
-              <div class="client-logo bg-white px-6 py-4 rounded-xl shadow-clean"><img class="h-12 w-auto object-contain" src="<?php echo ika_asset('images/clients/coris.jpg'); ?>" alt="Coris Bank"></div>
-              <div class="client-logo bg-white px-6 py-4 rounded-xl shadow-clean"><img class="h-12 w-auto object-contain" src="<?php echo ika_asset('images/clients/Lonab.png'); ?>" alt="LONAB"></div>
-              <div class="client-logo bg-white px-6 py-4 rounded-xl shadow-clean"><img class="h-12 w-auto object-contain" src="<?php echo ika_asset('images/clients/ONEA.jpg'); ?>" alt="ONEA"></div>
-              <div class="client-logo bg-white px-6 py-4 rounded-xl shadow-clean"><img class="h-12 w-auto object-contain" src="<?php echo ika_asset('images/clients/Sonatur.png'); ?>" alt="SONATUR"></div>
-              <div class="client-logo bg-white px-6 py-4 rounded-xl shadow-clean"><img class="h-12 w-auto object-contain" src="<?php echo ika_asset('images/clients/sonabhy.png'); ?>" alt="SONABHY"></div>
-            </div>
+            <?php
+            $clients = get_posts( array(
+                'post_type'      => 'ika_client',
+                'posts_per_page' => 20,
+                'orderby'        => 'menu_order',
+                'order'          => 'ASC',
+            ) );
+            if ( $clients ) :
+              foreach ( $clients as $c ) :
+                $logo = ika_asset( get_post_meta( $c->ID, 'ika_client_image', true ) );
+            ?>
+            <div class="client-logo bg-white px-6 py-4 rounded-xl shadow-clean"><img class="h-12 w-auto object-contain" src="<?php echo esc_url( $logo ); ?>" alt="<?php echo esc_attr( get_the_title( $c ) ); ?>"></div>
+            <?php endforeach; ?>
             <div class="flex items-center gap-12 shrink-0" aria-hidden="true">
-              <div class="client-logo bg-white px-6 py-4 rounded-xl shadow-clean"><img class="h-12 w-auto object-contain" src="<?php echo ika_asset('images/clients/APEC.png'); ?>" alt="APEC"></div>
-              <div class="client-logo bg-white px-6 py-4 rounded-xl shadow-clean"><img class="h-12 w-auto object-contain" src="<?php echo ika_asset('images/clients/coris.jpg'); ?>" alt="Coris Bank"></div>
-              <div class="client-logo bg-white px-6 py-4 rounded-xl shadow-clean"><img class="h-12 w-auto object-contain" src="<?php echo ika_asset('images/clients/Lonab.png'); ?>" alt="LONAB"></div>
-              <div class="client-logo bg-white px-6 py-4 rounded-xl shadow-clean"><img class="h-12 w-auto object-contain" src="<?php echo ika_asset('images/clients/ONEA.jpg'); ?>" alt="ONEA"></div>
-              <div class="client-logo bg-white px-6 py-4 rounded-xl shadow-clean"><img class="h-12 w-auto object-contain" src="<?php echo ika_asset('images/clients/Sonatur.png'); ?>" alt="SONATUR"></div>
-              <div class="client-logo bg-white px-6 py-4 rounded-xl shadow-clean"><img class="h-12 w-auto object-contain" src="<?php echo ika_asset('images/clients/sonabhy.png'); ?>" alt="SONABHY"></div>
+              <?php foreach ( $clients as $c ) :
+                $logo = ika_asset( get_post_meta( $c->ID, 'ika_client_image', true ) );
+              ?>
+              <div class="client-logo bg-white px-6 py-4 rounded-xl shadow-clean"><img class="h-12 w-auto object-contain" src="<?php echo esc_url( $logo ); ?>" alt="<?php echo esc_attr( get_the_title( $c ) ); ?>"></div>
+              <?php endforeach; ?>
             </div>
+            <?php endif; ?>
           </div>
         </div>
       </div>
@@ -162,6 +205,7 @@ get_header();
 
   <script>
     // Hero Slider & Animations Script
+    const heroContentData = <?php echo wp_json_encode( $hero_data ); ?>;
     const slides = document.querySelectorAll('#accueil .slide');
     const dots = document.querySelectorAll('.hero-dot');
     const heroCopy = document.getElementById('heroCopyPanel');
@@ -175,51 +219,12 @@ get_header();
     const heroMetric = document.getElementById('heroMetric');
     const heroMetricText = document.getElementById('heroMetricText');
 
-    const heroContentData = [
-      {
-        eyebrow: "La solution qui vous convient | Depuis 2014",
-        titleHtml: '<span class="block">Votre transformation digitale</span> <span class="block">commence ici !</span>',
-        text: "Nous analysons vos besoins, structurons vos priorités et mettons en place les outils numériques qui rendent vos opérations plus simples, plus fiables et mieux suivies.",
-        primary: { text: "Découvrir nos expertises", href: "#expertises" },
-        secondary: { text: "Parler à un expert", href: "#contact" },
-        image: "<?php echo ika_asset('images/slide11.jpg'); ?>",
-        metric: { label: "Depuis 2014", value: "Expert digital", text: "Conseil, logiciels, réseaux, cloud et sécurité." }
-      },
-      {
-        eyebrow: "Ingénierie & Progiciels Métiers",
-        titleHtml: '<span class="block">Logiciels sur mesure</span> <span class="block">et automatisation</span>',
-        text: "Développez des solutions performantes adaptées à vos spécificités métiers : gestion d'accueil, courrier, archives et portails citoyens.",
-        primary: { text: "Explorer nos logiciels", href: "#produits" },
-        secondary: { text: "Demander une démo", href: "#contact" },
-        image: "<?php echo ika_asset('images/slide2.jpg'); ?>",
-        metric: { label: "Progiciels", value: "IKA Suite", text: "Visite, Courrier, Archive, Portail." }
-      },
-      {
-        eyebrow: "Infrastructures & Réseaux Sécurisés",
-        titleHtml: '<span class="block">Réseaux robustes</span> <span class="block">et hébergement cloud</span>',
-        text: "Sécurisez vos données et interconnectez vos sites avec nos expertises en infrastructure serveur, pare-feu, cloud et énergie.",
-        primary: { text: "Nos infrastructures", href: "#expertises" },
-        secondary: { text: "Audit réseau", href: "#contact" },
-        image: "<?php echo ika_asset('images/slide3.jpg'); ?>",
-        metric: { label: "Sécurité", value: "Haute Disponibilité", text: "Protection des données et continuité." }
-      },
-      {
-        eyebrow: "Partenaire de Confiance au Burkina Faso",
-        titleHtml: '<span class="block">Accompagnement global</span> <span class="block">et infogérance IT</span>',
-        text: "Bénéficiez d'un support technique réactif, de conseils stratégiques et d'une assistance quotidienne pour tous vos équipements informatiques.",
-        primary: { text: "Contacter l'équipe", href: "#contact" },
-        secondary: { text: "En savoir plus", href: "presentation.php" },
-        image: "<?php echo ika_asset('images/slide4.jpg'); ?>",
-        metric: { label: "Support", value: "24/7 & Proximité", text: "Intervention rapide à Ouagadougou et sous-région." }
-      }
-    ];
-
     let currentSlide = 0;
     let slideInterval = setInterval(nextSlide, 5500);
 
     function setHeroContent(index) {
       const data = heroContentData[index];
-      if (!heroCopy || !heroVisual) return;
+      if (!data || !heroCopy || !heroVisual) return;
       heroCopy.classList.add('is-changing');
       heroVisual.classList.add('is-changing');
       setTimeout(() => {
@@ -284,7 +289,8 @@ get_header();
         tab.classList.add('bg-ikaBlue', 'text-white', 'shadow-clean');
 
         productSlides.forEach(s => s.classList.remove('active'));
-        document.getElementById(target).classList.add('active');
+        const el = document.getElementById(target);
+        if (el) el.classList.add('active');
       });
     });
 

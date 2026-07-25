@@ -1,15 +1,26 @@
 <?php
 /**
  * Template part: Hero slider (section "accueil")
- * Modularised from front-page.php — keep markup in sync with front-page.php <script>.
+ * Slides are driven by the ika_slide CPT (editable from the WordPress admin).
  */
+$ika_slides = get_posts( array(
+    'post_type'      => 'ika_slide',
+    'posts_per_page' => 10,
+    'orderby'        => 'menu_order',
+    'order'          => 'ASC',
+) );
+if ( empty( $ika_slides ) ) {
+    $ika_slides = array();
+}
 ?>
     <section id="accueil" class="relative min-h-[96svh] overflow-hidden pt-32 text-white">
       <div class="absolute inset-0">
-        <div class="slide active effect-orbit absolute inset-0 bg-cover bg-center" style="background-image:url('<?php echo ika_asset('images/slide11.jpg'); ?>')"></div>
-        <div class="slide effect-decompose absolute inset-0 bg-cover bg-center" style="background-image:url('<?php echo ika_asset('images/slide2.jpg'); ?>')"></div>
-        <div class="slide effect-parallax absolute inset-0 bg-cover bg-center" style="background-image:url('<?php echo ika_asset('images/slide3.jpg'); ?>')"></div>
-        <div class="slide effect-hosting absolute inset-0 bg-cover bg-center" style="background-image:url('<?php echo ika_asset('images/slide4.jpg'); ?>')"></div>
+        <?php foreach ( $ika_slides as $i => $slide ) :
+            $img = ika_asset( get_post_meta( $slide->ID, 'ika_slide_image', true ) );
+            $cls = $i === 0 ? 'slide active effect-orbit' : 'slide effect-decompose';
+        ?>
+        <div class="<?php echo esc_attr( $cls ); ?> absolute inset-0 bg-cover bg-center" style="background-image:url('<?php echo esc_url( $img ); ?>')"></div>
+        <?php endforeach; ?>
         <div class="absolute inset-0 bg-ikaBlueDark/90"></div>
       </div>
 
@@ -28,17 +39,16 @@
             <a id="heroSecondary" href="#contact" class="inline-flex items-center justify-center rounded-full border border-white/35 px-7 py-4 text-sm font-extrabold text-white transition hover:bg-white hover:text-ikaBlue">Parler à un expert</a>
           </div>
           <div class="mt-8 flex gap-3" aria-label="Navigation du hero">
-            <button class="hero-dot h-2.5 w-10 rounded-full bg-ikaRed transition" data-hero="0" aria-label="Slide 1"></button>
-            <button class="hero-dot h-2.5 w-10 rounded-full bg-white/35 transition" data-hero="1" aria-label="Slide 2"></button>
-            <button class="hero-dot h-2.5 w-10 rounded-full bg-white/35 transition" data-hero="2" aria-label="Slide 3"></button>
-            <button class="hero-dot h-2.5 w-10 rounded-full bg-white/35 transition" data-hero="3" aria-label="Slide 4"></button>
+            <?php foreach ( $ika_slides as $i => $slide ) : ?>
+            <button class="hero-dot h-2.5 w-10 rounded-full <?php echo $i === 0 ? 'bg-ikaRed' : 'bg-white/35'; ?> transition" data-hero="<?php echo (int) $i; ?>" aria-label="Slide <?php echo (int) $i + 1; ?>"></button>
+            <?php endforeach; ?>
           </div>
         </div>
 
         <div class="relative hidden lg:block">
           <div class="absolute -left-5 top-10 h-28 w-28 rounded-full border-[18px] border-ikaRed/90"></div>
           <div class="animate-float rounded-[2rem] border border-white/20 bg-white p-4 shadow-premium">
-            <img id="heroVisualImage" class="h-[520px] w-full rounded-[1.5rem] object-cover transition duration-700" src="<?php echo ika_asset('images/slide11.jpg'); ?>" alt="Transformation digitale IKA SOLUTION">
+            <img id="heroVisualImage" class="h-[520px] w-full rounded-[1.5rem] object-cover transition duration-700" src="<?php echo esc_url( ika_asset( 'images/slide11.jpg' ) ); ?>" alt="Transformation digitale IKA SOLUTION">
           </div>
           <div class="absolute -bottom-8 -left-8 w-64 rounded-2xl bg-white p-5 text-ikaInk shadow-premium">
             <p id="heroMetricLabel" class="text-sm font-bold text-ikaRed">Depuis 2014</p>
