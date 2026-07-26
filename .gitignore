@@ -1,0 +1,22 @@
+# Secrets — ne JAMAIS versionner
+mail-config.php
+wp-config.php
+.env
+*.pem
+*.key
+
+# Archives de distribution (à régénérer à la livraison)
+*.zip
+
+# Dépendances
+node_modules/
+vendor/
+
+# Build
+assets/css/*.min.css
+assets/js/*.min.js
+
+# Système
+.DS_Store
+Thumbs.db
+*.log
