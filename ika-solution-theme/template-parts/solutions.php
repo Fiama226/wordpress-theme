@@ -30,6 +30,7 @@ $solutions = get_posts( array(
             $sol_img      = ika_asset( get_post_meta( $sol->ID, 'ika_image', true ) );
             $sol_eyebrow  = get_post_meta( $sol->ID, 'ika_eyebrow', true );
             $sol_features = ika_get_list_meta( $sol->ID, 'ika_features' );
+            $sol_brochure = get_post_meta( $sol->ID, 'ika_brochure', true );
           ?>
           <div id="<?php echo esc_attr( $sol->post_name ); ?>" class="product-slide <?php echo $i === 0 ? 'active' : ''; ?> grid gap-10 lg:grid-cols-2 lg:items-center">
             <div class="reveal">
@@ -42,7 +43,13 @@ $solutions = get_posts( array(
                 <?php endforeach; ?>
               </ul>
               <div class="mt-8 flex flex-wrap gap-4">
-                <a href="<?php echo esc_url( get_permalink( $sol ) ); ?>" class="rounded-full bg-ikaBlue px-7 py-4 text-sm font-bold text-white transition hover:bg-ikaBlueDark">Découvrir <?php echo esc_html( get_the_title( $sol ) ); ?></a>
+                <a href="<?php echo esc_url( get_permalink( $sol ) ); ?>" class="rounded-full bg-ikaBlue px-7 py-4 text-sm font-bold text-white transition hover:bg-ikaBlueDark"><?php
+                  /* translators: %s: nom de la solution */
+                  printf( esc_html__( 'Découvrir %s', 'ika-solution' ), esc_html( get_the_title( $sol ) ) );
+                ?></a>
+                <?php if ( $sol_brochure ) : ?>
+                <a href="<?php echo esc_url( ika_asset( $sol_brochure ) ); ?>" download="<?php echo esc_attr( 'Brochure_' . sanitize_file_name( get_the_title( $sol ) ) . '.' . pathinfo( $sol_brochure, PATHINFO_EXTENSION ) ); ?>" class="inline-flex rounded-full border border-slate-200 px-7 py-4 text-sm font-extrabold text-slate-700 transition hover:border-ikaBlue hover:bg-ikaSoft hover:text-ikaBlue"><?php esc_html_e( 'Télécharger la brochure', 'ika-solution' ); ?></a>
+                <?php endif; ?>
               </div>
             </div>
             <div class="reveal relative">

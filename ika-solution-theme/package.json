@@ -1,0 +1,14 @@
+{
+  "name": "ika-solution-theme",
+  "version": "1.1.0",
+  "description": "Thème WordPress IKA Solution Pro — build Tailwind CSS",
+  "private": true,
+  "license": "GPL-2.0-or-later",
+  "scripts": {
+    "build:css": "tailwindcss -i assets/css/src.css -o assets/css/tailwind.css --minify",
+    "watch:css": "tailwindcss -i assets/css/src.css -o assets/css/tailwind.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  }
+}

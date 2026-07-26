@@ -53,54 +53,53 @@ add_action( 'after_setup_theme', 'ika_solution_setup' );
  * Enqueue Styles and Scripts
  */
 function ika_solution_scripts() {
-    // Tailwind CSS via CDN (matching original site)
-    wp_enqueue_script( 'tailwindcss', 'https://cdn.tailwindcss.com', array(), '3.4.0', false );
+    $theme   = wp_get_theme();
+    $version = $theme->get( 'Version' );
+    $dir     = get_template_directory();
+    $uri     = get_template_directory_uri();
 
-    // Custom Tailwind Config inline script
-    wp_add_inline_script( 'tailwindcss', "
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              ikaBlue: '#1270b8',
-              ikaBlueDark: '#0d4a7e',
-              ikaRed: '#e51a37',
-              ikaInk: '#111827',
-              ikaSoft: '#f4f7fb'
-            },
-            fontFamily: {
-              sans: ['Inter', 'ui-sans-serif', 'system-ui', 'Segoe UI', 'Arial']
-            },
-            boxShadow: {
-              premium: '0 24px 70px rgba(4, 31, 77, 0.14)',
-              clean: '0 12px 40px rgba(17, 24, 39, 0.10)'
-            },
-            animation: {
-              float: 'float 7s ease-in-out infinite',
-              reveal: 'reveal .8s ease forwards',
-              marquee: 'marquee 26s linear infinite'
-            },
-            keyframes: {
-              float: {
-                '0%, 100%': { transform: 'translateY(0)' },
-                '50%': { transform: 'translateY(-16px)' }
-              },
-              reveal: {
-                '0%': { opacity: '0', transform: 'translateY(20px)' },
-                '100%': { opacity: '1', transform: 'translateY(0)' }
-              },
-              marquee: {
-                '0%': { transform: 'translateX(0)' },
-                '100%': { transform: 'translateX(-50%)' }
-              }
-            }
-          }
-        }
-      };
-    " );
+    // Police Inter hébergée localement si présente, sinon Google Fonts.
+    if ( file_exists( $dir . '/assets/fonts/inter.css' ) ) {
+        wp_enqueue_style( 'ika-fonts', $uri . '/assets/fonts/inter.css', array(), $version );
+    } else {
+        wp_enqueue_style(
+            'ika-fonts',
+            'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap',
+            array(),
+            null
+        );
+    }
 
-    // Theme Custom Stylesheet
-    wp_enqueue_style( 'ika-solution-style', get_stylesheet_uri(), array(), '1.0.0' );
+    // Tailwind compilé localement (plus de CDN : pas de FOUC, pas de tiers).
+    $tailwind = $dir . '/assets/css/tailwind.css';
+    if ( file_exists( $tailwind ) ) {
+        wp_enqueue_style(
+            'ika-tailwind',
+            $uri . '/assets/css/tailwind.css',
+            array( 'ika-fonts' ),
+            (string) filemtime( $tailwind )
+        );
+    }
+
+    // Feuille de style du thème.
+    wp_enqueue_style( 'ika-solution-style', get_stylesheet_uri(), array( 'ika-tailwind' ), $version );
+
+    // Scripts du thème.
+    $script = $dir . '/assets/js/theme.js';
+    if ( file_exists( $script ) ) {
+        wp_enqueue_script(
+            'ika-theme',
+            $uri . '/assets/js/theme.js',
+            array(),
+            (string) filemtime( $script ),
+            true
+        );
+        wp_localize_script( 'ika-theme', 'ikaHero', array( 'slides' => ika_get_hero_slides() ) );
+    }
+
+    if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
+        wp_enqueue_script( 'comment-reply' );
+    }
 }
 add_action( 'wp_enqueue_scripts', 'ika_solution_scripts' );
 
@@ -147,6 +146,21 @@ function ika_solution_custom_post_types() {
         'menu_icon'   => 'dashicons-id',
         'show_in_rest'=> true,
     ) );
+
+    // Partenaires CPT
+    register_post_type( 'ika_partenaire', array(
+        'labels' => array(
+            'name'          => __( 'Partenaires', 'ika-solution' ),
+            'singular_name' => __( 'Partenaire', 'ika-solution' ),
+            'add_new'       => __( 'Ajouter un partenaire', 'ika-solution' ),
+            'edit_item'     => __( 'Modifier le partenaire', 'ika-solution' ),
+        ),
+        'public'       => true,
+        'has_archive'  => false,
+        'supports'     => array( 'title' ),
+        'menu_icon'    => 'dashicons-awards',
+        'show_in_rest' => true,
+    ) );
 }
 add_action( 'init', 'ika_solution_custom_post_types' );
 
@@ -155,6 +169,116 @@ add_action( 'init', 'ika_solution_custom_post_types' );
  */
 function ika_asset( $path ) {
     return get_template_directory_uri() . '/assets/' . ltrim( $path, '/' );
+}
+
+/**
+ * Charge les modules du thème.
+ */
+require_once get_template_directory() . '/inc/customizer.php';
+require_once get_template_directory() . '/inc/contact-form.php';
+
+/**
+ * URL d'une page du thème à partir de son slug, avec repli sur home_url().
+ *
+ * Évite les liens « realisations.php » codés en dur, invalides sous WordPress.
+ *
+ * @param string $slug Slug de la page.
+ * @return string
+ */
+function ika_page_url( $slug ) {
+    $page = get_page_by_path( $slug );
+    return $page ? get_permalink( $page ) : home_url( '/' . ltrim( $slug, '/' ) );
+}
+
+/**
+ * URL d'illustration d'un contenu : image mise en avant, puis meta, puis repli.
+ *
+ * @param int    $post_id  Identifiant du contenu.
+ * @param string $meta_key Clé meta contenant un chemin relatif d'asset.
+ * @param string $fallback Chemin d'asset de repli.
+ * @return string
+ */
+function ika_post_image( $post_id, $meta_key = '', $fallback = 'images/slide1.jpg' ) {
+    if ( has_post_thumbnail( $post_id ) ) {
+        $url = get_the_post_thumbnail_url( $post_id, 'large' );
+        if ( $url ) {
+            return $url;
+        }
+    }
+
+    if ( $meta_key ) {
+        $meta = get_post_meta( $post_id, $meta_key, true );
+        if ( $meta ) {
+            return ika_asset( $meta );
+        }
+    }
+
+    return ika_asset( $fallback );
+}
+
+/**
+ * Données des slides du hero, transmises au JS via wp_localize_script.
+ *
+ * @return array<int,array<string,mixed>>
+ */
+function ika_get_hero_slides() {
+    $slides = get_posts( array(
+        'post_type'      => 'ika_slide',
+        'posts_per_page' => 10,
+        'orderby'        => 'menu_order',
+        'order'          => 'ASC',
+    ) );
+
+    $data = array();
+    foreach ( $slides as $slide ) {
+        $lines = preg_split( '/\R/', (string) get_the_title( $slide ) );
+        $html  = '<span class="block">' . implode( '</span> <span class="block">', array_map( 'esc_html', $lines ) ) . '</span>';
+
+        $data[] = array(
+            'eyebrow'   => get_post_meta( $slide->ID, 'ika_slide_eyebrow', true ),
+            'titleHtml' => $html,
+            'text'      => get_post_meta( $slide->ID, 'ika_slide_text', true ),
+            'primary'   => array(
+                'text' => get_post_meta( $slide->ID, 'ika_slide_primary_text', true ),
+                'href' => ika_slide_url( get_post_meta( $slide->ID, 'ika_slide_primary_url', true ) ),
+            ),
+            'secondary' => array(
+                'text' => get_post_meta( $slide->ID, 'ika_slide_secondary_text', true ),
+                'href' => ika_slide_url( get_post_meta( $slide->ID, 'ika_slide_secondary_url', true ) ),
+            ),
+            'image'     => ika_asset( get_post_meta( $slide->ID, 'ika_slide_image', true ) ),
+            'metric'    => array(
+                'label' => get_post_meta( $slide->ID, 'ika_slide_metric_label', true ),
+                'value' => get_post_meta( $slide->ID, 'ika_slide_metric_value', true ),
+                'text'  => get_post_meta( $slide->ID, 'ika_slide_metric_text', true ),
+            ),
+        );
+    }
+
+    return $data;
+}
+
+/**
+ * Normalise une URL de slide : ancre, URL absolue ou ancien lien « page.php ».
+ *
+ * @param string $url Valeur saisie dans l'administration.
+ * @return string
+ */
+function ika_slide_url( $url ) {
+    $url = trim( (string) $url );
+
+    if ( '' === $url ) {
+        return '#';
+    }
+    if ( '#' === $url[0] || preg_match( '#^https?://#i', $url ) ) {
+        return $url;
+    }
+    // Ancien format hérité du site statique : « presentation.php ».
+    if ( substr( $url, -4 ) === '.php' ) {
+        return ika_page_url( basename( $url, '.php' ) );
+    }
+
+    return home_url( '/' . ltrim( $url, '/' ) );
 }
 
 /**
@@ -207,20 +331,19 @@ add_action( 'after_switch_theme', 'ika_solution_create_default_pages' );
  * Helper: check whether a published page with the given title already exists.
  */
 function ika_solution_page_exists( $title ) {
-    if ( function_exists( 'get_page_by_title' ) ) {
-        $page = get_page_by_title( $title, OBJECT, 'page' );
-        return ! empty( $page );
-    }
-
+    // get_page_by_title() est dépréciée depuis WordPress 6.2.
     $query = new WP_Query( array(
-        'post_type'      => 'page',
-        'title'          => $title,
-        'posts_per_page' => 1,
-        'fields'         => 'ids',
-        'no_found_rows'  => true,
+        'post_type'              => 'page',
+        'title'                  => $title,
+        'post_status'            => 'any',
+        'posts_per_page'         => 1,
+        'fields'                 => 'ids',
+        'no_found_rows'          => true,
+        'update_post_meta_cache' => false,
+        'update_post_term_cache' => false,
     ) );
 
-    return $query->have_posts();
+    return ! empty( $query->posts );
 }
 
 /**
@@ -241,6 +364,7 @@ $ika_meta_config = array(
             'ika_benefits'  => array( 'label' => 'Bénéfices (un par ligne)', 'type' => 'list' ),
             'ika_use_cases' => array( 'label' => 'Cas d’usage (un par ligne)', 'type' => 'list' ),
             'ika_features'  => array( 'label' => 'Fonctionnalités (un par ligne)', 'type' => 'list' ),
+            'ika_brochure'  => array( 'label' => 'Brochure à télécharger (chemin relatif, ex: images/brochures/A5-visite.png)', 'type' => 'text' ),
         ),
     ),
     'ika_expertise' => array(
@@ -268,6 +392,36 @@ $ika_meta_config = array(
             'ika_slide_metric_label' => array( 'label' => 'Métrique – label', 'type' => 'text' ),
             'ika_slide_metric_value' => array( 'label' => 'Métrique – valeur', 'type' => 'text' ),
             'ika_slide_metric_text'  => array( 'label' => 'Métrique – texte', 'type' => 'text' ),
+        ),
+    ),
+    'ika_membre' => array(
+        'box'    => 'Fiche du membre',
+        'fields' => array(
+            'ika_membre_role'    => array( 'label' => 'Poste / fonction', 'type' => 'text' ),
+            'ika_membre_image'   => array( 'label' => 'Photo (chemin relatif, ex: images/yaya.jpg) — ou utilisez l’image mise en avant', 'type' => 'text' ),
+            'ika_membre_email'   => array( 'label' => 'Email (optionnel)', 'type' => 'text' ),
+            'ika_membre_linkedin'=> array( 'label' => 'Profil LinkedIn (optionnel)', 'type' => 'text' ),
+        ),
+    ),
+    'ika_realisation' => array(
+        'box'    => 'Détails de la réalisation',
+        'fields' => array(
+            'ika_realisation_client' => array( 'label' => 'Client (ex: SONATUR)', 'type' => 'text' ),
+            'ika_realisation_image'  => array( 'label' => 'Image (chemin relatif) — ou utilisez l’image mise en avant', 'type' => 'text' ),
+            'ika_realisation_url'    => array( 'label' => 'Lien du projet (optionnel)', 'type' => 'text' ),
+        ),
+    ),
+    'ika_partenaire' => array(
+        'box'    => 'Logo du partenaire',
+        'fields' => array(
+            'ika_partenaire_image'  => array( 'label' => 'Logo (chemin relatif, ex: images/odoo.png). Vide = le nom s’affiche en texte.', 'type' => 'text' ),
+            'ika_partenaire_height' => array( 'label' => 'Hauteur max (classe Tailwind : max-h-14, max-h-16, max-h-20)', 'type' => 'text' ),
+        ),
+    ),
+    'ika_client' => array(
+        'box'    => 'Logo du client',
+        'fields' => array(
+            'ika_client_image' => array( 'label' => 'Logo (chemin relatif, ex: images/clients/APEC.png)', 'type' => 'text' ),
         ),
     ),
 );
@@ -436,6 +590,12 @@ function ika_solution_cpt_exists( $post_type, $slug ) {
  * Idempotent: it only creates items that do not already exist.
  */
 function ika_seed_solutions() {
+    $brochures = array(
+        'ika-visite'   => 'images/brochures/A5-visite.png',
+        'ika-courrier' => 'images/brochures/A5courier.png',
+        'ika-archive'  => 'images/brochures/A5-archive.png',
+        'ika-portail'  => 'images/brochures/A5-portail.png',
+    );
     $solutions = array(
         'ika-visite' => array(
             'title'       => 'IKA VISITE',
@@ -523,6 +683,9 @@ function ika_seed_solutions() {
             update_post_meta( $id, 'ika_eyebrow', $data['eyebrow'] );
             update_post_meta( $id, 'ika_image', $data['image'] );
             update_post_meta( $id, 'ika_features', $data['features'] );
+            if ( isset( $brochures[ $slug ] ) ) {
+                update_post_meta( $id, 'ika_brochure', $brochures[ $slug ] );
+            }
             update_post_meta( $id, 'ika_benefits', $data['benefits'] );
             update_post_meta( $id, 'ika_use_cases', $data['use_cases'] );
         }
@@ -763,7 +926,7 @@ function ika_seed_slides() {
             'eyebrow'     => 'Partenaire de Confiance au Burkina Faso',
             'text'        => 'Bénéficiez d’un support technique réactif, de conseils stratégiques et d’une assistance quotidienne pour tous vos équipements informatiques.',
             'primary_text'=> 'Contacter l’équipe', 'primary_url' => '#contact',
-            'secondary_text'=> 'En savoir plus', 'secondary_url' => 'presentation.php',
+            'secondary_text'=> 'En savoir plus', 'secondary_url' => 'presentation',
             'image'       => 'images/slide4.jpg',
             'metric_label'=> 'Support', 'metric_value' => '24/7 & Proximité', 'metric_text' => 'Intervention rapide à Ouagadougou et sous-région.',
         ),
@@ -792,6 +955,278 @@ function ika_seed_slides() {
     }
 }
 
+
+/**
+ * Seed : membres de l'équipe (CPT ika_membre).
+ */
+function ika_seed_membres() {
+    $membres = array(
+        'yaya-ouattara' => array( 'name' => 'Yaya OUATTARA', 'role' => 'Directeur Général', 'image' => 'images/yaya.jpg' ),
+        'serge-gedeon-oue' => array( 'name' => 'SERGE GEDEON OUE', 'role' => 'Développeur Full-Stack', 'image' => 'images/Serge.jpg' ),
+        'roukiatou-ouedraogo' => array( 'name' => 'Roukiatou OUEDRAOGO', 'role' => 'Commerciale', 'image' => 'images/roukiatou.jpg' ),
+        'victorine-bazemo' => array( 'name' => 'Victorine BAZEMO', 'role' => 'Assistante Commerciale', 'image' => 'images/victorine.jpg' ),
+        'martin-yameogo' => array( 'name' => 'Tegawende Martin Junior YAMEOGO', 'role' => 'Développeur Junior', 'image' => 'images/Martin.jpg' ),
+        'daouda-dao' => array( 'name' => 'Daouda DAO', 'role' => 'Développeur Front End', 'image' => 'images/daouda.jpg' ),
+        'landry-kabore' => array( 'name' => 'KABORE Pawendtaore Landry', 'role' => 'Développeur Full-Stack', 'image' => 'images/landry.jpg' ),
+        'williams-woba' => array( 'name' => 'Williams woba', 'role' => 'Technicien , helpdesk', 'image' => 'images/willi.jpg' ),
+        'sandrine-kini' => array( 'name' => 'Sandrine Tiahoun KINI', 'role' => 'Assistante de Direction', 'image' => 'images/Sandrine.jpg' ),
+        'aminata-hema' => array( 'name' => 'Aminata HEMA', 'role' => 'Comptable', 'image' => 'images/ami.jpg' ),
+        'nouriatou-ouedraogo' => array( 'name' => 'Nouriatou OUEDRAOGO', 'role' => 'Gestionnaire de Projet', 'image' => 'images/Nouriatou.jpg' ),
+    );
+    $order = 0;
+    foreach ( $membres as $slug => $data ) {
+        $order++;
+        if ( ika_solution_cpt_exists( 'ika_membre', $slug ) ) {
+            continue;
+        }
+        $id = wp_insert_post( array(
+            'post_type'   => 'ika_membre',
+            'post_name'   => $slug,
+            'post_title'  => $data['name'],
+            'menu_order'  => $order,
+            'post_status' => 'publish',
+        ) );
+        if ( $id ) {
+            update_post_meta( $id, 'ika_membre_role', $data['role'] );
+            update_post_meta( $id, 'ika_membre_image', $data['image'] );
+        }
+    }
+}
+
+/**
+ * Seed : réalisations (CPT ika_realisation).
+ */
+function ika_seed_realisations() {
+    $images = array( 'images/sonatur.png', 'images/intranetsonatur.png', 'images/sitesonatur.png' );
+    $realisations = array(
+        'gestion-des-requetes-sous-sharepoint-2016' => array(
+            'title'    => 'Gestion des requêtes sous SharePoint 2016',
+            'client'   => 'Coris Bank International Burkina Faso',
+            'category' => 'Banque',
+            'type'     => 'app',
+            'excerpt'  => 'Automatisation du processus métier de gestion des requêtes dans SharePoint 2016 au profit de Coris Bank International Burkina Faso.',
+            'tags'     => array( 'SharePoint 2016', 'Workflow', 'Banque' ),
+        ),
+        'fiches-d-engagement-de-depense' => array(
+            'title'    => 'Fiches d’engagement de dépense',
+            'client'   => 'Fondation 2iE Burkina Faso',
+            'category' => 'Fondation',
+            'type'     => 'app',
+            'excerpt'  => 'Automatisation du processus métier de gestion des fiches d’engagement de dépense dans SharePoint 2016.',
+            'tags'     => array( 'SharePoint 2016', 'Dépenses', 'Validation' ),
+        ),
+        'suivi-des-recommandations' => array(
+            'title'    => 'Suivi des recommandations',
+            'client'   => 'CorisBank Burkina Faso',
+            'category' => 'Banque',
+            'type'     => 'app',
+            'excerpt'  => 'Automatisation du processus métier de gestion et suivi des recommandations dans SharePoint 2016.',
+            'tags'     => array( 'SharePoint 2016', 'Suivi', 'Reporting' ),
+        ),
+        'ika-portail-sous-sharepoint-foundation-2013' => array(
+            'title'    => 'IKA PORTAIL sous SharePoint Foundation 2013',
+            'client'   => 'PME',
+            'category' => 'Portail collaboratif',
+            'type'     => 'intranet',
+            'excerpt'  => 'Création d’une plateforme de partage de documents et d’information pour les PME sous SharePoint Foundation 2013.',
+            'tags'     => array( 'IKA PORTAIL', 'Documents', 'Collaboration' ),
+        ),
+        'design-et-presentation-de-l-intranet' => array(
+            'title'    => 'Design et présentation de l’intranet',
+            'client'   => 'CorisBank International Burkina Faso',
+            'category' => 'Intranet',
+            'type'     => 'intranet',
+            'excerpt'  => 'Création du design et de la présentation de l’intranet CorisBank International Burkina Faso sous SharePoint Server 2016.',
+            'tags'     => array( 'SharePoint Server 2016', 'Intranet', 'UX' ),
+        ),
+        'mise-a-jour-de-l-intranet-sharepoint-2013' => array(
+            'title'    => 'Mise à jour de l’intranet SharePoint 2013',
+            'client'   => 'SONATUR',
+            'category' => 'Intranet',
+            'type'     => 'intranet',
+            'excerpt'  => 'Mise à jour de l’intranet SharePoint 2013 de la SONATUR.',
+            'tags'     => array( 'SharePoint 2013', 'Maintenance', 'Intranet' ),
+        ),
+        'intranets-de-coris-holding-coris-banque-coris-mesofinan' => array(
+            'title'    => 'Intranets de Coris Holding, Coris Banque, Coris Mésofinance et Coris Baraka.',
+            'client'   => 'Coris Group',
+            'category' => 'Banque',
+            'type'     => 'intranet',
+            'excerpt'  => 'Conception, structuration et accompagnement sur des intranets et plateformes collaboratives pour le groupe.',
+            'tags'     => array( 'Intranet', 'Collaboration', 'Banque' ),
+        ),
+        'intranet-sonabhy' => array(
+            'title'    => 'Intranet SONABHY',
+            'client'   => 'SONABHY',
+            'category' => 'Énergie',
+            'type'     => 'intranet',
+            'excerpt'  => 'Mise en place d’un intranet pour centraliser les informations internes, fluidifier la communication et accompagner les équipes.',
+            'tags'     => array( 'Intranet', 'Communication', 'Énergie' ),
+        ),
+        'gestion-des-vols-passagers-hotels-et-application-mobile' => array(
+            'title'    => 'Gestion des vols, passagers, hôtels et application mobile.',
+            'client'   => 'Plateformes nationales',
+            'category' => 'Aéroports & hôtels',
+            'type'     => 'app',
+            'excerpt'  => 'Plateformes nationales pour les aéroports, plateforme officielle des hôtels et application mobile des gérants d’hôtel.',
+            'tags'     => array( 'Application mobile', 'Aéroport', 'Hôtellerie' ),
+        ),
+        'plateforme-bons-factures' => array(
+            'title'    => 'Plateforme bons & factures',
+            'client'   => 'SONABHY',
+            'category' => 'Énergie',
+            'type'     => 'app',
+            'excerpt'  => 'Plateforme web et application mobile qui dématérialisent la gestion des bons d’enlèvement de la SONABHY.',
+            'tags'     => array( 'Application mobile', 'Factures', 'Énergie' ),
+        ),
+        'dematerialisation-administrative-et-parcelles' => array(
+            'title'    => 'Dématérialisation administrative et parcelles',
+            'client'   => 'SONATUR',
+            'category' => 'Foncier',
+            'type'     => 'app',
+            'excerpt'  => 'Site web, portail de dématérialisation administrative, souscription officielle de parcelle, DevOps et conformité ANSSI.',
+            'tags'     => array( 'Portail', 'Dématérialisation', 'Foncier' ),
+        ),
+        'recherche-de-services-bancaires' => array(
+            'title'    => 'Recherche de services bancaires',
+            'client'   => 'FasoFinVenen',
+            'category' => 'Services financiers',
+            'type'     => 'app',
+            'excerpt'  => 'Plateforme et application mobile de recherche de services bancaires, DevOps FasoFinVenen et validation ANSSI.',
+            'tags'     => array( 'Application mobile', 'Banque', 'DevOps' ),
+        ),
+        'gestion-d-agrement' => array(
+            'title'    => 'Gestion d’agrément',
+            'client'   => 'MEBF',
+            'category' => 'Services publics',
+            'type'     => 'app',
+            'excerpt'  => 'Plateforme de gestion d’agrément des entreprises et des particuliers du Burkina Faso.',
+            'tags'     => array( 'Gestion', 'Agrément', 'Services publics' ),
+        ),
+        'validation-securite-reco' => array(
+            'title'    => 'Validation sécurité Reco',
+            'client'   => 'Reco',
+            'category' => 'Services publics',
+            'type'     => 'infra',
+            'excerpt'  => 'Accompagnement et validation sécurité de la plateforme Reco pour renforcer la conformité et la fiabilité du service.',
+            'tags'     => array( 'Sécurité', 'Conformité', 'Audit' ),
+        ),
+        'audits-internes-et-qualite' => array(
+            'title'    => 'Audits internes et qualité',
+            'client'   => 'ONEA',
+            'category' => 'Eau & assainissement',
+            'type'     => 'app',
+            'excerpt'  => 'Plateforme de gestion des audits internes et qualité de l’ONEA.',
+            'tags'     => array( 'Audit', 'Qualité', 'Eau' ),
+        ),
+    );
+    $order = 0;
+    foreach ( $realisations as $slug => $data ) {
+        $order++;
+        if ( ika_solution_cpt_exists( 'ika_realisation', $slug ) ) {
+            continue;
+        }
+        $id = wp_insert_post( array(
+            'post_type'    => 'ika_realisation',
+            'post_name'    => $slug,
+            'post_title'   => $data['title'],
+            'post_excerpt' => $data['excerpt'],
+            'post_content' => $data['excerpt'],
+            'menu_order'   => $order,
+            'post_status'  => 'publish',
+        ) );
+        if ( $id ) {
+            update_post_meta( $id, 'ika_realisation_client', $data['client'] );
+            update_post_meta( $id, 'ika_realisation_image', $images[ ( $order - 1 ) % count( $images ) ] );
+            update_post_meta( $id, 'ika_realisation_category', $data['category'] );
+            update_post_meta( $id, 'ika_realisation_type', $data['type'] );
+            update_post_meta( $id, 'ika_realisation_tags', $data['tags'] );
+        }
+    }
+}
+
+/**
+ * Seed : partenaires (CPT ika_partenaire).
+ */
+function ika_seed_partenaires() {
+    $partenaires = array(
+        'microsoft' => array( 'name' => 'Microsoft', 'image' => '', 'height' => 'max-h-14' ),
+        'odoo' => array( 'name' => 'Odoo', 'image' => 'images/odoo.png', 'height' => 'max-h-14' ),
+        'abdi' => array( 'name' => 'ABDI', 'image' => 'images/abdi.jpg', 'height' => 'max-h-16' ),
+        'arcep' => array( 'name' => 'ARCEP', 'image' => 'images/arcep.png', 'height' => 'max-h-16' ),
+        'coris' => array( 'name' => 'Coris', 'image' => 'images/coris.jpg', 'height' => 'max-h-14' ),
+        'fortinet' => array( 'name' => 'Fortinet', 'image' => 'images/fortinet.png', 'height' => 'max-h-20' ),
+    );
+    $order = 0;
+    foreach ( $partenaires as $slug => $data ) {
+        $order++;
+        if ( ika_solution_cpt_exists( 'ika_partenaire', $slug ) ) {
+            continue;
+        }
+        $id = wp_insert_post( array(
+            'post_type'   => 'ika_partenaire',
+            'post_name'   => $slug,
+            'post_title'  => $data['name'],
+            'menu_order'  => $order,
+            'post_status' => 'publish',
+        ) );
+        if ( $id ) {
+            update_post_meta( $id, 'ika_partenaire_image', $data['image'] );
+            update_post_meta( $id, 'ika_partenaire_height', $data['height'] );
+        }
+    }
+}
+
+/**
+ * Seed : actualités (articles WordPress natifs).
+ */
+function ika_seed_actualites() {
+    $articles = array(
+        'pourquoi-rapprocher-hebergement-operations-critiques' => array(
+            'title'    => 'Pourquoi rapprocher l’hébergement des opérations critiques',
+            'category' => 'Cloud',
+            'image'    => 'images/slide4.jpg',
+            'excerpt'  => 'Disponibilité, latence, support local et meilleure maîtrise des environnements applicatifs.',
+            'content'  => 'Héberger ses services au plus près de ses utilisateurs change concrètement la qualité de service : la latence baisse, le support devient joignable aux mêmes heures que vos équipes, et les environnements applicatifs restent sous votre maîtrise. Pour les opérations critiques, la proximité de l’hébergement est un facteur de continuité autant qu’un choix technique.',
+        ),
+        'digitaliser-sans-fragiliser-acces-donnees' => array(
+            'title'    => 'Digitaliser sans fragiliser les accès et les données',
+            'category' => 'Sécurité',
+            'image'    => 'images/securite.jpg',
+            'excerpt'  => 'Contrôle d’accès, sauvegarde, supervision et continuité de service dès la conception.',
+            'content'  => 'Un projet de digitalisation réussi intègre la sécurité dès la conception : contrôle des accès, sauvegarde testée, supervision des services et plan de continuité. Ajouter ces briques après coup coûte toujours plus cher que de les prévoir dès le cadrage.',
+        ),
+        'renforcer-identite-numerique-domaine-local' => array(
+            'title'    => 'Renforcer son identité numérique avec un domaine local',
+            'category' => 'Domaine .bf',
+            'image'    => 'images/conseil2.jpg',
+            'excerpt'  => 'Nom de domaine, DNS, messagerie et maintenance technique pour une présence crédible.',
+            'content'  => 'Un nom de domaine local ancre votre organisation sur son marché. Au-delà de l’adresse, c’est la configuration DNS, la messagerie professionnelle et la maintenance technique qui construisent une présence numérique crédible et durable.',
+        ),
+    );
+    foreach ( $articles as $slug => $data ) {
+        if ( get_page_by_path( $slug, OBJECT, 'post' ) ) {
+            continue;
+        }
+        $term = term_exists( $data['category'], 'category' );
+        if ( ! $term ) {
+            $term = wp_insert_term( $data['category'], 'category' );
+        }
+        $id = wp_insert_post( array(
+            'post_type'    => 'post',
+            'post_name'    => $slug,
+            'post_title'   => $data['title'],
+            'post_excerpt' => $data['excerpt'],
+            'post_content' => $data['content'],
+            'post_status'  => 'publish',
+        ) );
+        if ( $id && ! is_wp_error( $term ) ) {
+            wp_set_post_categories( $id, array( (int) $term['term_id'] ) );
+            update_post_meta( $id, 'ika_post_image', $data['image'] );
+        }
+    }
+}
+
 /**
  * Seed all editable content on theme activation (idempotent).
  */
@@ -800,6 +1235,10 @@ function ika_solution_seed_content() {
     ika_seed_expertises();
     ika_seed_clients();
     ika_seed_slides();
+    ika_seed_membres();
+    ika_seed_realisations();
+    ika_seed_partenaires();
+    ika_seed_actualites();
     flush_rewrite_rules();
 }
 add_action( 'after_switch_theme', 'ika_solution_seed_content' );

@@ -1,7 +1,5 @@
 <?php /* Template Name: Equipe */ ?>
 <?php
-  $pageTitle = 'Équipe | IKA SOLUTION LTD';
-  $pageDescription = "Découvrez l'équipe d'IKA SOLUTION LTD, des experts passionnés au service de votre transformation digitale.";
   get_header();
 ?>
 
@@ -36,134 +34,32 @@
         <h2 class="mt-4 text-4xl font-black tracking-normal text-ikaBlueDark sm:text-5xl">Les talents qui font IKA SOLUTION.</h2>
       </div>
       <div class="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-        
+        <?php
+        $ika_membres = get_posts(
+          array(
+            'post_type'      => 'ika_membre',
+            'posts_per_page' => -1,
+            'orderby'        => 'menu_order',
+            'order'          => 'ASC',
+          )
+        );
+        foreach ( $ika_membres as $ika_membre ) :
+          $ika_role = get_post_meta( $ika_membre->ID, 'ika_membre_role', true );
+          $ika_bio  = has_excerpt( $ika_membre->ID ) ? get_the_excerpt( $ika_membre ) : $ika_membre->post_content;
+        ?>
         <article class="reveal group rounded-2xl bg-white p-8 text-center shadow-clean transition hover:-translate-y-2 hover:shadow-premium">
           <div class="mx-auto h-52 w-52 overflow-hidden rounded-2xl border-4 border-ikaSoft bg-ikaSoft shadow-clean">
-            <img class="h-full w-full object-cover" src="<?php echo ika_asset('images/yaya.jpg'); ?>" alt="Yaya OUATTARA">
+            <img class="h-full w-full object-cover" src="<?php echo esc_url( ika_post_image( $ika_membre->ID, 'ika_membre_image', 'images/logo.png' ) ); ?>" alt="<?php echo esc_attr( get_the_title( $ika_membre ) ); ?>" loading="lazy">
           </div>
-          <h3 class="mt-6 text-xl font-black text-ikaBlue">Yaya OUATTARA</h3>
-          <p class="mt-1 text-sm font-bold text-ikaRed">Directeur Général</p>
-          <p class="mt-4 text-sm leading-7 text-slate-600">Définit la vision stratégique de l'entreprise et accompagne les clients dans la transformation de leurs enjeux digitaux.</p>
+          <h3 class="mt-6 text-xl font-black text-ikaBlue"><?php echo esc_html( get_the_title( $ika_membre ) ); ?></h3>
+          <?php if ( $ika_role ) : ?>
+          <p class="mt-1 text-sm font-bold text-ikaRed"><?php echo esc_html( $ika_role ); ?></p>
+          <?php endif; ?>
+          <?php if ( $ika_bio ) : ?>
+          <p class="mt-4 text-sm leading-7 text-slate-600"><?php echo esc_html( wp_strip_all_tags( $ika_bio ) ); ?></p>
+          <?php endif; ?>
         </article>
-
-        <article class="reveal group rounded-2xl bg-white p-8 text-center shadow-clean transition hover:-translate-y-2 hover:shadow-premium">
-          <div class="mx-auto h-52 w-52 overflow-hidden rounded-2xl border-4 border-ikaSoft bg-ikaSoft shadow-clean">
-            <img class="h-full w-full object-cover" src="<?php echo ika_asset('images/Serge.jpg'); ?>" alt="Serge Gedeon OUE">
-          </div>
-          <h3 class="mt-6 text-xl font-black text-ikaBlue">SERGE GEDEON OUE</h3>
-          <p class="mt-1 text-sm font-bold text-ikaRed">Développeur Full-Stack</p>
-          <p class="mt-4 text-sm leading-7 text-slate-600">Conçoit et développe des solutions web et mobiles sur mesure, garantissant des architectures robustes et des expériences fluides.</p>
-        </article>
-<!-- 
-        <article class="reveal group rounded-2xl bg-white p-8 text-center shadow-clean transition hover:-translate-y-2 hover:shadow-premium">
-          <div class="mx-auto h-52 w-52 overflow-hidden rounded-2xl border-4 border-ikaSoft bg-ikaSoft shadow-clean">
-            <img class="h-full w-full object-cover" src="<?php echo ika_asset('images/team/kader.jpg'); ?>" alt="Goombasda Donald Aymard TIENTEGA">
-          </div>
-          <h3 class="mt-6 text-xl font-black text-ikaBlue">Goombasda Donald Aymard TIENTEGA</h3>
-          <p class="mt-1 text-sm font-bold text-ikaRed">Ingénieur Réseaux et système</p>
-          <p class="mt-4 text-sm leading-7 text-slate-600">Conçoit l'architecture réseau, déploie les infrastructures et assure la sécurité et la haute disponibilité des systèmes critiques.</p>
-        </article>
--->
-        <article class="reveal group rounded-2xl bg-white p-8 text-center shadow-clean transition hover:-translate-y-2 hover:shadow-premium">
-          <div class="mx-auto h-52 w-52 overflow-hidden rounded-2xl border-4 border-ikaSoft bg-ikaSoft shadow-clean">
-            <img class="h-full w-full object-cover" src="<?php echo ika_asset('images/roukiatou.jpg'); ?>" alt="Roukiatou OUEDRAOGO">
-          </div>
-          <h3 class="mt-6 text-xl font-black text-ikaBlue">Roukiatou OUEDRAOGO</h3>
-          <p class="mt-1 text-sm font-bold text-ikaRed">Commerciale</p>
-          <p class="mt-4 text-sm leading-7 text-slate-600">Identifie les besoins des clients, propose nos solutions d'hébergement et d'infrastructures cloud, et fidélise le portefeuille.</p>
-        </article>
-
-        <article class="reveal group rounded-2xl bg-white p-8 text-center shadow-clean transition hover:-translate-y-2 hover:shadow-premium">
-          <div class="mx-auto h-52 w-52 overflow-hidden rounded-2xl border-4 border-ikaSoft bg-ikaSoft shadow-clean">
-            <img class="h-full w-full object-cover" src="<?php echo ika_asset('images/victorine.jpg'); ?>" alt="Victorine BAZEMO">
-          </div>
-          <h3 class="mt-6 text-xl font-black text-ikaBlue">Victorine BAZEMO</h3>
-          <p class="mt-1 text-sm font-bold text-ikaRed">Assistante Commerciale</p>
-          <p class="mt-4 text-sm leading-7 text-slate-600">Accompagne l'équipe dans le suivi des prospects, la rédaction des propositions et assure une relation client de qualité.</p>
-        </article>
-
-        <article class="reveal group rounded-2xl bg-white p-8 text-center shadow-clean transition hover:-translate-y-2 hover:shadow-premium">
-          <div class="mx-auto h-52 w-52 overflow-hidden rounded-2xl border-4 border-ikaSoft bg-ikaSoft shadow-clean">
-            <img class="h-full w-full object-cover" src="<?php echo ika_asset('images/Martin.jpg'); ?>" alt="Tegawende Martin Junior YAMEOGO">
-          </div>
-          <h3 class="mt-6 text-xl font-black text-ikaBlue">Tegawende Martin Junior YAMEOGO</h3>
-          <p class="mt-1 text-sm font-bold text-ikaRed">Développeur Junior</p>
-          <p class="mt-4 text-sm leading-7 text-slate-600">Participe au développement des interfaces et fonctionnalités web, tout en assurant la maintenance et l'optimisation de nos applications.</p>
-        </article>
-
-        <article class="reveal group rounded-2xl bg-white p-8 text-center shadow-clean transition hover:-translate-y-2 hover:shadow-premium">
-          <div class="mx-auto h-52 w-52 overflow-hidden rounded-2xl border-4 border-ikaSoft bg-ikaSoft shadow-clean">
-            <img class="h-full w-full object-cover" src="<?php echo ika_asset('images/daouda.jpg'); ?>" alt="Daouda DAO">
-          </div>
-          <h3 class="mt-6 text-xl font-black text-ikaBlue">Daouda DAO</h3>
-          <p class="mt-1 text-sm font-bold text-ikaRed">Développeur Front End</p>
-          <p class="mt-4 text-sm leading-7 text-slate-600">Transforme les maquettes en interfaces web interactives et responsives, en plaçant l'expérience utilisateur au cœur de son code.</p>
-        </article>
-
-        <article class="reveal group rounded-2xl bg-white p-8 text-center shadow-clean transition hover:-translate-y-2 hover:shadow-premium">
-          <div class="mx-auto h-52 w-52 overflow-hidden rounded-2xl border-4 border-ikaSoft bg-ikaSoft shadow-clean">
-            <img class="h-full w-full object-cover" src="<?php echo ika_asset('images/landry.jpg'); ?>" alt="KABORE Pawendtaore Landry">
-          </div>
-          <h3 class="mt-6 text-xl font-black text-ikaBlue">KABORE Pawendtaore Landry</h3>
-          <p class="mt-1 text-sm font-bold text-ikaRed">Développeur Full-Stack</p>
-          <p class="mt-4 text-sm leading-7 text-slate-600">Développe des applications complètes, de la base de données à l'interface, pour répondre aux besoins métiers spécifiques de nos clients.</p>
-        </article>
-
-        <article class="reveal group rounded-2xl bg-white p-8 text-center shadow-clean transition hover:-translate-y-2 hover:shadow-premium">
-          <div class="mx-auto h-52 w-52 overflow-hidden rounded-2xl border-4 border-ikaSoft bg-ikaSoft shadow-clean">
-            <img class="h-full w-full object-cover" src="<?php echo ika_asset('images/willi.jpg'); ?>" alt="Williams woba">
-          </div>
-          <h3 class="mt-6 text-xl font-black text-ikaBlue">Williams woba</h3>
-          <p class="mt-1 text-sm font-bold text-ikaRed">Technicien , helpdesk</p>
-          <p class="mt-4 text-sm leading-7 text-slate-600">Premier point de contact pour le support technique, il résout les incidents, assiste les utilisateurs et assure la maintenance du parc.</p>
-        </article>
-
-        <article class="reveal group rounded-2xl bg-white p-8 text-center shadow-clean transition hover:-translate-y-2 hover:shadow-premium">
-          <div class="mx-auto h-52 w-52 overflow-hidden rounded-2xl border-4 border-ikaSoft bg-ikaSoft shadow-clean">
-            <img class="h-full w-full object-cover" src="<?php echo ika_asset('images/Sandrine.jpg'); ?>" alt="Sandrine Tiahoun KINI">
-          </div>
-          <h3 class="mt-6 text-xl font-black text-ikaBlue">Sandrine Tiahoun KINI</h3>
-          <p class="mt-1 text-sm font-bold text-ikaRed">Assistante de Direction</p>
-          <p class="mt-4 text-sm leading-7 text-slate-600">Organise le quotidien de la direction, gère l'administration générale et facilite la communication interne et externe.</p>
-        </article>
-<!-- 
-        <article class="reveal group rounded-2xl bg-white p-8 text-center shadow-clean transition hover:-translate-y-2 hover:shadow-premium">
-          <div class="mx-auto h-52 w-52 overflow-hidden rounded-2xl border-4 border-ikaSoft bg-ikaSoft shadow-clean">
-            <img class="h-full w-full object-cover" src="<?php echo ika_asset('images/Fatoumata.jpg'); ?>" alt="Fatoumata KANO">
-          </div>
-          <h3 class="mt-6 text-xl font-black text-ikaBlue">Fatoumata KANO</h3>
-          <p class="mt-1 text-sm font-bold text-ikaRed">Assistante Comptable</p>
-          <p class="mt-4 text-sm leading-7 text-slate-600">Assiste dans la saisie des opérations financières, le suivi de la trésorerie et la préparation des déclarations fiscales.</p>
-        </article>
--->
-
-        <article class="reveal group rounded-2xl bg-white p-8 text-center shadow-clean transition hover:-translate-y-2 hover:shadow-premium">
-          <div class="mx-auto h-52 w-52 overflow-hidden rounded-2xl border-4 border-ikaSoft bg-ikaSoft shadow-clean">
-            <img class="h-full w-full object-cover" src="<?php echo ika_asset('images/ami.jpg'); ?>" alt="Aminata HEMA">
-          </div>
-          <h3 class="mt-6 text-xl font-black text-ikaBlue">Aminata HEMA</h3>
-          <p class="mt-1 text-sm font-bold text-ikaRed">Comptable</p>
-          <p class="mt-4 text-sm leading-7 text-slate-600">Gère la comptabilité générale, établit les états financiers et veille au respect des obligations fiscales et légales de l'entreprise.</p>
-        </article>
-<!-- 
-        <article class="reveal group rounded-2xl bg-white p-8 text-center shadow-clean transition hover:-translate-y-2 hover:shadow-premium">
-          <div class="mx-auto h-52 w-52 overflow-hidden rounded-2xl border-4 border-ikaSoft bg-ikaSoft shadow-clean">
-            <img class="h-full w-full object-cover" src="<?php echo ika_asset('images/Koro.jpg'); ?>" alt="Korotimi SANOGO">
-          </div>
-          <h3 class="mt-6 text-xl font-black text-ikaBlue">Korotimi SANOGO</h3>
-          <p class="mt-1 text-sm font-bold text-ikaRed">Comptable</p>
-          <p class="mt-4 text-sm leading-7 text-slate-600">Supervise les flux financiers, analyse les coûts et produit les rapports comptables pour éclairer les prises de décision.</p>
-        </article>
--->
-        <article class="reveal group rounded-2xl bg-white p-8 text-center shadow-clean transition hover:-translate-y-2 hover:shadow-premium">
-          <div class="mx-auto h-52 w-52 overflow-hidden rounded-2xl border-4 border-ikaSoft bg-ikaSoft shadow-clean">
-            <img class="h-full w-full object-cover" src="<?php echo ika_asset('images/Nouriatou.jpg'); ?>" alt="Nouriatou OUEDRAOGO">
-          </div>
-          <h3 class="mt-6 text-xl font-black text-ikaBlue">Nouriatou OUEDRAOGO</h3>
-          <p class="mt-1 text-sm font-bold text-ikaRed">Gestionnaire de Projet</p>
-          <p class="mt-4 text-sm leading-7 text-slate-600">Pilote le planning, coordonne les équipes techniques et veille au respect des délais, du budget et de la qualité des livrables.</p>
-        </article>
-
+        <?php endforeach; ?>
       </div>
     </div>
   </section>

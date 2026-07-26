@@ -1,14 +1,18 @@
 /*
 Theme Name: IKA Solution Pro
 Theme URI: https://ikasolution.com
-Author: IKA Solution & AI Agent
+Author: IKA SOLUTION LTD
 Author URI: https://ikasolution.com
-Description: Thème WordPress professionnel 100% open source pour IKA SOLUTION LTD. Reproduction pixel-perfect et animations fluides du site d'origine, avec gestion entièrement dynamique des contenus (Textes, Images, Actualités, Équipe, Réalisations) via WordPress et ACF.
-Version: 1.0.0
+Description: Thème WordPress professionnel et 100% open source pour IKA SOLUTION LTD. Reproduit fidèlement le site d'origine (mise en page et animations) et rend l'ensemble des contenus administrables : slides, expertises, solutions, réalisations, équipe, clients, partenaires, actualités et coordonnées. Tailwind CSS compilé localement, aucune dépendance à un CDN.
+Version: 1.1.0
+Requires at least: 6.0
+Tested up to: 6.8
+Requires PHP: 7.4
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: ika-solution
-Tags: custom-menu, featured-images, translation-ready, full-width-template
+Domain Path: /languages
+Tags: custom-menu, featured-images, translation-ready, full-width-template, custom-logo, threaded-comments
 */
 
 /* ─── Product Tab Slides ─── */
@@ -82,4 +86,225 @@ Tags: custom-menu, featured-images, translation-ready, full-width-template
 
 .animate-marquee:hover {
   animation-play-state: paused;
+}
+
+/* ─── Font ─── */
+body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+
+/* ─── Carrousel clients (pleine largeur, fondu sur les bords) ─── */
+.clients-marquee {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, black 8%, black 92%, transparent 100%);
+          mask-image: linear-gradient(to right, transparent 0, black 8%, black 92%, transparent 100%);
+}
+.clients-track {
+  display: flex;
+  width: max-content;
+  animation: clients-scroll 28s linear infinite;
+}
+.clients-marquee:hover .clients-track { animation-play-state: paused; }
+.clients-group { display: flex; flex-shrink: 0; }
+.client-logo {
+  flex-shrink: 0;
+  width: 11rem;
+  height: 8rem;
+  margin: 0 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1rem;
+  background: #F5F6FA;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06), 0 8px 24px -12px rgba(15, 23, 42, 0.10);
+}
+.client-logo img {
+  max-height: 3.5rem;
+  max-width: 80%;
+  object-fit: contain;
+  filter: grayscale(100%);
+  opacity: 0.7;
+  transition: filter 0.3s ease, opacity 0.3s ease;
+}
+.client-logo:hover img { filter: grayscale(0%); opacity: 1; }
+@keyframes clients-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ─── Animations du hero et des sections (déplacé depuis header.php) ─── */
+body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+.slide {
+  opacity: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background-position: center;
+  transform: scale(1.08) rotate(.6deg);
+  filter: saturate(.75) blur(6px);
+  transition: opacity .9s ease, transform 1.35s cubic-bezier(.2,.85,.18,1), clip-path 1.25s cubic-bezier(.2,.85,.18,1), background-position 1.45s cubic-bezier(.2,.85,.18,1), filter .9s ease;
+  will-change: opacity, transform, clip-path, background-position, filter;
+}
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1) rotate(0);
+  filter: saturate(1) blur(0);
+}
+.slide.leaving { opacity: 0; filter: saturate(.65) blur(10px); }
+.slide.effect-orbit { clip-path: circle(0% at 8% 88%); transform-origin: 8% 88%; }
+.slide.effect-orbit.active { clip-path: circle(145% at 8% 88%); }
+.slide.effect-orbit.leaving { clip-path: circle(0% at 86% 14%); transform: scale(1.14) rotate(-3deg); }
+.slide.effect-decompose { clip-path: inset(0); transform: scale(1.12); }
+.slide.effect-decompose::before,
+.slide.effect-decompose::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  pointer-events: none;
+}
+.slide.effect-decompose.active { transform: scale(1); animation: decompose-base 1.05s cubic-bezier(.2,.85,.18,1) both; }
+.slide.effect-decompose.active::before { opacity: 1; clip-path: inset(0 0 64% 0); animation: decompose-top 1.05s cubic-bezier(.2,.85,.18,1) both; }
+.slide.effect-decompose.active::after { opacity: 1; clip-path: inset(64% 0 0 0); animation: decompose-bottom 1.05s cubic-bezier(.2,.85,.18,1) both; }
+.slide.effect-decompose.leaving { clip-path: polygon(0 0, 100% 7%, 91% 100%, 9% 93%); transform: scale(1.12); }
+.slide.effect-parallax { clip-path: inset(0); background-position: 28% center; transform: translateX(8%) scale(1.18); transform-origin: center; }
+.slide.effect-parallax.active { background-position: 64% center; transform: translateX(0) scale(1); }
+.slide.effect-parallax.leaving { background-position: 86% center; transform: translateX(-8%) scale(1.12); }
+.slide.effect-hosting { clip-path: inset(0 50% 0 50%); transform: scale(1.1); transform-origin: center; }
+.slide.effect-hosting.active { clip-path: inset(0); transform: scale(1); }
+.slide.effect-hosting.leaving { clip-path: inset(0 0 0 100%); transform: scale(1.12); }
+@keyframes decompose-base {
+  0% { opacity: .2; transform: scale(1.16) translateY(22px); filter: blur(12px) saturate(.55); }
+  55% { opacity: .85; transform: scale(1.04) translateY(0); }
+  100% { opacity: 1; transform: scale(1); filter: blur(0) saturate(1); }
+}
+@keyframes decompose-top {
+  0% { transform: translate(-9%, -22%) scale(1.08); opacity: .2; }
+  100% { transform: translate(0, 0) scale(1); opacity: 0; }
+}
+@keyframes decompose-bottom {
+  0% { transform: translate(9%, 20%) scale(1.08); opacity: .22; }
+  100% { transform: translate(0, 0) scale(1); opacity: 0; }
+}
+#heroCopyPanel { transition: opacity .42s ease, transform .55s cubic-bezier(.2,.85,.18,1), filter .42s ease; }
+#heroCopyPanel.is-changing { opacity: 0; transform: translateY(22px) rotateX(10deg); filter: blur(8px); }
+#heroVisualImage { transform-origin: 70% 30%; }
+#heroVisualImage.is-changing { opacity: .2; transform: scale(.94) rotate(-2deg); filter: blur(8px) saturate(.7); }
+#accueil.hero-intro #heroEyebrow,
+#accueil.hero-intro #heroText,
+#accueil.hero-intro #heroPrimary,
+#accueil.hero-intro #heroSecondary,
+#accueil.hero-intro .hero-dot,
+#accueil.hero-intro #heroMetricLabel,
+#accueil.hero-intro #heroMetric,
+#accueil.hero-intro #heroMetricText {
+  opacity: 0;
+  transform: translateY(18px);
+  animation: heroIntroRise .8s cubic-bezier(.2,.85,.18,1) forwards;
+}
+#accueil.hero-intro #heroText { animation-delay: 1.35s; }
+#accueil.hero-intro #heroPrimary { animation-delay: 1.62s; }
+#accueil.hero-intro #heroSecondary { animation-delay: 1.74s; }
+#accueil.hero-intro .hero-dot { animation-delay: 1.96s; }
+#accueil.hero-intro #heroMetricLabel { animation-delay: 1.22s; }
+#accueil.hero-intro #heroMetric { animation-delay: 1.38s; }
+#accueil.hero-intro #heroMetricText { animation-delay: 1.54s; }
+#accueil.hero-intro #heroVisualImage {
+  animation: heroIntroImage 1.25s cubic-bezier(.2,.85,.18,1) .35s both;
+}
+#accueil.hero-intro #heroTitle .hero-word {
+  display: inline-block;
+  white-space: nowrap;
+}
+#accueil.hero-intro #heroTitle .hero-char {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(34px) rotateX(70deg) scale(.82);
+  filter: blur(8px);
+  transform-origin: 50% 100%;
+  animation: heroCharIn .68s cubic-bezier(.2,.85,.18,1) forwards;
+}
+@keyframes heroCharIn {
+  0% { opacity: 0; transform: translateY(34px) rotateX(70deg) scale(.82); filter: blur(8px); }
+  70% { opacity: 1; transform: translateY(-4px) rotateX(0) scale(1.04); filter: blur(0); }
+  100% { opacity: 1; transform: translateY(0) rotateX(0) scale(1); filter: blur(0); }
+}
+@keyframes heroIntroRise {
+  0% { opacity: 0; transform: translateY(18px); filter: blur(6px); }
+  100% { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+@keyframes heroIntroImage {
+  0% { opacity: 0; transform: translateY(34px) scale(.88) rotate(-3deg); filter: blur(14px) saturate(.72); }
+  65% { opacity: 1; transform: translateY(-6px) scale(1.03) rotate(.8deg); filter: blur(0) saturate(1.05); }
+  100% { opacity: 1; transform: translateY(0) scale(1) rotate(0); filter: blur(0) saturate(1); }
+}
+.expertise-card {
+  isolation: isolate;
+  overflow: hidden;
+}
+.expertise-card::before {
+  content: "";
+  position: absolute;
+  inset: auto -24px -42px auto;
+  height: 96px;
+  width: 96px;
+  border-radius: 999px;
+  background: rgba(229, 26, 55, .1);
+  z-index: -1;
+}
+.expertise-visual {
+  position: relative;
+  height: 12rem;
+  margin: -1.75rem -1.75rem 1.5rem;
+  overflow: hidden;
+  background: #0d4a7e;
+}
+.expertise-visual img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  transform: scale(1.06);
+  transition: transform .7s cubic-bezier(.2,.85,.18,1), filter .7s ease;
+}
+.expertise-card:hover .expertise-visual img {
+  transform: scale(1.16) rotate(1.5deg);
+  filter: saturate(1.12) contrast(1.04);
+}
+.expertise-visual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(18,112,184,.2), rgba(229,26,55,.32));
+  mix-blend-mode: multiply;
+}
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity .76s ease, transform .82s cubic-bezier(.2,.85,.18,1), filter .76s ease;
+  will-change: opacity, transform, filter;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translate(0, 0) scale(1) rotate(0);
+  filter: blur(0);
+}
+.whatsapp-widget { animation: whatsappPulse 3.4s ease-in-out infinite; }
+@keyframes whatsappPulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 18px 44px rgba(18,112,184,.18); }
+  50% { transform: scale(1.045); box-shadow: 0 22px 58px rgba(37,211,102,.26); }
+}
+
+/* ─── Accessibilité : respect de « animations réduites » ─── */
+@media (prefers-reduced-motion: reduce) {
+  .clients-track { animation: none; }
+  .clients-marquee { overflow-x: auto; }
+  .slide, .reveal, #heroCopyPanel, #heroVisualImage,
+  .whatsapp-widget, .animate-float, .animate-marquee {
+    animation: none !important;
+    transition: none !important;
+  }
+  .reveal { opacity: 1; transform: none; }
 }

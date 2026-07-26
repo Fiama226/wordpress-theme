@@ -1,153 +1,40 @@
 <?php /* Template Name: Realisations */ ?>
 <?php
-  $typeLabels = [
-    'app'     => 'Application web & mobile',
-    'site'    => 'Site web',
-    'intranet'=> 'Intranet',
-    'formation'=> 'Formations',
-    'licence' => 'Licences',
-    'infra'   => 'Infrastructure serveur',
-  ];
+  $typeLabels = array(
+    'app'       => __( 'Application web & mobile', 'ika-solution' ),
+    'site'      => __( 'Site web', 'ika-solution' ),
+    'intranet'  => __( 'Intranet', 'ika-solution' ),
+    'formation' => __( 'Formations', 'ika-solution' ),
+    'licence'   => __( 'Licences', 'ika-solution' ),
+    'infra'     => __( 'Infrastructure serveur', 'ika-solution' ),
+  );
 
-  $realisations = [
-    [
-      'type' => 'app',
-      'client' => 'Coris Bank International Burkina Faso',
-      'category' => 'Banque',
-      'title' => 'Gestion des requêtes sous SharePoint 2016',
-      'description' => 'Automatisation du processus métier de gestion des requêtes dans SharePoint 2016 au profit de Coris Bank International Burkina Faso.',
-      'tags' => ['SharePoint 2016', 'Workflow', 'Banque'],
-      'color' => 'bg-ikaBlue',
-    ],
-    [
-      'type' => 'app',
-      'client' => 'Fondation 2iE Burkina Faso',
-      'category' => 'Fondation',
-      'title' => 'Fiches d’engagement de dépense',
-      'description' => 'Automatisation du processus métier de gestion des fiches d’engagement de dépense dans SharePoint 2016.',
-      'tags' => ['SharePoint 2016', 'Dépenses', 'Validation'],
-      'color' => 'bg-ikaRed',
-    ],
-    [
-      'type' => 'app',
-      'client' => 'CorisBank Burkina Faso',
-      'category' => 'Banque',
-      'title' => 'Suivi des recommandations',
-      'description' => 'Automatisation du processus métier de gestion et suivi des recommandations dans SharePoint 2016.',
-      'tags' => ['SharePoint 2016', 'Suivi', 'Reporting'],
-      'color' => 'bg-ikaBlue',
-    ],
-    [
-      'type' => 'intranet',
-      'client' => 'PME',
-      'category' => 'Portail collaboratif',
-      'title' => 'IKA PORTAIL sous SharePoint Foundation 2013',
-      'description' => 'Création d’une plateforme de partage de documents et d’information pour les PME sous SharePoint Foundation 2013.',
-      'tags' => ['IKA PORTAIL', 'Documents', 'Collaboration'],
-      'color' => 'bg-ikaRed',
-    ],
-    [
-      'type' => 'intranet',
-      'client' => 'CorisBank International Burkina Faso',
-      'category' => 'Intranet',
-      'title' => 'Design et présentation de l’intranet',
-      'description' => 'Création du design et de la présentation de l’intranet CorisBank International Burkina Faso sous SharePoint Server 2016.',
-      'tags' => ['SharePoint Server 2016', 'Intranet', 'UX'],
-      'color' => 'bg-ikaBlue',
-    ],
-    [
-      'type' => 'intranet',
-      'client' => 'SONATUR',
-      'category' => 'Intranet',
-      'title' => 'Mise à jour de l’intranet SharePoint 2013',
-      'description' => 'Mise à jour de l’intranet SharePoint 2013 de la SONATUR.',
-      'tags' => ['SharePoint 2013', 'Maintenance', 'Intranet'],
-      'color' => 'bg-ikaRed',
-    ],
-    [
-      'type' => 'intranet',
-      'client' => 'Coris Group',
-      'category' => 'Banque',
-      'title' => 'Intranets de Coris Holding, Coris Banque, Coris Mésofinance et Coris Baraka.',
-      'description' => 'Conception, structuration et accompagnement sur des intranets et plateformes collaboratives pour le groupe.',
-      'tags' => ['Intranet', 'Collaboration', 'Banque'],
-      'color' => 'bg-ikaBlue',
-    ],
-    [
-      'type' => 'intranet',
-      'client' => 'SONABHY',
-      'category' => 'Énergie',
-      'title' => 'Intranet SONABHY',
-      'description' => 'Mise en place d’un intranet pour centraliser les informations internes, fluidifier la communication et accompagner les équipes.',
-      'tags' => ['Intranet', 'Communication', 'Énergie'],
-      'color' => 'bg-ikaRed',
-    ],
-    [
-      'type' => 'app',
-      'client' => 'Plateformes nationales',
-      'category' => 'Aéroports & hôtels',
-      'title' => 'Gestion des vols, passagers, hôtels et application mobile.',
-      'description' => 'Plateformes nationales pour les aéroports, plateforme officielle des hôtels et application mobile des gérants d’hôtel.',
-      'tags' => ['Application mobile', 'Aéroport', 'Hôtellerie'],
-      'color' => 'bg-ikaBlue',
-    ],
-    [
-      'type' => 'app',
-      'client' => 'SONABHY',
-      'category' => 'Énergie',
-      'title' => 'Plateforme bons & factures',
-      'description' => 'Plateforme web et application mobile qui dématérialisent la gestion des bons d’enlèvement de la SONABHY.',
-      'tags' => ['Application mobile', 'Factures', 'Énergie'],
-      'color' => 'bg-ikaRed',
-    ],
-    [
-      'type' => 'app',
-      'client' => 'SONATUR',
-      'category' => 'Foncier',
-      'title' => 'Dématérialisation administrative et parcelles',
-      'description' => 'Site web, portail de dématérialisation administrative, souscription officielle de parcelle, DevOps et conformité ANSSI.',
-      'tags' => ['Portail', 'Dématérialisation', 'Foncier'],
-      'color' => 'bg-ikaBlue',
-    ],
-    [
-      'type' => 'app',
-      'client' => 'FasoFinVenen',
-      'category' => 'Services financiers',
-      'title' => 'Recherche de services bancaires',
-      'description' => 'Plateforme et application mobile de recherche de services bancaires, DevOps FasoFinVenen et validation ANSSI.',
-      'tags' => ['Application mobile', 'Banque', 'DevOps'],
-      'color' => 'bg-ikaRed',
-    ],
-    [
-      'type' => 'app',
-      'client' => 'MEBF',
-      'category' => 'Services publics',
-      'title' => 'Gestion d’agrément',
-      'description' => 'Plateforme de gestion d’agrément des entreprises et des particuliers du Burkina Faso.',
-      'tags' => ['Gestion', 'Agrément', 'Services publics'],
-      'color' => 'bg-ikaBlue',
-    ],
-    [
-      'type' => 'infra',
-      'client' => 'Reco',
-      'category' => 'Services publics',
-      'title' => 'Validation sécurité Reco',
-      'description' => 'Accompagnement et validation sécurité de la plateforme Reco pour renforcer la conformité et la fiabilité du service.',
-      'tags' => ['Sécurité', 'Conformité', 'Audit'],
-      'color' => 'bg-ikaRed',
-    ],
-    [
-      'type' => 'app',
-      'client' => 'ONEA',
-      'category' => 'Eau & assainissement',
-      'title' => 'Audits internes et qualité',
-      'description' => 'Plateforme de gestion des audits internes et qualité de l’ONEA.',
-      'tags' => ['Audit', 'Qualité', 'Eau'],
-      'color' => 'bg-ikaBlue',
-    ],
-  ];
+  // Réalisations éditables depuis l'administration (CPT ika_realisation).
+  $ika_posts    = get_posts(
+    array(
+      'post_type'      => 'ika_realisation',
+      'posts_per_page' => -1,
+      'orderby'        => 'menu_order',
+      'order'          => 'ASC',
+    )
+  );
+  $realisations = array();
+  foreach ( $ika_posts as $ika_p ) {
+    $tags = get_post_meta( $ika_p->ID, 'ika_realisation_tags', true );
+    $realisations[] = array(
+      'type'        => get_post_meta( $ika_p->ID, 'ika_realisation_type', true ),
+      'client'      => get_post_meta( $ika_p->ID, 'ika_realisation_client', true ),
+      'category'    => get_post_meta( $ika_p->ID, 'ika_realisation_category', true ),
+      'title'       => get_the_title( $ika_p ),
+      'description' => get_the_excerpt( $ika_p ),
+      'tags'        => is_array( $tags ) ? $tags : array(),
+      'color'       => ( count( $realisations ) % 2 === 0 ) ? 'bg-ikaBlue' : 'bg-ikaRed',
+    );
+  }
 
-  get_header();
+  // N'afficher que les filtres réellement utilisés.
+  $usedTypes  = array_filter( wp_list_pluck( $realisations, 'type' ) );
+  $typeLabels = array_intersect_key( $typeLabels, array_flip( $usedTypes ) );
 ?>
 
   <main>
@@ -204,30 +91,6 @@
       </div>
     </section>
 
-    <script>
-    (function(){
-      const btns = document.querySelectorAll('.filter-btn');
-      const cards = document.querySelectorAll('.realisation-card');
-      btns.forEach(btn => {
-        btn.addEventListener('click', function(){
-          btns.forEach(b => {
-            b.classList.remove('bg-ikaRed','text-white');
-            b.classList.add('border','border-slate-200','bg-white','text-ikaBlue');
-          });
-          this.classList.remove('border','border-slate-200','bg-white','text-ikaBlue');
-          this.classList.add('bg-ikaRed','text-white');
-          const filter = this.getAttribute('data-filter');
-          cards.forEach(card => {
-            if (filter === 'all' || card.getAttribute('data-type') === filter) {
-              card.style.display = '';
-            } else {
-              card.style.display = 'none';
-            }
-          });
-        });
-      });
-    })();
-    </script>
   </main>
 
 <?php get_footer(); ?>
