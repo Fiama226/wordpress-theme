@@ -5,7 +5,7 @@
       'file' => 'developpement-app.php',
       'title' => "Développement & intégration d'applications",
       'eyebrow' => 'Applications métier',
-      'image' => '<?php echo ika_asset(images/development2.jpg);',
+      'image' => ika_asset('images/development2.jpg'),
       'intro' => "Des applications web, mobiles et portails conçus pour automatiser vos processus, connecter vos équipes et fiabiliser vos opérations.",
       'description' => "IKA SOLUTION conçoit des solutions digitales adaptées à votre organisation : plateformes de gestion, portails clients, espaces internes, workflows de validation, tableaux de bord et connexions avec vos outils existants. L'objectif est simple : transformer vos méthodes de travail en applications fiables, sécurisées et faciles à utiliser.",
       'highlights' => ['Applications web et mobiles', 'Portails sécurisés', 'Intégrations API et métiers'],
@@ -24,7 +24,7 @@
       'file' => 'infrastructures-serveurs-reseaux.php',
       'title' => 'Infrastructures serveurs & réseaux',
       'eyebrow' => 'Socle technique',
-      'image' => '<?php echo ika_asset(images/slide4.jpg);',
+      'image' => ika_asset('images/slide4.jpg'),
       'intro' => "Premier fournisseur de services d'hébergement avec des datacenters locaux au Burkina Faso, IKA SOLUTION garantit une infrastructure de pointe sur le sol national.",
       'description' => "Avec IKA Cloud, nous accompagnons les entreprises et institutions dans l'hébergement local, la vente de noms de domaine, les serveurs dédiés, les VPS, les réseaux et la continuité de service. Nos datacenters au Burkina Faso permettent de rapprocher vos données de vos utilisateurs, de renforcer la souveraineté numérique et de garantir un socle technique fiable pour vos applications critiques.",
       'highlights' => ['Datacenters locaux', 'Hébergement IKA Cloud', 'Noms de domaine'],
@@ -44,7 +44,7 @@
       'file' => 'solutions-cloud-licences.php',
       'title' => 'Solutions cloud & licences logicielles',
       'eyebrow' => 'Cloud et productivité',
-      'image' => '<?php echo ika_asset(images/cloud2.jpg);',
+      'image' => ika_asset('images/cloud2.jpg'),
       'intro' => 'Des solutions Microsoft 365, Fortinet, Odoo, cloud et licences logicielles sélectionnées pour vos besoins réels.',
       'description' => "IKA SOLUTION vous accompagne dans le choix, la fourniture, la configuration et l'administration de solutions cloud et licences professionnelles : Microsoft 365 pour la collaboration et la messagerie, Fortinet pour la sécurité réseau, Odoo pour la gestion d'entreprise, ainsi que les services cloud, VPS, sauvegarde et outils de productivité adaptés à vos équipes.",
       'highlights' => ['Microsoft 365', 'Fortinet', 'Odoo'],
@@ -64,7 +64,7 @@
       'file' => 'conseil-audit-strategie-it.php',
       'title' => 'Conseil, audit & stratégie IT',
       'eyebrow' => 'Pilotage digital',
-      'image' => '<?php echo ika_asset(images/conseil2.jpg);',
+      'image' => ika_asset('images/conseil2.jpg'),
       'intro' => 'Un accompagnement clair pour diagnostiquer votre système d’information, prioriser vos projets et sécuriser vos choix techniques.',
       'description' => "Avant d’investir dans un logiciel, un réseau ou une infrastructure, il faut comprendre les enjeux, les dépendances et les risques. IKA SOLUTION vous aide à poser un diagnostic fiable, définir une feuille de route réaliste et choisir les solutions qui servent réellement vos objectifs.",
       'highlights' => ['Audit SI', 'Feuille de route digitale', 'Aide à la décision'],
@@ -83,7 +83,7 @@
       'file' => 'cybersecurite-donnees.php',
       'title' => 'Cybersécurité & protection des données',
       'eyebrow' => 'Protection numérique',
-      'image' => '<?php echo ika_asset(images/securite.jpg);',
+      'image' => ika_asset('images/securite.jpg'),
       'intro' => 'Des mesures concrètes pour protéger vos accès, vos données, vos sauvegardes et la continuité de vos services.',
       'description' => "La sécurité numérique doit être intégrée dans les usages quotidiens : comptes utilisateurs, sauvegardes, postes de travail, serveurs, applications, messagerie et procédures de reprise. Nous mettons en place une protection pragmatique, adaptée à votre niveau de risque.",
       'highlights' => ['Contrôle d’accès', 'Sauvegarde et reprise', 'Durcissement des systèmes'],
@@ -102,7 +102,7 @@
       'file' => 'support-technique-infogerance.php',
       'title' => 'Support technique & infogérance',
       'eyebrow' => 'Exploitation IT',
-      'image' => '<?php echo ika_asset(images/support2.png);',
+      'image' => ika_asset('images/support2.png'),
       'intro' => 'Une assistance réactive pour maintenir vos postes, serveurs, réseaux, applications et services numériques en bon état.',
       'description' => "IKA SOLUTION prend en charge le suivi quotidien de vos environnements techniques : support utilisateur, maintenance préventive, surveillance des services, gestion des incidents et amélioration continue. L’objectif est de réduire les interruptions et de garder vos équipes concentrées sur leur métier.",
       'highlights' => ['Support utilisateur', 'Maintenance préventive', 'Supervision technique'],
@@ -121,7 +121,7 @@
       'file' => 'equipements-services-energetiques.php',
       'title' => 'Équipements & services énergétiques',
       'eyebrow' => 'Continuité énergétique',
-      'image' => '<?php echo ika_asset(images/energie2.jpg);',
+      'image' => ika_asset('images/energie2.jpg'),
       'intro' => 'Des solutions pour protéger vos équipements informatiques contre les coupures, variations électriques et interruptions de service.',
       'description' => "La performance informatique dépend aussi de la qualité de l’alimentation électrique. Nous accompagnons les organisations dans le choix et la mise en place d’onduleurs, groupes électrogènes, solutions solaires et dispositifs de continuité adaptés aux serveurs, réseaux et postes critiques.",
       'highlights' => ['Onduleurs', 'Groupes et solaire', 'Protection des équipements'],
@@ -140,7 +140,7 @@
       'file' => 'formation-utilisateurs.php',
       'title' => 'Formation & accompagnement utilisateurs',
       'eyebrow' => 'Adoption digitale',
-      'image' => '<?php echo ika_asset(images/formation2.jpg);',
+      'image' => ika_asset('images/formation2.jpg'),
       'intro' => 'Des formations pratiques pour aider vos équipes à adopter les outils numériques et à travailler avec plus d’autonomie.',
       'description' => "Un projet digital réussit quand les utilisateurs comprennent l’outil, savent l’exploiter et adoptent les bons réflexes. IKA SOLUTION prépare vos équipes à l’usage quotidien des applications, plateformes, services cloud, procédures de sécurité et méthodes de travail associées.",
       'highlights' => ['Prise en main', 'Documentation', 'Transfert de compétences'],
@@ -166,7 +166,7 @@
     return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
   }
 
-  include 'header.php';
+  get_header();
 ?>
 
 <main class="bg-white pt-32">
@@ -177,7 +177,7 @@
     </div>
     <div class="relative mx-auto grid min-h-[560px] max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.05fr_.95fr] lg:items-center lg:px-8">
       <div>
-        <a href="index.php#expertises" class="inline-flex rounded-full border border-white/25 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white hover:text-ikaBlue">Retour aux expertises</a>
+        <a href="<?php echo esc_url( home_url( '/#expertises' ) ); ?>" class="inline-flex rounded-full border border-white/25 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white hover:text-ikaBlue">Retour aux expertises</a>
         <p class="mt-8 text-sm font-black uppercase tracking-[0.2em] text-red-200"><?= e($expertise['eyebrow']) ?></p>
         <h1 class="mt-4 text-4xl font-black leading-tight tracking-normal sm:text-5xl lg:text-6xl"><?= e($expertise['title']) ?></h1>
         <p class="mt-6 max-w-3xl text-lg leading-8 text-white/85"><?= e($expertise['intro']) ?></p>
@@ -216,7 +216,7 @@
         <div>
           <p class="text-sm font-black uppercase tracking-[0.2em] text-ikaRed">Ce que nous mettons en place</p>
           <h2 class="mt-4 text-3xl font-black leading-tight text-ikaBlueDark sm:text-4xl">Des actions concrètes, documentées et suivies.</h2>
-          <a href="index.php#contact" class="mt-8 inline-flex rounded-full bg-ikaRed px-7 py-4 text-sm font-extrabold text-white shadow-clean transition hover:bg-red-700">Demander un devis</a>
+          <a href="<?php echo esc_url( home_url( '/#contact' ) ); ?>" class="mt-8 inline-flex rounded-full bg-ikaRed px-7 py-4 text-sm font-extrabold text-white shadow-clean transition hover:bg-red-700">Demander un devis</a>
         </div>
         <div class="grid gap-5 sm:grid-cols-2">
           <?php foreach ($expertise['capabilities'] as $index => $capability): ?>
@@ -269,7 +269,7 @@
         <p class="text-sm font-black uppercase tracking-[0.2em] text-red-200">Lancer un projet</p>
         <h2 class="mt-4 text-3xl font-black leading-tight sm:text-4xl">Parlons de votre besoin et du niveau d’accompagnement nécessaire.</h2>
       </div>
-      <a href="index.php#contact" class="inline-flex justify-center rounded-full bg-ikaRed px-8 py-4 text-sm font-extrabold text-white shadow-clean transition hover:bg-red-700">Contacter IKA SOLUTION</a>
+      <a href="<?php echo esc_url( home_url( '/#contact' ) ); ?>" class="inline-flex justify-center rounded-full bg-ikaRed px-8 py-4 text-sm font-extrabold text-white shadow-clean transition hover:bg-red-700">Contacter IKA SOLUTION</a>
     </div>
   </section>
 
@@ -280,7 +280,7 @@
           <p class="text-sm font-black uppercase tracking-[0.2em] text-ikaRed">Autres expertises</p>
           <h2 class="mt-4 text-3xl font-black text-ikaBlueDark sm:text-4xl">Explorer nos domaines complémentaires.</h2>
         </div>
-        <a href="index.php#expertises" class="inline-flex rounded-full border border-slate-200 px-6 py-3 text-sm font-black text-ikaBlue transition hover:border-ikaBlue">Toutes les expertises</a>
+        <a href="<?php echo esc_url( home_url( '/#expertises' ) ); ?>" class="inline-flex rounded-full border border-slate-200 px-6 py-3 text-sm font-black text-ikaBlue transition hover:border-ikaBlue">Toutes les expertises</a>
       </div>
       <div class="mt-10 grid gap-6 md:grid-cols-3">
         <?php

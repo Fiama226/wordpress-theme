@@ -11,7 +11,46 @@ Text Domain: ika-solution
 Tags: custom-menu, featured-images, translation-ready, full-width-template
 */
 
-/* Custom Animations & Styles */
+/* ─── Product Tab Slides ─── */
+.product-slide {
+  display: none;
+}
+.product-slide.active {
+  display: grid;
+}
+
+/* ─── Expertise Image Clip-Paths ─── */
+.expertise-cut-a { clip-path: polygon(0 0, 100% 0, 100% 78%, 0 92%); }
+.expertise-cut-b { clip-path: polygon(0 0, 100% 0, 94% 100%, 0 78%); }
+.expertise-cut-c { clip-path: polygon(0 0, 88% 0, 100% 100%, 0 100%); }
+.expertise-cut-d { clip-path: polygon(6% 0, 100% 0, 100% 100%, 0 88%); }
+.expertise-cut-e { clip-path: polygon(0 6%, 100% 0, 100% 94%, 0 100%); }
+.expertise-cut-f { clip-path: polygon(0 0, 100% 6%, 100% 100%, 6% 94%); }
+.expertise-cut-g { clip-path: polygon(0 0, 94% 0, 100% 100%, 6% 100%); }
+.expertise-cut-h { clip-path: polygon(0 0, 100% 0, 100% 88%, 6% 100%); }
+
+/* ─── About Showcase ─── */
+.about-showcase .about-image-card {
+  isolation: isolate;
+}
+.about-showcase .about-stat-card {
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+.about-showcase .about-stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 36px rgba(18,112,184,.12);
+}
+
+/* ─── Client Logo Hover ─── */
+.client-logo {
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+.client-logo:hover {
+  transform: scale(1.06);
+  box-shadow: 0 8px 24px rgba(0,0,0,.08);
+}
+
+/* ─── Custom Animations & Styles ─── */
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-16px); }

@@ -2,7 +2,7 @@
   $actualites = [
     [
       'tag' => 'Cloud',
-      'image' => '<?php echo ika_asset(images/slide4.jpg);',
+      'image' => ika_asset('images/slide4.jpg'),
       'title' => 'Pourquoi rapprocher l’hébergement des opérations critiques',
       'intro' => 'Disponibilité, latence, support local et meilleure maîtrise des environnements applicatifs.',
       'article' => 'cloud',
@@ -10,7 +10,7 @@
     ],
     [
       'tag' => 'Sécurité',
-      'image' => '<?php echo ika_asset(images/securite.jpg);',
+      'image' => ika_asset('images/securite.jpg'),
       'title' => 'Digitaliser sans fragiliser les accès et les données',
       'intro' => 'Contrôle d’accès, sauvegarde, supervision et continuité de service dès la conception.',
       'article' => 'securite',
@@ -18,7 +18,7 @@
     ],
     [
       'tag' => '.bf',
-      'image' => '<?php echo ika_asset(images/conseil.jpg);',
+      'image' => ika_asset('images/conseil.jpg'),
       'title' => 'Renforcer son identité numérique avec un domaine local',
       'intro' => 'Nom de domaine, DNS, messagerie et maintenance technique pour une présence crédible.',
       'article' => 'domaine',
@@ -30,7 +30,7 @@
 
   <main>
     <section class="relative overflow-hidden bg-ikaBlueDark pt-36 text-white sm:pt-40">
-      <div class="absolute inset-0 bg-cover bg-center opacity-10" style="background-image:url('<?php echo ika_asset(images/slide3.jpg);')" aria-hidden="true"></div>
+      <div class="absolute inset-0 bg-cover bg-center opacity-10" style="background-image:url('<?php echo ika_asset('images/slide3.jpg'); ?>')" aria-hidden="true"></div>
       <div class="absolute inset-0 bg-ikaBlueDark/92" aria-hidden="true"></div>
       <div class="relative mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
         <div class="reveal max-w-3xl">
