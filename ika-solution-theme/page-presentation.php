@@ -3,7 +3,7 @@
 
   <main>
     <section id="societe" class="relative overflow-hidden bg-ikaBlueDark pt-36 text-white sm:pt-40">
-      <div class="absolute inset-0 bg-cover bg-center opacity-10" style="background-image:url('<?php echo ika_asset(images/equipe.jpg);')" aria-hidden="true"></div>
+      <div class="absolute inset-0 bg-cover bg-center opacity-10" style="background-image:url('<?php echo ika_asset('images/equipe.jpg'); ?>')" aria-hidden="true"></div>
       <div class="absolute inset-0 bg-ikaBlueDark/88" aria-hidden="true"></div>
       <div class="relative mx-auto grid min-h-[76svh] max-w-7xl items-center gap-12 px-4 pb-16 sm:px-6 lg:grid-cols-[1fr_.9fr] lg:px-8">
         <div class="reveal max-w-3xl">
@@ -28,7 +28,7 @@
         </div>
         <div class="reveal relative hidden lg:block">
           <div class="absolute -right-5 -top-5 h-28 w-28 rounded-3xl bg-ikaRed"></div>
-          <img class="relative h-[540px] w-full rounded-[2rem] object-cover shadow-premium" src="<?php echo ika_asset(images/equipe.jpg);" alt="Equipe IKA SOLUTION">
+          <img class="relative h-[540px] w-full rounded-[2rem] object-cover shadow-premium" src="<?php echo ika_asset('images/equipe.jpg'); ?>" alt="Equipe IKA SOLUTION">
         </div>
       </div>
     </section>
@@ -74,12 +74,12 @@
 
     
     <section class="relative overflow-hidden bg-ikaBlueDark py-20 text-white sm:py-28">
-      <div class="absolute inset-0 bg-cover bg-center opacity-10" style="background-image:url('<?php echo ika_asset(images/yaya.jpg);')" aria-hidden="true"></div>
+      <div class="absolute inset-0 bg-cover bg-center opacity-10" style="background-image:url('<?php echo ika_asset('images/yaya.jpg'); ?>')" aria-hidden="true"></div>
       <div class="absolute inset-0 bg-ikaBlueDark/90" aria-hidden="true"></div>
       <div class="relative mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[.85fr_1.15fr] lg:items-center lg:px-8">
         <div class="reveal">
           <div class="overflow-hidden rounded-[2rem] border border-white/15 bg-white/10 p-4 shadow-premium">
-            <img class="h-[460px] w-full rounded-[1.5rem] object-cover" src="<?php echo ika_asset(images/yaya.jpg);" alt="Photo du Directeur Général Yaya OUATTARA">
+            <img class="h-[460px] w-full rounded-[1.5rem] object-cover" src="<?php echo ika_asset('images/yaya.jpg'); ?>" alt="Photo du Directeur Général Yaya OUATTARA">
           </div>
         </div>
         <div class="reveal">
@@ -91,8 +91,8 @@
             <p>Je remercie nos partenaires, nos clients et nos collaborateurs pour la confiance accordée depuis 2014. Nous continuerons à avancer avec rigueur, proximité et sens du service.</p>
           </div>
           <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-            <a href="index.php#expertises" class="inline-flex justify-center rounded-full bg-ikaRed px-7 py-4 text-sm font-extrabold text-white shadow-clean transition hover:bg-red-700">Nos expertises</a>
-            <a href="index.php#contact" class="inline-flex justify-center rounded-full border border-white/35 px-7 py-4 text-sm font-extrabold text-white transition hover:bg-white hover:text-ikaBlue">Nous contacter</a>
+            <a href="<?php echo esc_url( home_url( '/#expertises' ) ); ?>" class="inline-flex justify-center rounded-full bg-ikaRed px-7 py-4 text-sm font-extrabold text-white shadow-clean transition hover:bg-red-700">Nos expertises</a>
+            <a href="<?php echo esc_url( home_url( '/#contact' ) ); ?>" class="inline-flex justify-center rounded-full border border-white/35 px-7 py-4 text-sm font-extrabold text-white transition hover:bg-white hover:text-ikaBlue">Nous contacter</a>
           </div>
         </div>
       </div>

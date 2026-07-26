@@ -1,16 +1,16 @@
 <?php
   $pageTitle = 'Équipe | IKA SOLUTION LTD';
   $pageDescription = "Découvrez l'équipe d'IKA SOLUTION LTD, des experts passionnés au service de votre transformation digitale.";
-  include 'header.php';
+  get_header();
 ?>
 
 <main>
   <section class="relative overflow-hidden bg-ikaBlueDark pt-36 text-white sm:pt-40">
-    <div class="absolute inset-0 bg-cover bg-center opacity-10" style="background-image:url('<?php echo ika_asset(images/presentation.jpg);')" aria-hidden="true"></div>
+    <div class="absolute inset-0 bg-cover bg-center opacity-10" style="background-image:url('<?php echo ika_asset('images/presentation.jpg'); ?>')" aria-hidden="true"></div>
     <div class="absolute inset-0 bg-ikaBlueDark/92" aria-hidden="true"></div>
     <div class="relative mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
       <div class="max-w-4xl">
-        <a href="index.php#top" class="inline-flex rounded-full border border-white/25 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white hover:text-ikaBlue">Retour à l'accueil</a>
+        <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="inline-flex rounded-full border border-white/25 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white hover:text-ikaBlue">Retour à l'accueil</a>
         <p class="mt-8 text-sm font-black uppercase tracking-[0.2em] text-red-200">Notre équipe</p>
         <h1 class="mt-5 text-4xl font-black leading-[1.05] tracking-normal sm:text-5xl lg:text-6xl">Des experts passionnés au service de votre transformation digitale.</h1>
         <p class="mt-6 max-w-3xl text-lg leading-8 text-white/80 sm:text-xl">Ingénieurs, développeurs, consultants et techniciens réunis autour d'une même mission : vous offrir des solutions fiables, adaptées et durables.</p>
@@ -38,7 +38,7 @@
         
         <article class="reveal group rounded-2xl bg-white p-8 text-center shadow-clean transition hover:-translate-y-2 hover:shadow-premium">
           <div class="mx-auto h-52 w-52 overflow-hidden rounded-2xl border-4 border-ikaSoft bg-ikaSoft shadow-clean">
-            <img class="h-full w-full object-cover" src="<?php echo ika_asset(images/yaya.jpg);" alt="Yaya OUATTARA">
+            <img class="h-full w-full object-cover" src="<?php echo ika_asset('images/yaya.jpg'); ?>" alt="Yaya OUATTARA">
           </div>
           <h3 class="mt-6 text-xl font-black text-ikaBlue">Yaya OUATTARA</h3>
           <p class="mt-1 text-sm font-bold text-ikaRed">Directeur Général</p>
@@ -47,7 +47,7 @@
 
         <article class="reveal group rounded-2xl bg-white p-8 text-center shadow-clean transition hover:-translate-y-2 hover:shadow-premium">
           <div class="mx-auto h-52 w-52 overflow-hidden rounded-2xl border-4 border-ikaSoft bg-ikaSoft shadow-clean">
-            <img class="h-full w-full object-cover" src="<?php echo ika_asset(images/Serge.jpg);" alt="Serge Gedeon OUE">
+            <img class="h-full w-full object-cover" src="<?php echo ika_asset('images/Serge.jpg'); ?>" alt="Serge Gedeon OUE">
           </div>
           <h3 class="mt-6 text-xl font-black text-ikaBlue">SERGE GEDEON OUE</h3>
           <p class="mt-1 text-sm font-bold text-ikaRed">Développeur Full-Stack</p>
@@ -56,7 +56,7 @@
 <!-- 
         <article class="reveal group rounded-2xl bg-white p-8 text-center shadow-clean transition hover:-translate-y-2 hover:shadow-premium">
           <div class="mx-auto h-52 w-52 overflow-hidden rounded-2xl border-4 border-ikaSoft bg-ikaSoft shadow-clean">
-            <img class="h-full w-full object-cover" src="<?php echo ika_asset(images/team/kader.jpg);" alt="Goombasda Donald Aymard TIENTEGA">
+            <img class="h-full w-full object-cover" src="<?php echo ika_asset('images/team/kader.jpg'); ?>" alt="Goombasda Donald Aymard TIENTEGA">
           </div>
           <h3 class="mt-6 text-xl font-black text-ikaBlue">Goombasda Donald Aymard TIENTEGA</h3>
           <p class="mt-1 text-sm font-bold text-ikaRed">Ingénieur Réseaux et système</p>
@@ -65,7 +65,7 @@
 -->
         <article class="reveal group rounded-2xl bg-white p-8 text-center shadow-clean transition hover:-translate-y-2 hover:shadow-premium">
           <div class="mx-auto h-52 w-52 overflow-hidden rounded-2xl border-4 border-ikaSoft bg-ikaSoft shadow-clean">
-            <img class="h-full w-full object-cover" src="<?php echo ika_asset(images/roukiatou.jpg);" alt="Roukiatou OUEDRAOGO">
+            <img class="h-full w-full object-cover" src="<?php echo ika_asset('images/roukiatou.jpg'); ?>" alt="Roukiatou OUEDRAOGO">
           </div>
           <h3 class="mt-6 text-xl font-black text-ikaBlue">Roukiatou OUEDRAOGO</h3>
           <p class="mt-1 text-sm font-bold text-ikaRed">Commerciale</p>
@@ -74,7 +74,7 @@
 
         <article class="reveal group rounded-2xl bg-white p-8 text-center shadow-clean transition hover:-translate-y-2 hover:shadow-premium">
           <div class="mx-auto h-52 w-52 overflow-hidden rounded-2xl border-4 border-ikaSoft bg-ikaSoft shadow-clean">
-            <img class="h-full w-full object-cover" src="<?php echo ika_asset(images/victorine.jpg);" alt="Victorine BAZEMO">
+            <img class="h-full w-full object-cover" src="<?php echo ika_asset('images/victorine.jpg'); ?>" alt="Victorine BAZEMO">
           </div>
           <h3 class="mt-6 text-xl font-black text-ikaBlue">Victorine BAZEMO</h3>
           <p class="mt-1 text-sm font-bold text-ikaRed">Assistante Commerciale</p>
@@ -83,7 +83,7 @@
 
         <article class="reveal group rounded-2xl bg-white p-8 text-center shadow-clean transition hover:-translate-y-2 hover:shadow-premium">
           <div class="mx-auto h-52 w-52 overflow-hidden rounded-2xl border-4 border-ikaSoft bg-ikaSoft shadow-clean">
-            <img class="h-full w-full object-cover" src="<?php echo ika_asset(images/Martin.jpg);" alt="Tegawende Martin Junior YAMEOGO">
+            <img class="h-full w-full object-cover" src="<?php echo ika_asset('images/Martin.jpg'); ?>" alt="Tegawende Martin Junior YAMEOGO">
           </div>
           <h3 class="mt-6 text-xl font-black text-ikaBlue">Tegawende Martin Junior YAMEOGO</h3>
           <p class="mt-1 text-sm font-bold text-ikaRed">Développeur Junior</p>
@@ -92,7 +92,7 @@
 
         <article class="reveal group rounded-2xl bg-white p-8 text-center shadow-clean transition hover:-translate-y-2 hover:shadow-premium">
           <div class="mx-auto h-52 w-52 overflow-hidden rounded-2xl border-4 border-ikaSoft bg-ikaSoft shadow-clean">
-            <img class="h-full w-full object-cover" src="<?php echo ika_asset(images/daouda.jpg);" alt="Daouda DAO">
+            <img class="h-full w-full object-cover" src="<?php echo ika_asset('images/daouda.jpg'); ?>" alt="Daouda DAO">
           </div>
           <h3 class="mt-6 text-xl font-black text-ikaBlue">Daouda DAO</h3>
           <p class="mt-1 text-sm font-bold text-ikaRed">Développeur Front End</p>
@@ -101,7 +101,7 @@
 
         <article class="reveal group rounded-2xl bg-white p-8 text-center shadow-clean transition hover:-translate-y-2 hover:shadow-premium">
           <div class="mx-auto h-52 w-52 overflow-hidden rounded-2xl border-4 border-ikaSoft bg-ikaSoft shadow-clean">
-            <img class="h-full w-full object-cover" src="<?php echo ika_asset(images/landry.jpg);" alt="KABORE Pawendtaore Landry">
+            <img class="h-full w-full object-cover" src="<?php echo ika_asset('images/landry.jpg'); ?>" alt="KABORE Pawendtaore Landry">
           </div>
           <h3 class="mt-6 text-xl font-black text-ikaBlue">KABORE Pawendtaore Landry</h3>
           <p class="mt-1 text-sm font-bold text-ikaRed">Développeur Full-Stack</p>
@@ -110,7 +110,7 @@
 
         <article class="reveal group rounded-2xl bg-white p-8 text-center shadow-clean transition hover:-translate-y-2 hover:shadow-premium">
           <div class="mx-auto h-52 w-52 overflow-hidden rounded-2xl border-4 border-ikaSoft bg-ikaSoft shadow-clean">
-            <img class="h-full w-full object-cover" src="<?php echo ika_asset(images/willi.jpg);" alt="Williams woba">
+            <img class="h-full w-full object-cover" src="<?php echo ika_asset('images/willi.jpg'); ?>" alt="Williams woba">
           </div>
           <h3 class="mt-6 text-xl font-black text-ikaBlue">Williams woba</h3>
           <p class="mt-1 text-sm font-bold text-ikaRed">Technicien , helpdesk</p>
@@ -119,7 +119,7 @@
 
         <article class="reveal group rounded-2xl bg-white p-8 text-center shadow-clean transition hover:-translate-y-2 hover:shadow-premium">
           <div class="mx-auto h-52 w-52 overflow-hidden rounded-2xl border-4 border-ikaSoft bg-ikaSoft shadow-clean">
-            <img class="h-full w-full object-cover" src="<?php echo ika_asset(images/Sandrine.jpg);" alt="Sandrine Tiahoun KINI">
+            <img class="h-full w-full object-cover" src="<?php echo ika_asset('images/Sandrine.jpg'); ?>" alt="Sandrine Tiahoun KINI">
           </div>
           <h3 class="mt-6 text-xl font-black text-ikaBlue">Sandrine Tiahoun KINI</h3>
           <p class="mt-1 text-sm font-bold text-ikaRed">Assistante de Direction</p>
@@ -128,7 +128,7 @@
 <!-- 
         <article class="reveal group rounded-2xl bg-white p-8 text-center shadow-clean transition hover:-translate-y-2 hover:shadow-premium">
           <div class="mx-auto h-52 w-52 overflow-hidden rounded-2xl border-4 border-ikaSoft bg-ikaSoft shadow-clean">
-            <img class="h-full w-full object-cover" src="<?php echo ika_asset(images/Fatoumata.jpg);" alt="Fatoumata KANO">
+            <img class="h-full w-full object-cover" src="<?php echo ika_asset('images/Fatoumata.jpg'); ?>" alt="Fatoumata KANO">
           </div>
           <h3 class="mt-6 text-xl font-black text-ikaBlue">Fatoumata KANO</h3>
           <p class="mt-1 text-sm font-bold text-ikaRed">Assistante Comptable</p>
@@ -138,7 +138,7 @@
 
         <article class="reveal group rounded-2xl bg-white p-8 text-center shadow-clean transition hover:-translate-y-2 hover:shadow-premium">
           <div class="mx-auto h-52 w-52 overflow-hidden rounded-2xl border-4 border-ikaSoft bg-ikaSoft shadow-clean">
-            <img class="h-full w-full object-cover" src="<?php echo ika_asset(images/ami.jpg);" alt="Aminata HEMA">
+            <img class="h-full w-full object-cover" src="<?php echo ika_asset('images/ami.jpg'); ?>" alt="Aminata HEMA">
           </div>
           <h3 class="mt-6 text-xl font-black text-ikaBlue">Aminata HEMA</h3>
           <p class="mt-1 text-sm font-bold text-ikaRed">Comptable</p>
@@ -147,7 +147,7 @@
 <!-- 
         <article class="reveal group rounded-2xl bg-white p-8 text-center shadow-clean transition hover:-translate-y-2 hover:shadow-premium">
           <div class="mx-auto h-52 w-52 overflow-hidden rounded-2xl border-4 border-ikaSoft bg-ikaSoft shadow-clean">
-            <img class="h-full w-full object-cover" src="<?php echo ika_asset(images/Koro.jpg);" alt="Korotimi SANOGO">
+            <img class="h-full w-full object-cover" src="<?php echo ika_asset('images/Koro.jpg'); ?>" alt="Korotimi SANOGO">
           </div>
           <h3 class="mt-6 text-xl font-black text-ikaBlue">Korotimi SANOGO</h3>
           <p class="mt-1 text-sm font-bold text-ikaRed">Comptable</p>
@@ -156,7 +156,7 @@
 -->
         <article class="reveal group rounded-2xl bg-white p-8 text-center shadow-clean transition hover:-translate-y-2 hover:shadow-premium">
           <div class="mx-auto h-52 w-52 overflow-hidden rounded-2xl border-4 border-ikaSoft bg-ikaSoft shadow-clean">
-            <img class="h-full w-full object-cover" src="<?php echo ika_asset(images/Nouriatou.jpg);" alt="Nouriatou OUEDRAOGO">
+            <img class="h-full w-full object-cover" src="<?php echo ika_asset('images/Nouriatou.jpg'); ?>" alt="Nouriatou OUEDRAOGO">
           </div>
           <h3 class="mt-6 text-xl font-black text-ikaBlue">Nouriatou OUEDRAOGO</h3>
           <p class="mt-1 text-sm font-bold text-ikaRed">Gestionnaire de Projet</p>

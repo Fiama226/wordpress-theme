@@ -103,29 +103,16 @@ $use_cases = ika_get_list_meta( $post_id, 'ika_use_cases' );
         <h2 class="mt-4 text-3xl font-black leading-tight sm:text-4xl">Contactez IKA SOLUTION pour une présentation ou un devis.</h2>
         <p class="mt-5 text-base leading-8 text-white/75">Laissez vos coordonnées et décrivez votre besoin. L’équipe IKA SOLUTION pourra vous orienter sur la mise en place, l’adaptation et l’accompagnement de la solution.</p>
       </div>
-      <form class="rounded-[2rem] bg-white p-7 text-ikaInk shadow-premium sm:p-8" action="contact-submit.php" method="post">
-        <input type="hidden" name="type" value="solution">
-        <input type="hidden" name="page" value="<?php echo ika_h( $name ); ?>">
-        <input type="hidden" name="solution" value="<?php echo ika_h( $name ); ?>">
-        <div class="grid gap-4 sm:grid-cols-2">
-          <label class="grid gap-2 text-sm font-bold text-slate-700">Nom
-            <input class="min-h-[3.25rem] rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-ikaBlue" name="nom" type="text" placeholder="Votre nom" required>
-          </label>
-          <label class="grid gap-2 text-sm font-bold text-slate-700">Téléphone
-            <input class="min-h-[3.25rem] rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-ikaBlue" name="telephone" type="tel" placeholder="+226">
-          </label>
+      <?php if ( function_exists( 'wpcf7_contact_form' ) ) : ?>
+        <div class="rounded-[2rem] bg-white p-7 text-ikaInk shadow-premium sm:p-8">
+          <?php echo do_shortcode( '[contact-form-7 id="ika-solution" title="Contact Solution"]' ); ?>
         </div>
-        <label class="mt-5 grid gap-2 text-sm font-bold text-slate-700">Email
-          <input class="min-h-[3.25rem] rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-ikaBlue" name="email" type="email" placeholder="vous@entreprise.com" required>
-        </label>
-        <label class="mt-5 grid gap-2 text-sm font-bold text-slate-700">Solution souhaitée
-          <input class="min-h-[3.25rem] rounded-xl border border-slate-200 bg-ikaSoft px-4 py-3 font-bold text-ikaBlueDark outline-none" name="solution_label" type="text" value="<?php echo ika_h( $name ); ?>" readonly>
-        </label>
-        <label class="mt-5 grid gap-2 text-sm font-bold text-slate-700">Message
-          <textarea class="min-h-32 rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-ikaBlue" name="message" placeholder="Expliquez votre besoin, le nombre d’utilisateurs ou le contexte de votre organisation." required></textarea>
-        </label>
-        <button class="mt-6 rounded-full bg-ikaRed px-7 py-4 text-sm font-extrabold text-white shadow-clean transition hover:bg-red-700" type="submit">Envoyer la demande</button>
-      </form>
+      <?php else : ?>
+        <div class="rounded-[2rem] bg-white p-7 text-ikaInk shadow-premium sm:p-8">
+          <p class="text-center text-sm font-bold text-slate-600">Installez Contact Form 7 pour activer le formulaire de demande.</p>
+          <a href="<?php echo esc_url( home_url( '/#contact' ) ); ?>" class="mt-4 inline-flex justify-center rounded-full bg-ikaRed px-7 py-4 text-sm font-extrabold text-white shadow-clean transition hover:bg-red-700 w-full">Contacter IKA SOLUTION</a>
+        </div>
+      <?php endif; ?>
     </div>
   </section>
 

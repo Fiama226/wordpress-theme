@@ -147,16 +147,16 @@
     ],
   ];
 
-  include 'header.php';
+  get_header();
 ?>
 
   <main>
     <section class="relative overflow-hidden bg-ikaBlueDark pt-36 text-white sm:pt-40">
-      <div class="absolute inset-0 bg-cover bg-center opacity-10" style="background-image:url('<?php echo ika_asset(images/infrastructure.jpg);')" aria-hidden="true"></div>
+      <div class="absolute inset-0 bg-cover bg-center opacity-10" style="background-image:url('<?php echo ika_asset('images/infrastructure.jpg'); ?>')" aria-hidden="true"></div>
       <div class="absolute inset-0 bg-ikaBlueDark/92" aria-hidden="true"></div>
       <div class="relative mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
         <div class="max-w-4xl">
-          <a href="index.php#realisations" class="inline-flex rounded-full border border-white/25 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white hover:text-ikaBlue">Retour à l’accueil</a>
+          <a href="<?php echo esc_url( home_url( '/#realisations' ) ); ?>" class="inline-flex rounded-full border border-white/25 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white hover:text-ikaBlue">Retour à l’accueil</a>
           <p class="mt-8 text-sm font-black uppercase tracking-[0.2em] text-red-200">Réalisations</p>
           <h1 class="mt-5 text-4xl font-black leading-[1.05] tracking-normal sm:text-5xl lg:text-6xl">Des projets métiers, intranets et plateformes livrés pour des organisations exigeantes.</h1>
           <p class="mt-6 max-w-3xl text-lg leading-8 text-white/80 sm:text-xl">IKA SOLUTION accompagne banques, institutions, services publics, plateformes nationales et entreprises dans la digitalisation de leurs processus critiques.</p>
@@ -171,7 +171,7 @@
             <p class="text-sm font-black uppercase tracking-[0.2em] text-ikaRed">Réalisations</p>
             <h2 class="mt-4 text-4xl font-black tracking-normal text-ikaBlueDark sm:text-5xl">Des projets concrets pour des besoins réels.</h2>
           </div>
-          <a href="index.php#contact" class="inline-flex w-fit shrink-0 rounded-full bg-ikaRed px-6 py-3 text-sm font-black text-white shadow-clean transition hover:bg-red-700">Discuter d’un projet</a>
+          <a href="<?php echo esc_url( home_url( '/#contact' ) ); ?>" class="inline-flex w-fit shrink-0 rounded-full bg-ikaRed px-6 py-3 text-sm font-black text-white shadow-clean transition hover:bg-red-700">Discuter d’un projet</a>
         </div>
 
         <div id="filterBar" class="mt-8 flex flex-wrap gap-2">

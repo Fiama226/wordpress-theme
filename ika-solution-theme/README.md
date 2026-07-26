@@ -6,36 +6,74 @@ Ce dossier contient le thème WordPress sur mesure pour **IKA SOLUTION LTD**, co
 
 ## 🚀 Installation du Thème dans WordPress
 
-1. Compressez le dossier `ika-solution-theme` au format `.zip` (ou téléchargez-le directement dans votre répertoire `wp-content/themes/ika-solution-theme`).
-2. Rendez-vous dans votre tableau de bord WordPress : **Apparence > Thèmes > Ajouter nouveau**.
-3. Cliquez sur **Mettre téléverser un thème**, sélectionnez le fichier zip, puis cliquez sur **Installer maintenant**.
-4. Activez le thème **IKA Solution Pro**.
+1. Compressez le dossier `ika-solution-theme` au format `.zip` (ou copiez-le dans `wp-content/themes/ika-solution-theme`).
+2. Dans WordPress : **Apparence > Thèmes > Ajouter nouveau > Installer**.
+3. Activez **IKA Solution Pro**.
+
+> **Pages + contenu créés automatiquement à l'activation :**
+> - Pages : Société, Équipe, Réalisations, Actualités
+> - CPT seed : 4 slides hero, 4 solutions logicielles, 8 expertises, 6 logos clients
 
 ---
 
-## 🛠️ Stack Technique 100% Open Source
+## 🛠️ Stack Technique
 
-- **WordPress Core (GPLv2)** : Moteur de gestion de contenu.
-- **Tailwind CSS (CDN)** : Intégration fidèle du design et des classes d'origine.
-- **Advanced Custom Fields (ACF - Version Gratuite)** : Pour la gestion intuitive des champs personnalisés (textes d'accueil, slogans, images, témoignages, détails d'équipe et de réalisations).
-- **Custom Post Types (CPT)** : Enregistrés nativement dans `functions.php` pour les Réalisations et les Membres de l'Équipe.
+- **WordPress Core (GPLv2)** + **Tailwind CSS (CDN)** + **Meta Boxes natives** (pas de dépendance ACF)
+- **Contact Form 7** recommandé pour les formulaires (shortcode `[contact-form-7 id="ika-solution"]` / `[contact-form-7 id="ika-expertise"]`)
 
 ---
 
-## 📁 Structure des Templates WordPress
+## 📁 Architecture Modulaire
 
-- `style.css` : En-tête du thème et définitions d'animations personnalisées.
-- `functions.php` : Configuration du thème, enqueued scripts/styles, enregistrement des menus et des CPT.
-- `header.php` / `footer.php` : En-tête et pied de page modulaires avec intégration dynamique des logos, menus et widgets.
-- `front-page.php` : Page d'accueil complète (Hero Slider, section Société, Pourquoi nous choisir, Expertises, Logiciels phares avec onglets interactifs, Marquee clients).
-- `page-presentation.php` / `presentation.php` : Page "Société".
-- `page-equipe.php` / `equipe.php` : Page "Équipe".
-- `page-realisations.php` / `realisations.php` : Page "Réalisations".
-- `page-actualites.php` / `actualites.php` : Page "Actualités".
-- Templates de solutions et d'expertises individuelles (`solution-template.php`, `expertise-template.php`, etc.).
+### Template Parts (sections réutilisables)
+
+| Fichier | Section | Source |
+|---------|---------|--------|
+| `template-parts/hero.php` | Accueil hero slider | ika_slide CPT |
+| `template-parts/about.php` | Qui sommes-nous | statique |
+| `template-parts/pourquoi.php` | 4 piliers | statique |
+| `template-parts/expertises.php` | Expertises grid | ika_expertise CPT |
+| `template-parts/solutions.php` | Onglets produits | ika_solution CPT |
+| `template-parts/clients.php` | Marquee logos | ika_client CPT |
+
+### Single Templates (pages dynamiques depuis CPTs)
+
+| Template | CPT | Sections |
+|----------|-----|----------|
+| `single-ika_expertise.php` | ika_expertise | Hero + description + capabilities + process + deliverables + CTA + related |
+| `single-ika_solution.php` | ika_solution | Hero + description + features + use_cases + benefits + CF7 form + related |
+
+> **Pas besoin de stubs !** WordPress route automatiquement vers `single-ika_expertise.php` et `single-ika_solution.php` selon le CPT. Les 17 anciens fichiers stubs (page-developpement-app, expertise-template, etc.) ont été supprimés.
+
+### Page Templates
+
+| Template | Page | Description |
+|----------|------|-------------|
+| `front-page.php` | Accueil | Assemble les 6 template-parts + JS animations |
+| `page-presentation.php` | Société | Vision, mission, valeurs, mot du DG |
+| `page-equipe.php` | Équipe | Fiches membres, valeurs |
+| `page-realisations.php` | Réalisations | Portfolio filtré |
+| `page-actualites.php` | Actualités | Blog articles |
+| `page-detail-actualite.php` | Article | Article individuel |
+
+### CPTs & Meta Fields
+
+| CPT | Slug | Meta Fields |
+|-----|------|-------------|
+| `ika_slide` | — | eyebrow, title, text, primary/secondary buttons, image, metric |
+| `ika_solution` | solutions | eyebrow, image, features (list), benefits (list), use_cases (list) |
+| `ika_expertise` | expertises | image, eyebrow, highlights (list), capabilities (list), process (list), deliverables (list) |
+| `ika_client` | — | image |
+| `ika_realisation` | — | (uses title, editor, thumbnail, excerpt) |
+| `ika_membre` | — | (uses title, editor, thumbnail, excerpt) |
 
 ---
 
-## 💡 Remplissage Initial de la Base de Données
+## 🎨 Animations & Design
 
-À l'activation du thème, les templates utilisent un contenu de repli (fallback) rigoureusement identique aux pages PHP d'origine. Vous pouvez ainsi modifier immédiatement vos textes et images via l'administration WordPress ou les champs ACF configurés.
+- **Hero Slider** : transitions orbit/decompose/parallax + clip-path + blur
+- **Product Tabs** : JS switch instantané
+- **Client Marquee** : CSS `@keyframes marquee` 26s
+- **Scroll Reveal** : IntersectionObserver `.reveal → .visible`
+- **Expertise Cards** : 8 clip-path shapes + hover scale/rotate/saturate
+- **WhatsApp Widget** : pulse animation + tooltip

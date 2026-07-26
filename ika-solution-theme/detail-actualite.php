@@ -2,7 +2,7 @@
   $actualites = [
     'cloud' => [
       'tag' => 'Cloud',
-      'image' => '<?php echo ika_asset(images/slide4.jpg);',
+      'image' => ika_asset('images/slide4.jpg'),
       'title' => 'Pourquoi rapprocher l’hébergement des opérations critiques',
       'intro' => 'L’hébergement local permet aux organisations de gagner en disponibilité, en réactivité et en maîtrise technique.',
       'content' => [
@@ -13,7 +13,7 @@
     ],
     'securite' => [
       'tag' => 'Sécurité',
-      'image' => '<?php echo ika_asset(images/securite.jpg);',
+      'image' => ika_asset('images/securite.jpg'),
       'title' => 'Digitaliser sans fragiliser les accès et les données',
       'intro' => 'La digitalisation doit améliorer la productivité sans exposer les systèmes, les utilisateurs et les données sensibles.',
       'content' => [
@@ -24,7 +24,7 @@
     ],
     'domaine' => [
       'tag' => '.bf',
-      'image' => '<?php echo ika_asset(images/conseil.jpg);',
+      'image' => ika_asset('images/conseil.jpg'),
       'title' => 'Renforcer son identité numérique avec un domaine local',
       'intro' => 'Un nom de domaine local renforce la crédibilité, la proximité et la visibilité numérique d’une organisation.',
       'content' => [
@@ -42,7 +42,7 @@
 
 <main class="bg-ikaSoft pt-36">
   <article class="mx-auto max-w-5xl px-4 pb-20 sm:px-6 lg:px-8">
-    <a href="actualites.php" class="inline-flex rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-black text-ikaBlue transition hover:border-ikaBlue">Retour aux actualités</a>
+    <a href="<?php echo esc_url( home_url( '/actualites' ) ); ?>" class="inline-flex rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-black text-ikaBlue transition hover:border-ikaBlue">Retour aux actualités</a>
 
     <div class="mt-8 overflow-hidden rounded-[2rem] bg-white shadow-premium">
       <img class="h-[320px] w-full object-cover sm:h-[460px]" src="<?= htmlspecialchars($article['image']) ?>" alt="<?= htmlspecialchars($article['title']) ?>">
