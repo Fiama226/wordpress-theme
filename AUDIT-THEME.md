@@ -1,8 +1,15 @@
 # Audit technique — Thème « IKA Solution Pro »
 
-**Date :** 26 juillet 2026
+**Date de l'audit :** 26 juillet 2026
 **Auditeur :** revue de code type agence web, avant mise en production
-**Périmètre :** `ika-solution-theme/` comparé au site statique de référence (racine du dépôt)
+**Périmètre :** `ika-solution-theme/` comparé au site statique de référence
+
+> ## ✅ Statut : corrigé — les 5 phases ont été réalisées
+>
+> Ce rapport documente l'état **initial** du thème. Tous les points bloquants
+> ont depuis été traités (voir `CORRECTIONS.md` pour le détail des travaux).
+>
+> `bash tools/audit-theme.sh` retourne désormais **0 bloquant**.
 
 ---
 

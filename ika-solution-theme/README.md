@@ -1,79 +1,138 @@
-# IKA Solution Pro - Thème WordPress 100% Open Source
+# IKA Solution Pro — thème WordPress
 
-Ce dossier contient le thème WordPress sur mesure pour **IKA SOLUTION LTD**, conçu pour restituer à l'identique (pixel-perfect et animations fluides) le site statique d'origine tout en rendant l'ensemble du contenu administrable via la base de données WordPress.
-
----
-
-## 🚀 Installation du Thème dans WordPress
-
-1. Compressez le dossier `ika-solution-theme` au format `.zip` (ou copiez-le dans `wp-content/themes/ika-solution-theme`).
-2. Dans WordPress : **Apparence > Thèmes > Ajouter nouveau > Installer**.
-3. Activez **IKA Solution Pro**.
-
-> **Pages + contenu créés automatiquement à l'activation :**
-> - Pages : Société, Équipe, Réalisations, Actualités
-> - CPT seed : 4 slides hero, 4 solutions logicielles, 8 expertises, 6 logos clients
+Thème sur mesure pour **IKA SOLUTION LTD**. Il reproduit le site d'origine
+(mise en page et animations) et rend l'ensemble des contenus administrables
+depuis WordPress.
 
 ---
 
-## 🛠️ Stack Technique
+## Installation
 
-- **WordPress Core (GPLv2)** + **Tailwind CSS (CDN)** + **Meta Boxes natives** (pas de dépendance ACF)
-- **Contact Form 7** recommandé pour les formulaires (shortcode `[contact-form-7 id="ika-solution"]` / `[contact-form-7 id="ika-expertise"]`)
+1. **Apparence > Thèmes > Ajouter > Téléverser le thème** → `ika-solution-theme.zip`
+2. Activer **IKA Solution Pro**.
+3. **Réglages > Permaliens > Enregistrer** (rafraîchit les règles de réécriture).
 
----
+À l'activation, le thème crée les pages *Société*, *Équipe*, *Réalisations*,
+*Actualités* et pré-remplit tous les contenus. L'opération est idempotente :
+réactiver le thème ne duplique rien.
 
-## 📁 Architecture Modulaire
-
-### Template Parts (sections réutilisables)
-
-| Fichier | Section | Source |
-|---------|---------|--------|
-| `template-parts/hero.php` | Accueil hero slider | ika_slide CPT |
-| `template-parts/about.php` | Qui sommes-nous | statique |
-| `template-parts/pourquoi.php` | 4 piliers | statique |
-| `template-parts/expertises.php` | Expertises grid | ika_expertise CPT |
-| `template-parts/solutions.php` | Onglets produits | ika_solution CPT |
-| `template-parts/clients.php` | Marquee logos | ika_client CPT |
-
-### Single Templates (pages dynamiques depuis CPTs)
-
-| Template | CPT | Sections |
-|----------|-----|----------|
-| `single-ika_expertise.php` | ika_expertise | Hero + description + capabilities + process + deliverables + CTA + related |
-| `single-ika_solution.php` | ika_solution | Hero + description + features + use_cases + benefits + CF7 form + related |
-
-> **Pas besoin de stubs !** WordPress route automatiquement vers `single-ika_expertise.php` et `single-ika_solution.php` selon le CPT. Les 17 anciens fichiers stubs (page-developpement-app, expertise-template, etc.) ont été supprimés.
-
-### Page Templates
-
-| Template | Page | Description |
-|----------|------|-------------|
-| `front-page.php` | Accueil | Assemble les 6 template-parts + JS animations |
-| `page-presentation.php` | Société | Vision, mission, valeurs, mot du DG |
-| `page-equipe.php` | Équipe | Fiches membres, valeurs |
-| `page-realisations.php` | Réalisations | Portfolio filtré |
-| `page-actualites.php` | Actualités | Blog articles |
-| `page-detail-actualite.php` | Article | Article individuel |
-
-### CPTs & Meta Fields
-
-| CPT | Slug | Meta Fields |
-|-----|------|-------------|
-| `ika_slide` | — | eyebrow, title, text, primary/secondary buttons, image, metric |
-| `ika_solution` | solutions | eyebrow, image, features (list), benefits (list), use_cases (list) |
-| `ika_expertise` | expertises | image, eyebrow, highlights (list), capabilities (list), process (list), deliverables (list) |
-| `ika_client` | — | image |
-| `ika_realisation` | — | (uses title, editor, thumbnail, excerpt) |
-| `ika_membre` | — | (uses title, editor, thumbnail, excerpt) |
+> L'archive contient les images : le site s'affiche complet dès l'activation.
 
 ---
 
-## 🎨 Animations & Design
+## Où modifier chaque contenu
 
-- **Hero Slider** : transitions orbit/decompose/parallax + clip-path + blur
-- **Product Tabs** : JS switch instantané
-- **Client Marquee** : CSS `@keyframes marquee` 26s
-- **Scroll Reveal** : IntersectionObserver `.reveal → .visible`
-- **Expertise Cards** : 8 clip-path shapes + hover scale/rotate/saturate
-- **WhatsApp Widget** : pulse animation + tooltip
+| Contenu | Emplacement dans l'administration |
+|---|---|
+| Slides du hero | **Slides hero** |
+| Expertises | **Expertises** |
+| Solutions logicielles | **Solutions IKA** |
+| Réalisations | **Réalisations** |
+| Équipe | **Membres d'équipe** |
+| Clients | **Clients** |
+| Partenaires | **Partenaires** |
+| Actualités | **Articles** |
+| Adresse, téléphones, email, WhatsApp | **Apparence > Personnaliser > Contenu IKA Solution** |
+| Chiffres clés, textes « Qui sommes-nous », footer | idem |
+| Logo | **Apparence > Personnaliser > Identité du site** |
+| Menus | **Apparence > Menus** (emplacements : header, footer société, footer solutions) |
+
+Les images se référencent par chemin relatif (`images/equipe.jpg`) ou, mieux,
+via l'**image mise en avant** du contenu — qui a la priorité.
+
+---
+
+## Page d'accueil
+
+`front-page.php` assemble les sections dans l'ordre du site d'origine :
+
+```
+hero · société · pourquoi · expertises · bandeau · solutions · réalisations
+hébergement · méthode · actualités · vision · partenaires · clients · contact
+```
+
+Chaque section est un fichier de `template-parts/`. Une section dont le contenu
+est vide (aucune réalisation, aucun partenaire…) ne s'affiche pas.
+
+---
+
+## Formulaire de contact
+
+Le thème embarque un formulaire natif : nonce, validation, honeypot anti-spam
+et envoi par `wp_mail()`. Les messages partent vers l'adresse d'administration
+du site (filtre `ika_contact_recipient` pour la changer).
+
+Pour utiliser **Contact Form 7** ou **WPForms**, renseignez simplement le
+shortcode dans *Personnaliser > Contenu IKA Solution > Section contact* : il
+remplace le formulaire natif.
+
+> Pour un envoi fiable, installez **WP Mail SMTP** et placez les identifiants
+> dans `wp-config.php` — jamais dans un fichier du thème.
+
+---
+
+## Développement
+
+```bash
+cd ika-solution-theme
+npm install
+npm run build:css     # compile assets/css/tailwind.css (minifié)
+npm run watch:css     # recompilation à la volée
+```
+
+Tailwind est **compilé localement** (24 Ko) : pas de CDN, donc pas de FOUC,
+pas de dépendance externe et un site qui fonctionne en intranet.
+
+Après toute modification de classes Tailwind dans les fichiers PHP,
+relancez `npm run build:css`.
+
+### Scripts du dépôt
+
+```bash
+bash tools/audit-theme.sh        # contrôle qualité (sort en erreur si bloquant)
+bash tools/build-theme-zip.sh    # régénère ika-solution-theme.zip
+```
+
+---
+
+## Architecture
+
+```
+ika-solution-theme/
+├── assets/
+│   ├── css/{src.css, tailwind.css}   ← source et build Tailwind
+│   ├── js/theme.js                   ← slider, onglets, filtres, menu, reveal
+│   ├── images/                       ← visuels embarqués
+│   └── pdf/
+├── inc/
+│   ├── customizer.php                ← réglages éditables (ika_opt)
+│   └── contact-form.php              ← traitement du formulaire natif
+├── template-parts/                   ← 14 sections de la page d'accueil
+├── front-page.php                    ← assemblage de la page d'accueil
+├── page-{presentation,equipe,realisations,actualites}.php
+├── single-{ika_solution,ika_expertise}.php
+├── single.php · archive.php · search.php · 404.php · comments.php
+└── functions.php                     ← CPT, meta boxes, seeders, enqueue
+```
+
+### Fonctions utiles
+
+| Fonction | Rôle |
+|---|---|
+| `ika_opt( $cle )` | Valeur du Customizer, avec repli sur le texte d'origine |
+| `ika_asset( $chemin )` | URL d'un fichier de `assets/` |
+| `ika_post_image( $id, $meta )` | Image mise en avant, sinon meta, sinon repli |
+| `ika_page_url( $slug )` | URL d'une page par son slug (jamais de `.php`) |
+| `ika_tel( $cle )` | Numéro nettoyé pour un lien `tel:` |
+
+---
+
+## Notes techniques
+
+- **Sécurité** : `wp_verify_nonce`, `current_user_can` et `sanitize_*` à
+  l'enregistrement des meta ; échappement systématique en sortie.
+- **Accessibilité** : la préférence système *animations réduites* est respectée
+  (défilements et transitions désactivés).
+- **Performance** : images `loading="lazy"`, CSS et JS versionnés par `filemtime`
+  pour un cache correct.
+- **Traduction** : chaînes internationalisées avec le domaine `ika-solution`.

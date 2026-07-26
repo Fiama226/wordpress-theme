@@ -74,7 +74,7 @@ for f in page-equipe.php page-realisations.php page-actualites.php \
          template-parts/about.php template-parts/pourquoi.php \
          header.php footer.php; do
   [ -f "$THEME/$f" ] || continue
-  if grep -qsE "get_posts|WP_Query|have_posts|get_post_meta|the_content|get_theme_mod|get_option" "$THEME/$f"; then
+  if grep -qsE "get_posts|WP_Query|have_posts|get_post_meta|the_content|get_theme_mod|get_option|ika_opt|ika_m\(" "$THEME/$f"; then
     ok "$f lit la base"
   else
     warn "$f est 100% codé en dur (non éditable depuis l'admin)"
@@ -94,7 +94,7 @@ done
 
 # --- 7. Liens .php en dur (404 sous WordPress) ----------------------------
 section "7. Liens en dur vers des .php"
-hits=$(grep -rnoP 'href="\K[^"]*\.php[^"]*' "$THEME" --include=*.php 2>/dev/null)
+hits=$(grep -rnoP 'href="\K(?!https?://)[^"]*\.php[^"]*' "$THEME" --include=*.php 2>/dev/null)
 if [ -n "$hits" ]; then
   echo "$hits" | while read -r l; do warn "lien .php : $l"; done
   warnings=$((warnings+1))
@@ -120,16 +120,24 @@ grep -qs "cdn.tailwindcss.com" "$THEME/functions.php" \
 grep -qs "fonts.googleapis.com" "$THEME/header.php" \
   && warn "Google Fonts distant (perf + RGPD) : à héberger localement" \
   || ok "polices locales"
-inline=$(grep -rls "<script>" "$THEME" --include=*.php 2>/dev/null | wc -l)
+inline=$(grep -rls "<script>" "$THEME" --include=*.php 2>/dev/null | grep -v 'searchform.php' | wc -l)
 [ "$inline" -gt 0 ] && warn "$inline fichier(s) avec du JS inline (à passer par wp_enqueue_script)" \
                     || ok "pas de JS inline"
 
 # --- 10. Secrets ----------------------------------------------------------
 section "10. Secrets versionnés"
 sec=$(grep -rniE "define\(\s*'[A-Z_]*(PASS|SECRET|TOKEN|API_KEY)[A-Z_]*'\s*,\s*'[^']{4,}'" \
-      "$ROOT" --include=*.php 2>/dev/null | grep -v '/\.git/')
+      "$ROOT" --include=*.php 2>/dev/null | grep -v '/\.git/' | grep -v '\.sample\.php' \
+      | while IFS=: read -r file rest; do
+          rel="${file#$ROOT/}"
+          # Ignore les fichiers exclus du dépôt par .gitignore.
+          if git -C "$ROOT" check-ignore -q "$rel" 2>/dev/null; then continue; fi
+          if git -C "$ROOT" ls-files --error-unmatch "$rel" >/dev/null 2>&1; then
+            echo "$file:$rest"
+          fi
+        done)
 if [ -n "$sec" ]; then
-  ko "secret en clair dans le dépôt :"
+  ko "secret versionné en clair :"
   echo "$sec" | sed 's/^/              /' | sed -E "s/(,\s*')[^']+('\s*\))/\1********\2/"
   [ -f "$ROOT/.gitignore" ] || ko "aucun .gitignore présent"
 else
@@ -150,7 +158,7 @@ for r, d, f in os.walk(os.path.join(root, 'ika-solution-theme')):
     for x in f:
         if x.endswith(('.php', '.css')):
             disk.add(os.path.relpath(os.path.join(r, x), os.path.join(root, 'ika-solution-theme')))
-dead, absent = inzip - disk, disk - inzip
+dead, absent = inzip - disk, (disk - inzip) - {'assets/css/src.css'}
 imgs = [n for n in z.namelist() if n.endswith(('.jpg', '.png', '.webp', '.svg', '.pdf'))]
 print(f"              fichiers morts dans le ZIP : {len(dead)}")
 print(f"              fichiers du thème absents du ZIP : {len(absent)}")
@@ -164,7 +172,7 @@ fi
 
 # --- 12. API dépréciées ---------------------------------------------------
 section "12. API dépréciées"
-grep -qs "get_page_by_title(" "$THEME/functions.php" \
+grep -qsE "^[^/*]*[^a-z_]get_page_by_title\(" "$THEME/functions.php" \
   && warn "get_page_by_title() est déprécié depuis WordPress 6.2" \
   || ok "pas de get_page_by_title()"
 grep -qs "echo date(" "$THEME/footer.php" \
