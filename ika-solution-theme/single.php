@@ -1,29 +1,46 @@
 <?php
 /**
- * The template for displaying single posts (news/articles)
+ * The template for displaying single posts (news/articles).
+ * Le rendu reprend la page détail du site statique avec image, chapeau et contenu.
  */
 get_header();
 ?>
-<main class="pt-32 pb-20">
-  <div class="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+<main class="bg-ikaSoft pt-36">
+  <article class="mx-auto max-w-5xl px-4 pb-20 sm:px-6 lg:px-8">
+    <a href="<?php echo esc_url( ika_page_url( 'actualites' ) ); ?>" class="inline-flex rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-black text-ikaBlue transition hover:border-ikaBlue"><?php esc_html_e( 'Retour aux actualités', 'ika-solution' ); ?></a>
+
     <?php while ( have_posts() ) : the_post(); ?>
-      <article>
-        <div class="mb-6 flex items-center gap-3 text-sm font-semibold text-ikaRed">
-          <span><?php echo get_the_date(); ?></span>
-          <span>•</span>
-          <span><?php the_category(', '); ?></span>
-        </div>
-        <h1 class="text-4xl font-black text-ikaBlueDark sm:text-5xl mb-8"><?php the_title(); ?></h1>
-        <?php if ( has_post_thumbnail() ) : ?>
-          <div class="mb-10 overflow-hidden rounded-3xl h-[420px] shadow-premium">
-            <?php the_post_thumbnail( 'full', array( 'class' => 'h-full w-full object-cover' ) ); ?>
+      <?php
+      $ika_cats  = get_the_category();
+      $ika_tag   = $ika_cats ? $ika_cats[0]->name : '';
+      $ika_intro = get_post_meta( get_the_ID(), '_ika_static_intro', true );
+      if ( ! $ika_intro ) {
+          $ika_intro = get_the_excerpt();
+      }
+      ?>
+      <div class="mt-8 overflow-hidden rounded-[2rem] bg-white shadow-premium">
+        <img class="h-[320px] w-full object-cover sm:h-[460px]" src="<?php echo esc_url( ika_post_image( get_the_ID(), 'ika_post_image', 'images/slide4.jpg' ) ); ?>" alt="<?php the_title_attribute(); ?>" loading="lazy">
+        <div class="p-7 sm:p-10">
+          <?php if ( $ika_tag ) : ?>
+          <span class="rounded-full bg-ikaRed px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-white"><?php echo esc_html( $ika_tag ); ?></span>
+          <?php endif; ?>
+          <h1 class="mt-6 text-4xl font-black leading-tight text-ikaBlueDark sm:text-5xl"><?php the_title(); ?></h1>
+          <?php if ( $ika_intro ) : ?>
+          <p class="mt-5 text-lg leading-8 text-slate-600"><?php echo esc_html( wp_strip_all_tags( $ika_intro ) ); ?></p>
+          <?php endif; ?>
+
+          <div class="mt-10 grid gap-5 text-base leading-8 text-slate-700">
+            <?php the_content(); ?>
           </div>
-        <?php endif; ?>
-        <div class="text-slate-700 leading-8 space-y-6 text-lg">
-          <?php the_content(); ?>
         </div>
-      </article>
+      </div>
+
+      <?php if ( comments_open() || get_comments_number() ) : ?>
+      <section class="mt-10 rounded-[2rem] bg-white p-7 shadow-clean sm:p-8">
+        <?php comments_template(); ?>
+      </section>
+      <?php endif; ?>
     <?php endwhile; ?>
-  </div>
+  </article>
 </main>
 <?php get_footer(); ?>

@@ -21,8 +21,10 @@
           $ika_query = new WP_Query(
             array(
               'post_type'      => 'post',
-              'posts_per_page' => 12,
-              'post_status'    => 'publish',
+              'posts_per_page'      => 12,
+              'post_status'         => 'publish',
+              'orderby'             => array( 'menu_order' => 'ASC', 'date' => 'DESC' ),
+              'ignore_sticky_posts' => true,
             )
           );
           if ( $ika_query->have_posts() ) :

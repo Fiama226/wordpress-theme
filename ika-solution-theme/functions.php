@@ -8,6 +8,11 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 
+// Version des données de démonstration importées depuis le site statique.
+if ( ! defined( 'IKA_SOLUTION_SEED_VERSION' ) ) {
+    define( 'IKA_SOLUTION_SEED_VERSION', '2026-07-27-static-v3' );
+}
+
 /**
  * Theme Setup
  */
@@ -282,13 +287,11 @@ function ika_slide_url( $url ) {
 }
 
 /**
- * Create the theme's default pages on activation.
+ * Create / repair the theme's default pages.
  *
- * Pages created (only if they don't already exist):
- *  - Société       -> page-presentation.php
- *  - Équipe        -> page-equipe.php
- *  - Réalisations  -> page-realisations.php
- *  - Actualités    -> page-actualites.php
+ * Les pages du site statique sont recréées automatiquement et reliées au bon
+ * template. Si une page existe déjà mais n'a pas le bon modèle, elle est
+ * corrigée afin que l'activation du thème affiche immédiatement le site attendu.
  */
 function ika_solution_create_default_pages() {
     $default_pages = array(
@@ -311,27 +314,45 @@ function ika_solution_create_default_pages() {
     );
 
     foreach ( $default_pages as $title => $args ) {
-        if ( ika_solution_page_exists( $title ) ) {
-            continue;
+        $page_id = ika_solution_find_page_id( $args['slug'], $title );
+
+        if ( $page_id ) {
+            wp_update_post( array(
+                'ID'          => $page_id,
+                'post_title'  => $title,
+                'post_name'   => $args['slug'],
+                'post_status' => 'publish',
+            ) );
+        } else {
+            $page_id = wp_insert_post( array(
+                'post_title'   => $title,
+                'post_name'    => $args['slug'],
+                'post_content' => '',
+                'post_status'  => 'publish',
+                'post_type'    => 'page',
+            ) );
         }
 
-        wp_insert_post( array(
-            'post_title'    => $title,
-            'post_name'     => $args['slug'],
-            'post_content'  => '',
-            'post_status'   => 'publish',
-            'post_type'     => 'page',
-            'page_template' => $args['template'],
-        ) );
+        if ( $page_id && ! is_wp_error( $page_id ) ) {
+            update_post_meta( $page_id, '_wp_page_template', $args['template'] );
+        }
     }
 }
 add_action( 'after_switch_theme', 'ika_solution_create_default_pages' );
 
 /**
- * Helper: check whether a published page with the given title already exists.
+ * Helper: find a page by slug first, then by title.
  */
-function ika_solution_page_exists( $title ) {
-    // get_page_by_title() est dépréciée depuis WordPress 6.2.
+function ika_solution_find_page_id( $slug, $title = '' ) {
+    $page = get_page_by_path( $slug, OBJECT, 'page' );
+    if ( $page ) {
+        return (int) $page->ID;
+    }
+
+    if ( '' === $title ) {
+        return 0;
+    }
+
     $query = new WP_Query( array(
         'post_type'              => 'page',
         'title'                  => $title,
@@ -343,7 +364,14 @@ function ika_solution_page_exists( $title ) {
         'update_post_term_cache' => false,
     ) );
 
-    return ! empty( $query->posts );
+    return ! empty( $query->posts ) ? (int) $query->posts[0] : 0;
+}
+
+/**
+ * Helper: check whether a published page with the given title already exists.
+ */
+function ika_solution_page_exists( $title ) {
+    return (bool) ika_solution_find_page_id( sanitize_title( $title ), $title );
 }
 
 /**
@@ -585,6 +613,51 @@ function ika_solution_cpt_exists( $post_type, $slug ) {
     return $query->have_posts();
 }
 
+
+/**
+ * Helper: retourne l'identifiant d'un contenu par slug et type.
+ */
+function ika_solution_get_post_id_by_slug( $post_type, $slug ) {
+    $post = get_page_by_path( $slug, OBJECT, $post_type );
+    return $post ? (int) $post->ID : 0;
+}
+
+/**
+ * Helper: met à jour un champ standard uniquement s'il est vide.
+ * Ainsi le thème répare les données manquantes sans écraser les modifications
+ * faites ensuite dans l'administration.
+ */
+function ika_solution_update_post_field_if_empty( $post_id, $field, $value ) {
+    if ( '' === (string) $value ) {
+        return;
+    }
+
+    $post = get_post( $post_id );
+    if ( ! $post || ! property_exists( $post, $field ) ) {
+        return;
+    }
+
+    if ( '' !== trim( (string) $post->{$field} ) ) {
+        return;
+    }
+
+    wp_update_post( array(
+        'ID'   => $post_id,
+        $field => $value,
+    ) );
+}
+
+/**
+ * Helper: met à jour une meta uniquement si elle est absente/vide.
+ */
+function ika_solution_update_meta_if_empty( $post_id, $key, $value ) {
+    $current        = get_post_meta( $post_id, $key, true );
+    $is_empty_array = is_array( $current ) && empty( $current );
+    if ( '' === $current || null === $current || $is_empty_array ) {
+        update_post_meta( $post_id, $key, $value );
+    }
+}
+
 /**
  * Seed the editable content from the previously hard-coded theme data.
  * Idempotent: it only creates items that do not already exist.
@@ -668,26 +741,31 @@ function ika_seed_solutions() {
     );
 
     foreach ( $solutions as $slug => $data ) {
-        if ( ika_solution_cpt_exists( 'ika_solution', $slug ) ) {
-            continue;
+        $id = ika_solution_get_post_id_by_slug( 'ika_solution', $slug );
+
+        if ( ! $id ) {
+            $id = wp_insert_post( array(
+                'post_type'    => 'ika_solution',
+                'post_name'    => $slug,
+                'post_title'   => $data['title'],
+                'post_excerpt' => $data['intro'],
+                'post_content' => $data['description'],
+                'post_status'  => 'publish',
+            ) );
+        } else {
+            ika_solution_update_post_field_if_empty( $id, 'post_excerpt', $data['intro'] );
+            ika_solution_update_post_field_if_empty( $id, 'post_content', $data['description'] );
         }
-        $id = wp_insert_post( array(
-            'post_type'    => 'ika_solution',
-            'post_name'    => $slug,
-            'post_title'   => $data['title'],
-            'post_excerpt' => $data['intro'],
-            'post_content' => $data['description'],
-            'post_status'  => 'publish',
-        ) );
-        if ( $id ) {
-            update_post_meta( $id, 'ika_eyebrow', $data['eyebrow'] );
-            update_post_meta( $id, 'ika_image', $data['image'] );
-            update_post_meta( $id, 'ika_features', $data['features'] );
+
+        if ( $id && ! is_wp_error( $id ) ) {
+            ika_solution_update_meta_if_empty( $id, 'ika_eyebrow', $data['eyebrow'] );
+            ika_solution_update_meta_if_empty( $id, 'ika_image', $data['image'] );
+            ika_solution_update_meta_if_empty( $id, 'ika_features', $data['features'] );
             if ( isset( $brochures[ $slug ] ) ) {
-                update_post_meta( $id, 'ika_brochure', $brochures[ $slug ] );
+                ika_solution_update_meta_if_empty( $id, 'ika_brochure', $brochures[ $slug ] );
             }
-            update_post_meta( $id, 'ika_benefits', $data['benefits'] );
-            update_post_meta( $id, 'ika_use_cases', $data['use_cases'] );
+            ika_solution_update_meta_if_empty( $id, 'ika_benefits', $data['benefits'] );
+            ika_solution_update_meta_if_empty( $id, 'ika_use_cases', $data['use_cases'] );
         }
     }
 }
@@ -844,25 +922,34 @@ function ika_seed_expertises() {
     $order = 0;
     foreach ( $expertises as $slug => $data ) {
         $order++;
-        if ( ika_solution_cpt_exists( 'ika_expertise', $slug ) ) {
-            continue;
+        $id = ika_solution_get_post_id_by_slug( 'ika_expertise', $slug );
+
+        if ( ! $id ) {
+            $id = wp_insert_post( array(
+                'post_type'    => 'ika_expertise',
+                'post_name'    => $slug,
+                'post_title'   => $data['title'],
+                'post_content' => $data['description'],
+                'post_excerpt' => $data['desc'],
+                'menu_order'   => $order,
+                'post_status'  => 'publish',
+            ) );
+        } else {
+            wp_update_post( array(
+                'ID'         => $id,
+                'menu_order' => $order,
+            ) );
+            ika_solution_update_post_field_if_empty( $id, 'post_excerpt', $data['desc'] );
+            ika_solution_update_post_field_if_empty( $id, 'post_content', $data['description'] );
         }
-        $id = wp_insert_post( array(
-            'post_type'    => 'ika_expertise',
-            'post_name'    => $slug,
-            'post_title'   => $data['title'],
-            'post_content' => $data['description'],
-            'post_excerpt' => $data['desc'],
-            'menu_order'   => $order,
-            'post_status'  => 'publish',
-        ) );
-        if ( $id ) {
-            update_post_meta( $id, 'ika_expertise_image', $data['image'] );
-            update_post_meta( $id, 'ika_expertise_eyebrow', $data['eyebrow'] );
-            update_post_meta( $id, 'ika_expertise_highlights', $data['highlights'] );
-            update_post_meta( $id, 'ika_expertise_capabilities', $data['capabilities'] );
-            update_post_meta( $id, 'ika_expertise_process', $data['process'] );
-            update_post_meta( $id, 'ika_expertise_deliverables', $data['deliverables'] );
+
+        if ( $id && ! is_wp_error( $id ) ) {
+            ika_solution_update_meta_if_empty( $id, 'ika_expertise_image', $data['image'] );
+            ika_solution_update_meta_if_empty( $id, 'ika_expertise_eyebrow', $data['eyebrow'] );
+            ika_solution_update_meta_if_empty( $id, 'ika_expertise_highlights', $data['highlights'] );
+            ika_solution_update_meta_if_empty( $id, 'ika_expertise_capabilities', $data['capabilities'] );
+            ika_solution_update_meta_if_empty( $id, 'ika_expertise_process', $data['process'] );
+            ika_solution_update_meta_if_empty( $id, 'ika_expertise_deliverables', $data['deliverables'] );
         }
     }
 }
@@ -877,17 +964,19 @@ function ika_seed_clients() {
         'sonabhy'  => array( 'title' => 'SONABHY', 'image' => 'images/clients/sonabhy.png' ),
     );
     foreach ( $clients as $slug => $data ) {
-        if ( ika_solution_cpt_exists( 'ika_client', $slug ) ) {
-            continue;
+        $id = ika_solution_get_post_id_by_slug( 'ika_client', $slug );
+
+        if ( ! $id ) {
+            $id = wp_insert_post( array(
+                'post_type'   => 'ika_client',
+                'post_name'   => $slug,
+                'post_title'  => $data['title'],
+                'post_status' => 'publish',
+            ) );
         }
-        $id = wp_insert_post( array(
-            'post_type'   => 'ika_client',
-            'post_name'   => $slug,
-            'post_title'  => $data['title'],
-            'post_status' => 'publish',
-        ) );
-        if ( $id ) {
-            update_post_meta( $id, 'ika_client_image', $data['image'] );
+
+        if ( $id && ! is_wp_error( $id ) ) {
+            ika_solution_update_meta_if_empty( $id, 'ika_client_image', $data['image'] );
         }
     }
 }
@@ -934,22 +1023,29 @@ function ika_seed_slides() {
     $order = 0;
     foreach ( $slides as $slug => $data ) {
         $order++;
-        if ( ika_solution_cpt_exists( 'ika_slide', $slug ) ) {
-            continue;
+        $id = ika_solution_get_post_id_by_slug( 'ika_slide', $slug );
+
+        if ( ! $id ) {
+            $id = wp_insert_post( array(
+                'post_type'   => 'ika_slide',
+                'post_name'   => $slug,
+                'post_title'  => $data['title'],
+                'menu_order'  => $order,
+                'post_status' => 'publish',
+            ) );
+        } else {
+            wp_update_post( array(
+                'ID'         => $id,
+                'menu_order' => $order,
+            ) );
         }
-        $id = wp_insert_post( array(
-            'post_type'   => 'ika_slide',
-            'post_name'   => $slug,
-            'post_title'  => $data['title'],
-            'menu_order'  => $order,
-            'post_status' => 'publish',
-        ) );
-        if ( $id ) {
+
+        if ( $id && ! is_wp_error( $id ) ) {
             foreach ( $data as $k => $v ) {
                 if ( in_array( $k, array( 'title' ), true ) ) {
                     continue;
                 }
-                update_post_meta( $id, 'ika_slide_' . $k, $v );
+                ika_solution_update_meta_if_empty( $id, 'ika_slide_' . $k, $v );
             }
         }
     }
@@ -957,38 +1053,112 @@ function ika_seed_slides() {
 
 
 /**
+ * Données par défaut : membres de l'équipe (identiques au site statique).
+ */
+function ika_get_default_membres() {
+    return array(
+        'yaya-ouattara' => array(
+            'name'  => 'Yaya OUATTARA',
+            'role'  => 'Directeur Général',
+            'image' => 'images/yaya.jpg',
+            'bio'   => "Définit la vision stratégique de l'entreprise et accompagne les clients dans la transformation de leurs enjeux digitaux.",
+        ),
+        'serge-gedeon-oue' => array(
+            'name'  => 'SERGE GEDEON OUE',
+            'role'  => 'Développeur Full-Stack',
+            'image' => 'images/Serge.jpg',
+            'bio'   => 'Conçoit et développe des solutions web et mobiles sur mesure, garantissant des architectures robustes et des expériences fluides.',
+        ),
+        'roukiatou-ouedraogo' => array(
+            'name'  => 'Roukiatou OUEDRAOGO',
+            'role'  => 'Commerciale',
+            'image' => 'images/roukiatou.jpg',
+            'bio'   => "Identifie les besoins des clients, propose nos solutions d'hébergement et d'infrastructures cloud, et fidélise le portefeuille.",
+        ),
+        'victorine-bazemo' => array(
+            'name'  => 'Victorine BAZEMO',
+            'role'  => 'Assistante Commerciale',
+            'image' => 'images/victorine.jpg',
+            'bio'   => "Accompagne l'équipe dans le suivi des prospects, la rédaction des propositions et assure une relation client de qualité.",
+        ),
+        'martin-yameogo' => array(
+            'name'  => 'Tegawende Martin Junior YAMEOGO',
+            'role'  => 'Développeur Junior',
+            'image' => 'images/Martin.jpg',
+            'bio'   => "Participe au développement des interfaces et fonctionnalités web, tout en assurant la maintenance et l'optimisation de nos applications.",
+        ),
+        'daouda-dao' => array(
+            'name'  => 'Daouda DAO',
+            'role'  => 'Développeur Front End',
+            'image' => 'images/daouda.jpg',
+            'bio'   => "Transforme les maquettes en interfaces web interactives et responsives, en plaçant l'expérience utilisateur au cœur de son code.",
+        ),
+        'landry-kabore' => array(
+            'name'  => 'KABORE Pawendtaore Landry',
+            'role'  => 'Développeur Full-Stack',
+            'image' => 'images/landry.jpg',
+            'bio'   => "Développe des applications complètes, de la base de données à l'interface, pour répondre aux besoins métiers spécifiques de nos clients.",
+        ),
+        'williams-woba' => array(
+            'name'  => 'Williams woba',
+            'role'  => 'Technicien , helpdesk',
+            'image' => 'images/willi.jpg',
+            'bio'   => 'Premier point de contact pour le support technique, il résout les incidents, assiste les utilisateurs et assure la maintenance du parc.',
+        ),
+        'sandrine-kini' => array(
+            'name'  => 'Sandrine Tiahoun KINI',
+            'role'  => 'Assistante de Direction',
+            'image' => 'images/Sandrine.jpg',
+            'bio'   => "Organise le quotidien de la direction, gère l'administration générale et facilite la communication interne et externe.",
+        ),
+        'aminata-hema' => array(
+            'name'  => 'Aminata HEMA',
+            'role'  => 'Comptable',
+            'image' => 'images/ami.jpg',
+            'bio'   => "Gère la comptabilité générale, établit les états financiers et veille au respect des obligations fiscales et légales de l'entreprise.",
+        ),
+        'nouriatou-ouedraogo' => array(
+            'name'  => 'Nouriatou OUEDRAOGO',
+            'role'  => 'Gestionnaire de Projet',
+            'image' => 'images/Nouriatou.jpg',
+            'bio'   => 'Pilote le planning, coordonne les équipes techniques et veille au respect des délais, du budget et de la qualité des livrables.',
+        ),
+    );
+}
+
+/**
  * Seed : membres de l'équipe (CPT ika_membre).
  */
 function ika_seed_membres() {
-    $membres = array(
-        'yaya-ouattara' => array( 'name' => 'Yaya OUATTARA', 'role' => 'Directeur Général', 'image' => 'images/yaya.jpg' ),
-        'serge-gedeon-oue' => array( 'name' => 'SERGE GEDEON OUE', 'role' => 'Développeur Full-Stack', 'image' => 'images/Serge.jpg' ),
-        'roukiatou-ouedraogo' => array( 'name' => 'Roukiatou OUEDRAOGO', 'role' => 'Commerciale', 'image' => 'images/roukiatou.jpg' ),
-        'victorine-bazemo' => array( 'name' => 'Victorine BAZEMO', 'role' => 'Assistante Commerciale', 'image' => 'images/victorine.jpg' ),
-        'martin-yameogo' => array( 'name' => 'Tegawende Martin Junior YAMEOGO', 'role' => 'Développeur Junior', 'image' => 'images/Martin.jpg' ),
-        'daouda-dao' => array( 'name' => 'Daouda DAO', 'role' => 'Développeur Front End', 'image' => 'images/daouda.jpg' ),
-        'landry-kabore' => array( 'name' => 'KABORE Pawendtaore Landry', 'role' => 'Développeur Full-Stack', 'image' => 'images/landry.jpg' ),
-        'williams-woba' => array( 'name' => 'Williams woba', 'role' => 'Technicien , helpdesk', 'image' => 'images/willi.jpg' ),
-        'sandrine-kini' => array( 'name' => 'Sandrine Tiahoun KINI', 'role' => 'Assistante de Direction', 'image' => 'images/Sandrine.jpg' ),
-        'aminata-hema' => array( 'name' => 'Aminata HEMA', 'role' => 'Comptable', 'image' => 'images/ami.jpg' ),
-        'nouriatou-ouedraogo' => array( 'name' => 'Nouriatou OUEDRAOGO', 'role' => 'Gestionnaire de Projet', 'image' => 'images/Nouriatou.jpg' ),
-    );
-    $order = 0;
+    $membres = ika_get_default_membres();
+    $order   = 0;
+
     foreach ( $membres as $slug => $data ) {
         $order++;
-        if ( ika_solution_cpt_exists( 'ika_membre', $slug ) ) {
-            continue;
+        $id = ika_solution_get_post_id_by_slug( 'ika_membre', $slug );
+
+        if ( ! $id ) {
+            $id = wp_insert_post( array(
+                'post_type'    => 'ika_membre',
+                'post_name'    => $slug,
+                'post_title'   => $data['name'],
+                'post_content' => $data['bio'],
+                'post_excerpt' => $data['bio'],
+                'menu_order'   => $order,
+                'post_status'  => 'publish',
+            ) );
+        } else {
+            wp_update_post( array(
+                'ID'         => $id,
+                'menu_order' => $order,
+            ) );
+            ika_solution_update_post_field_if_empty( $id, 'post_content', $data['bio'] );
+            ika_solution_update_post_field_if_empty( $id, 'post_excerpt', $data['bio'] );
         }
-        $id = wp_insert_post( array(
-            'post_type'   => 'ika_membre',
-            'post_name'   => $slug,
-            'post_title'  => $data['name'],
-            'menu_order'  => $order,
-            'post_status' => 'publish',
-        ) );
-        if ( $id ) {
-            update_post_meta( $id, 'ika_membre_role', $data['role'] );
-            update_post_meta( $id, 'ika_membre_image', $data['image'] );
+
+        if ( $id && ! is_wp_error( $id ) ) {
+            ika_solution_update_meta_if_empty( $id, 'ika_membre_role', $data['role'] );
+            ika_solution_update_meta_if_empty( $id, 'ika_membre_image', $data['image'] );
         }
     }
 }
@@ -1123,24 +1293,33 @@ function ika_seed_realisations() {
     $order = 0;
     foreach ( $realisations as $slug => $data ) {
         $order++;
-        if ( ika_solution_cpt_exists( 'ika_realisation', $slug ) ) {
-            continue;
+        $id = ika_solution_get_post_id_by_slug( 'ika_realisation', $slug );
+
+        if ( ! $id ) {
+            $id = wp_insert_post( array(
+                'post_type'    => 'ika_realisation',
+                'post_name'    => $slug,
+                'post_title'   => $data['title'],
+                'post_excerpt' => $data['excerpt'],
+                'post_content' => $data['excerpt'],
+                'menu_order'   => $order,
+                'post_status'  => 'publish',
+            ) );
+        } else {
+            wp_update_post( array(
+                'ID'         => $id,
+                'menu_order' => $order,
+            ) );
+            ika_solution_update_post_field_if_empty( $id, 'post_excerpt', $data['excerpt'] );
+            ika_solution_update_post_field_if_empty( $id, 'post_content', $data['excerpt'] );
         }
-        $id = wp_insert_post( array(
-            'post_type'    => 'ika_realisation',
-            'post_name'    => $slug,
-            'post_title'   => $data['title'],
-            'post_excerpt' => $data['excerpt'],
-            'post_content' => $data['excerpt'],
-            'menu_order'   => $order,
-            'post_status'  => 'publish',
-        ) );
-        if ( $id ) {
-            update_post_meta( $id, 'ika_realisation_client', $data['client'] );
-            update_post_meta( $id, 'ika_realisation_image', $images[ ( $order - 1 ) % count( $images ) ] );
-            update_post_meta( $id, 'ika_realisation_category', $data['category'] );
-            update_post_meta( $id, 'ika_realisation_type', $data['type'] );
-            update_post_meta( $id, 'ika_realisation_tags', $data['tags'] );
+
+        if ( $id && ! is_wp_error( $id ) ) {
+            ika_solution_update_meta_if_empty( $id, 'ika_realisation_client', $data['client'] );
+            ika_solution_update_meta_if_empty( $id, 'ika_realisation_image', $images[ ( $order - 1 ) % count( $images ) ] );
+            ika_solution_update_meta_if_empty( $id, 'ika_realisation_category', $data['category'] );
+            ika_solution_update_meta_if_empty( $id, 'ika_realisation_type', $data['type'] );
+            ika_solution_update_meta_if_empty( $id, 'ika_realisation_tags', $data['tags'] );
         }
     }
 }
@@ -1160,77 +1339,167 @@ function ika_seed_partenaires() {
     $order = 0;
     foreach ( $partenaires as $slug => $data ) {
         $order++;
-        if ( ika_solution_cpt_exists( 'ika_partenaire', $slug ) ) {
-            continue;
+        $id = ika_solution_get_post_id_by_slug( 'ika_partenaire', $slug );
+
+        if ( ! $id ) {
+            $id = wp_insert_post( array(
+                'post_type'   => 'ika_partenaire',
+                'post_name'   => $slug,
+                'post_title'  => $data['name'],
+                'menu_order'  => $order,
+                'post_status' => 'publish',
+            ) );
+        } else {
+            wp_update_post( array(
+                'ID'         => $id,
+                'menu_order' => $order,
+            ) );
         }
-        $id = wp_insert_post( array(
-            'post_type'   => 'ika_partenaire',
-            'post_name'   => $slug,
-            'post_title'  => $data['name'],
-            'menu_order'  => $order,
-            'post_status' => 'publish',
-        ) );
-        if ( $id ) {
-            update_post_meta( $id, 'ika_partenaire_image', $data['image'] );
-            update_post_meta( $id, 'ika_partenaire_height', $data['height'] );
+
+        if ( $id && ! is_wp_error( $id ) ) {
+            ika_solution_update_meta_if_empty( $id, 'ika_partenaire_image', $data['image'] );
+            ika_solution_update_meta_if_empty( $id, 'ika_partenaire_height', $data['height'] );
         }
     }
 }
 
 /**
- * Seed : actualités (articles WordPress natifs).
+ * Données par défaut : actualités (identiques au site statique).
  */
-function ika_seed_actualites() {
-    $articles = array(
+function ika_get_default_actualites() {
+    return array(
         'pourquoi-rapprocher-hebergement-operations-critiques' => array(
             'title'    => 'Pourquoi rapprocher l’hébergement des opérations critiques',
             'category' => 'Cloud',
             'image'    => 'images/slide4.jpg',
             'excerpt'  => 'Disponibilité, latence, support local et meilleure maîtrise des environnements applicatifs.',
-            'content'  => 'Héberger ses services au plus près de ses utilisateurs change concrètement la qualité de service : la latence baisse, le support devient joignable aux mêmes heures que vos équipes, et les environnements applicatifs restent sous votre maîtrise. Pour les opérations critiques, la proximité de l’hébergement est un facteur de continuité autant qu’un choix technique.',
+            'intro'    => 'L’hébergement local permet aux organisations de gagner en disponibilité, en réactivité et en maîtrise technique.',
+            'content'  => array(
+                'Pour une entreprise, une institution ou une organisation qui utilise des applications métiers au quotidien, l’hébergement n’est pas seulement une question technique. Il influence directement la vitesse d’accès, la continuité de service, la confidentialité des données et la capacité à obtenir une assistance rapide.',
+                'En rapprochant les serveurs des utilisateurs et des équipes de support, les temps de réponse deviennent plus prévisibles. Les incidents peuvent être diagnostiqués plus vite, les sauvegardes sont mieux suivies et les environnements critiques restent sous contrôle.',
+                'IKA SOLUTION accompagne ses clients dans le choix, la configuration et la supervision de solutions d’hébergement adaptées : sites web, applications métiers, VPS, domaines, sauvegardes et support local.',
+            ),
         ),
         'digitaliser-sans-fragiliser-acces-donnees' => array(
             'title'    => 'Digitaliser sans fragiliser les accès et les données',
             'category' => 'Sécurité',
             'image'    => 'images/securite.jpg',
             'excerpt'  => 'Contrôle d’accès, sauvegarde, supervision et continuité de service dès la conception.',
-            'content'  => 'Un projet de digitalisation réussi intègre la sécurité dès la conception : contrôle des accès, sauvegarde testée, supervision des services et plan de continuité. Ajouter ces briques après coup coûte toujours plus cher que de les prévoir dès le cadrage.',
+            'intro'    => 'La digitalisation doit améliorer la productivité sans exposer les systèmes, les utilisateurs et les données sensibles.',
+            'content'  => array(
+                'Chaque nouveau portail, application ou service connecté augmente la surface d’exposition. C’est pourquoi la sécurité doit être intégrée dès la conception du projet, et non ajoutée à la fin.',
+                'Une approche sérieuse combine contrôle d’accès, sauvegarde, journalisation, supervision, formation des utilisateurs et procédures de reprise. Ce socle réduit les risques d’interruption, de perte de données ou d’accès non autorisé.',
+                'IKA SOLUTION aide les organisations à structurer cette protection avec des choix techniques cohérents, des politiques d’accès claires et un accompagnement durable.',
+            ),
         ),
         'renforcer-identite-numerique-domaine-local' => array(
             'title'    => 'Renforcer son identité numérique avec un domaine local',
-            'category' => 'Domaine .bf',
-            'image'    => 'images/conseil2.jpg',
+            'category' => '.bf',
+            'image'    => 'images/conseil.jpg',
             'excerpt'  => 'Nom de domaine, DNS, messagerie et maintenance technique pour une présence crédible.',
-            'content'  => 'Un nom de domaine local ancre votre organisation sur son marché. Au-delà de l’adresse, c’est la configuration DNS, la messagerie professionnelle et la maintenance technique qui construisent une présence numérique crédible et durable.',
+            'intro'    => 'Un nom de domaine local renforce la crédibilité, la proximité et la visibilité numérique d’une organisation.',
+            'content'  => array(
+                'L’identité numérique commence souvent par une adresse claire, stable et reconnue. Un domaine local permet de mieux affirmer son ancrage, de professionnaliser ses adresses email et de centraliser ses services numériques.',
+                'Au-delà de l’achat du domaine, la qualité de la configuration DNS, de la messagerie, des certificats et du suivi technique joue un rôle important dans la fiabilité de la présence en ligne.',
+                'IKA SOLUTION accompagne les organisations dans l’acquisition, la configuration et la maintenance de leurs domaines, avec un support orienté continuité et simplicité d’usage.',
+            ),
         ),
     );
+}
+
+/**
+ * Seed : actualités (articles WordPress natifs).
+ */
+function ika_seed_actualites() {
+    $articles = ika_get_default_actualites();
+    $order    = 0;
+
     foreach ( $articles as $slug => $data ) {
-        if ( get_page_by_path( $slug, OBJECT, 'post' ) ) {
+        $order++;
+        $content = implode( "\n\n", $data['content'] );
+        $id      = ika_solution_get_post_id_by_slug( 'post', $slug );
+
+        if ( ! $id ) {
+            $id = wp_insert_post( array(
+                'post_type'    => 'post',
+                'post_name'    => $slug,
+                'post_title'   => $data['title'],
+                'post_excerpt' => $data['excerpt'],
+                'post_content' => $content,
+                'menu_order'   => $order,
+                'post_status'  => 'publish',
+            ) );
+        } else {
+            wp_update_post( array(
+                'ID'           => $id,
+                'post_title'   => $data['title'],
+                'post_excerpt' => $data['excerpt'],
+                'post_content' => $content,
+                'menu_order'   => $order,
+                'post_status'  => 'publish',
+            ) );
+        }
+
+        if ( ! $id || is_wp_error( $id ) ) {
             continue;
         }
+
         $term = term_exists( $data['category'], 'category' );
         if ( ! $term ) {
             $term = wp_insert_term( $data['category'], 'category' );
         }
-        $id = wp_insert_post( array(
-            'post_type'    => 'post',
-            'post_name'    => $slug,
-            'post_title'   => $data['title'],
-            'post_excerpt' => $data['excerpt'],
-            'post_content' => $data['content'],
-            'post_status'  => 'publish',
-        ) );
-        if ( $id && ! is_wp_error( $term ) ) {
+        if ( ! is_wp_error( $term ) ) {
             wp_set_post_categories( $id, array( (int) $term['term_id'] ) );
-            update_post_meta( $id, 'ika_post_image', $data['image'] );
+        }
+        update_post_meta( $id, 'ika_post_image', $data['image'] );
+        update_post_meta( $id, '_ika_seeded_actualite', 1 );
+        update_post_meta( $id, '_ika_static_intro', $data['intro'] );
+    }
+}
+
+/**
+ * Supprime uniquement les contenus d'exemple livrés par une installation
+ * WordPress vierge afin que le rendu corresponde au site statique dès le départ.
+ */
+function ika_solution_remove_default_wp_sample_content() {
+    $sample_titles = array( 'Hello world!', 'Bonjour tout le monde !' );
+    $query = new WP_Query( array(
+        'post_type'      => 'post',
+        'post_status'    => 'publish',
+        'posts_per_page' => 5,
+        'post_name__in'  => array( 'hello-world', 'bonjour-tout-le-monde' ),
+        'no_found_rows'  => true,
+    ) );
+
+    foreach ( $query->posts as $post ) {
+        if ( in_array( $post->post_title, $sample_titles, true ) ) {
+            $content = wp_strip_all_tags( $post->post_content );
+            if ( false !== stripos( $content, 'Welcome to WordPress' ) || false !== stripos( $content, 'Bienvenue sur WordPress' ) ) {
+                wp_trash_post( $post->ID );
+            }
         }
     }
 }
 
 /**
- * Seed all editable content on theme activation (idempotent).
+ * Détecte si l'installation a besoin d'être (ré)hydratée avec les données du
+ * site statique. Après une hydratation réussie, on ne relance plus ce processus
+ * automatiquement afin de laisser l'administrateur modifier librement le site.
+ */
+function ika_solution_has_seed_gaps() {
+    return get_option( 'ika_solution_seed_version' ) !== IKA_SOLUTION_SEED_VERSION;
+}
+
+/**
+ * Seed all editable content (idempotent).
  */
 function ika_solution_seed_content() {
+    // Assure que les CPT existent avant l'import et le flush, même pendant after_switch_theme.
+    ika_solution_custom_post_types();
+    ika_solution_post_types();
+
+    ika_solution_create_default_pages();
+    ika_solution_remove_default_wp_sample_content();
     ika_seed_solutions();
     ika_seed_expertises();
     ika_seed_clients();
@@ -1239,6 +1508,18 @@ function ika_solution_seed_content() {
     ika_seed_realisations();
     ika_seed_partenaires();
     ika_seed_actualites();
+    update_option( 'ika_solution_seed_version', IKA_SOLUTION_SEED_VERSION, false );
     flush_rewrite_rules();
 }
 add_action( 'after_switch_theme', 'ika_solution_seed_content' );
+
+/**
+ * Auto-réparation : utile si le thème était déjà actif avant cette correction
+ * ou si l'activation précédente a créé des contenus partiels/vides.
+ */
+function ika_solution_ensure_static_site_content() {
+    if ( ika_solution_has_seed_gaps() ) {
+        ika_solution_seed_content();
+    }
+}
+add_action( 'init', 'ika_solution_ensure_static_site_content', 30 );
