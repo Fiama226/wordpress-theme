@@ -4,14 +4,31 @@ Réponse au rapport `AUDIT-THEME.md`. Les 21 actions planifiées ont été réal
 
 **Résultat de `bash tools/audit-theme.sh` :**
 
-| | Avant | Après |
-|---|---:|---:|
-| Bloquants | **13** | **0** |
-| Avertissements | 26 | 2 |
+| | Avant | Après (v1.1.0) | Après (v1.2.0) |
+|---|---:|---:|---:|
+| Bloquants | **13** | **0** | **0** |
+| Avertissements | 26 | 2 | **0** |
 
-Les 2 avertissements restants sont assumés : `page-presentation.php` et
-`template-parts/pourquoi.php` restent en dur (contenu institutionnel très stable,
-modifiable par l'éditeur de page si besoin).
+## Mise à jour v1.2.0 — 100 % éditable
+
+Les 2 derniers avertissements ont été traités : `page-presentation.php`
+(page « Société ») et `template-parts/pourquoi.php` (section « Pourquoi nous
+choisir » de l'accueil) étaient les deux derniers blocs codés en dur. Tous
+leurs textes, images et titres sont désormais pilotés par le **Customizer**
+(`Apparence > Personnaliser > Contenu IKA Solution`), dans de nouvelles
+sections dédiées :
+
+- Accueil — Pourquoi nous choisir
+- Page Société — Introduction
+- Page Société — Notre identité
+- Page Société — Vision, mission, valeurs
+- Page Société — Mot du Directeur Général
+- Page Société — Ce qui nous guide
+
+Comme pour le reste du Customizer, chaque champ a pour valeur par défaut le
+texte exact du site statique d'origine : **tant que rien n'est modifié dans
+l'admin, le rendu est strictement identique**. `bash tools/audit-theme.sh`
+retourne désormais 0 bloquant et 0 avertissement.
 
 ---
 

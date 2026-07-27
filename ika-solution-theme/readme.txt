@@ -4,7 +4,7 @@ Contributors: ikasolution
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Tags: custom-menu, featured-images, translation-ready, full-width-template, custom-logo, threaded-comments
@@ -38,6 +38,8 @@ duplication en cas de réactivation).
 * Réalisations ............ Réalisations
 * Équipe .................. Membres d'équipe
 * Clients / Partenaires ... Clients / Partenaires
+* Coordonnées, chiffres clés, page Société, section « Pourquoi nous
+  choisir » .................. Personnaliser > Contenu IKA Solution
 * Actualités .............. Articles
 * Coordonnées et textes ... Apparence > Personnaliser > Contenu IKA Solution
 
@@ -80,6 +82,14 @@ Contrôler la qualité du thème :        bash tools/audit-theme.sh
 * Suppression de 5 modèles dupliqués et du code mort hérité du site statique.
 * Remplacement de get_page_by_title() (dépréciée) et de date() par wp_date().
 * Respect de la préférence système « animations réduites ».
+
+= 1.2.0 =
+* Le contenu de la page Société (introduction, identité, vision/mission/
+  valeurs, mot du Directeur Général, engagements) et de la section « Pourquoi
+  nous choisir » de l'accueil est désormais éditable depuis le Customizer
+  (`Personnaliser > Contenu IKA Solution`).
+* Plus aucun texte codé en dur dans le thème : `bash tools/audit-theme.sh`
+  retourne 0 bloquant et 0 avertissement.
 
 = 1.0.0 =
 * Version initiale.

@@ -58,6 +58,60 @@ function ika_default_options() {
 
 		// --- Section hébergement ---
 		'ika_hosting_url'    => 'https://ikacloud.bf',
+
+		// --- Page « Société » : hero ---
+		'ika_pres_hero_title' => 'Qui sommes-nous ?',
+		'ika_pres_hero_text1' => 'IKA SOLUTION LTD est une entreprise burkinabè spécialisée dans l’ingénierie informatique, la digitalisation, les réseaux, les logiciels métier, le cloud, les licences et la sécurité des systèmes d’information.',
+		'ika_pres_hero_text2' => 'Depuis 2014, nous aidons les entreprises, institutions et organisations à transformer leurs opérations avec des solutions utiles, fiables et adaptées à leurs réalités métier.',
+		'ika_pres_hero_image' => 'images/equipe.jpg',
+
+		// --- Page « Société » : notre identité ---
+		'ika_pres_identity_eyebrow' => 'Notre identité',
+		'ika_pres_identity_title'   => 'Un partenaire technologique proche, rigoureux et orienté résultat.',
+		'ika_pres_identity_text1'   => 'IKA SOLUTION accompagne les organisations dans la conception, le déploiement et la maintenance de solutions numériques. Notre approche part toujours du besoin métier : comprendre les contraintes, prioriser les impacts, choisir les bons outils, puis assurer un suivi durable.',
+		'ika_pres_identity_text2'   => 'Nos interventions couvrent le conseil IT, le développement d’applications, l’intégration de logiciels, les infrastructures serveurs et réseaux, l’hébergement cloud, la cybersécurité, le support technique et la formation des utilisateurs.',
+
+		// --- Page « Société » : vision, mission, valeurs ---
+		'ika_pres_vision_eyebrow'  => 'Vision, mission et valeurs',
+		'ika_pres_vision_title'    => 'Construire un numérique fiable, utile et durable.',
+		'ika_pres_vision_1_title'  => 'Être une référence régionale de la transformation digitale.',
+		'ika_pres_vision_1_text'   => 'Nous voulons contribuer à un écosystème numérique africain plus solide, plus sécurisé et mieux adapté aux besoins réels des organisations.',
+		'ika_pres_mission_title'   => 'Fournir des solutions qui améliorent le rendement.',
+		'ika_pres_mission_text'    => 'Nous conseillons, développons, intégrons, hébergeons et maintenons des systèmes qui simplifient le travail, renforcent le pilotage et sécurisent les opérations.',
+		'ika_pres_values_title'    => 'Rigueur, confiance, innovation et proximité.',
+		'ika_pres_values_text'     => 'Nous privilégions la qualité d’exécution, la transparence, la sécurité, le respect des engagements et l’accompagnement continu de nos clients.',
+
+		// --- Page « Société » : mot du Directeur Général ---
+		'ika_pres_dg_name'  => 'Yaya OUATTARA',
+		'ika_pres_dg_role'  => 'Directeur Général, IKA SOLUTION LTD',
+		'ika_pres_dg_image' => 'images/yaya.jpg',
+		'ika_pres_dg_text1' => 'Notre ambition est simple : mettre la technologie au service de la performance réelle des organisations. Chez IKA SOLUTION, nous ne considérons pas le numérique comme une fin en soi, mais comme un levier pour gagner en efficacité, en sécurité et en maîtrise opérationnelle.',
+		'ika_pres_dg_text2' => 'Chaque projet que nous conduisons doit répondre à une attente claire : faciliter le travail des équipes, protéger les données, améliorer le suivi des activités et créer de la valeur durable pour nos clients.',
+		'ika_pres_dg_text3' => 'Je remercie nos partenaires, nos clients et nos collaborateurs pour la confiance accordée depuis 2014. Nous continuerons à avancer avec rigueur, proximité et sens du service.',
+
+		// --- Page « Société » : ce qui nous guide ---
+		'ika_pres_guide_eyebrow' => 'Ce qui nous guide',
+		'ika_pres_guide_title'   => 'Des engagements concrets au service de vos projets.',
+		'ika_pres_guide_1_title' => 'Comprendre',
+		'ika_pres_guide_1_text'  => 'Nous analysons le contexte, les objectifs, les risques et les priorités avant toute proposition technique.',
+		'ika_pres_guide_2_title' => 'Concevoir',
+		'ika_pres_guide_2_text'  => 'Nous construisons des solutions évolutives, documentées et adaptées aux usages des équipes.',
+		'ika_pres_guide_3_title' => 'Sécuriser',
+		'ika_pres_guide_3_text'  => 'Nous intégrons la sécurité, les sauvegardes et la traçabilité dès la conception des projets.',
+		'ika_pres_guide_4_title' => 'Accompagner',
+		'ika_pres_guide_4_text'  => 'Nous assurons le support, la formation, la maintenance et l’amélioration continue après livraison.',
+
+		// --- Section « Pourquoi nous choisir » (page d'accueil) ---
+		'ika_why_eyebrow' => 'Pourquoi nous choisir',
+		'ika_why_title'   => 'Une expertise pensée pour optimiser votre rendement.',
+		'ika_why_1_title' => 'Proximité',
+		'ika_why_1_text'  => 'Une équipe disponible à Ouagadougou pour analyser vos besoins, cadrer vos projets et assurer le suivi.',
+		'ika_why_2_title' => 'Fiabilité',
+		'ika_why_2_text'  => 'Des infrastructures sécurisées, des logiciels robustes et des méthodologies éprouvées depuis 2014.',
+		'ika_why_3_title' => 'Réactivité',
+		'ika_why_3_text'  => 'Un support technique à l’écoute et des interventions rapides pour garantir la continuité de vos services.',
+		'ika_why_4_title' => 'Sur-mesure',
+		'ika_why_4_text'  => 'Des solutions adaptées à vos contraintes budgétaires, réglementaires et opérationnelles.',
 	);
 }
 
@@ -154,6 +208,78 @@ function ika_customize_register( $wp_customize ) {
 				'ika_contact_text'  => array( __( 'Texte du bloc contact', 'ika-solution' ), 'textarea' ),
 				'ika_contact_form'  => array( __( 'Shortcode du formulaire (ex : [contact-form-7 id="123"])', 'ika-solution' ), 'text' ),
 				'ika_hosting_url'   => array( __( 'Lien « Découvrir nos offres »', 'ika-solution' ), 'url' ),
+			),
+		),
+		'ika_sec_why'     => array(
+			'title'  => __( 'Accueil — Pourquoi nous choisir', 'ika-solution' ),
+			'fields' => array(
+				'ika_why_eyebrow' => array( __( 'Surtitre', 'ika-solution' ), 'text' ),
+				'ika_why_title'   => array( __( 'Titre', 'ika-solution' ), 'text' ),
+				'ika_why_1_title' => array( __( 'Pilier 1 — titre', 'ika-solution' ), 'text' ),
+				'ika_why_1_text'  => array( __( 'Pilier 1 — texte', 'ika-solution' ), 'textarea' ),
+				'ika_why_2_title' => array( __( 'Pilier 2 — titre', 'ika-solution' ), 'text' ),
+				'ika_why_2_text'  => array( __( 'Pilier 2 — texte', 'ika-solution' ), 'textarea' ),
+				'ika_why_3_title' => array( __( 'Pilier 3 — titre', 'ika-solution' ), 'text' ),
+				'ika_why_3_text'  => array( __( 'Pilier 3 — texte', 'ika-solution' ), 'textarea' ),
+				'ika_why_4_title' => array( __( 'Pilier 4 — titre', 'ika-solution' ), 'text' ),
+				'ika_why_4_text'  => array( __( 'Pilier 4 — texte', 'ika-solution' ), 'textarea' ),
+			),
+		),
+		'ika_sec_pres_hero' => array(
+			'title'  => __( 'Page Société — Introduction', 'ika-solution' ),
+			'fields' => array(
+				'ika_pres_hero_title' => array( __( 'Titre', 'ika-solution' ), 'text' ),
+				'ika_pres_hero_text1' => array( __( 'Paragraphe 1', 'ika-solution' ), 'textarea' ),
+				'ika_pres_hero_text2' => array( __( 'Paragraphe 2', 'ika-solution' ), 'textarea' ),
+				'ika_pres_hero_image' => array( __( 'Image (chemin relatif)', 'ika-solution' ), 'text' ),
+			),
+		),
+		'ika_sec_pres_identity' => array(
+			'title'  => __( 'Page Société — Notre identité', 'ika-solution' ),
+			'fields' => array(
+				'ika_pres_identity_eyebrow' => array( __( 'Surtitre', 'ika-solution' ), 'text' ),
+				'ika_pres_identity_title'   => array( __( 'Titre', 'ika-solution' ), 'text' ),
+				'ika_pres_identity_text1'   => array( __( 'Paragraphe 1', 'ika-solution' ), 'textarea' ),
+				'ika_pres_identity_text2'   => array( __( 'Paragraphe 2', 'ika-solution' ), 'textarea' ),
+			),
+		),
+		'ika_sec_pres_vision' => array(
+			'title'  => __( 'Page Société — Vision, mission, valeurs', 'ika-solution' ),
+			'fields' => array(
+				'ika_pres_vision_eyebrow' => array( __( 'Surtitre', 'ika-solution' ), 'text' ),
+				'ika_pres_vision_title'   => array( __( 'Titre', 'ika-solution' ), 'text' ),
+				'ika_pres_vision_1_title' => array( __( 'Vision — titre', 'ika-solution' ), 'text' ),
+				'ika_pres_vision_1_text'  => array( __( 'Vision — texte', 'ika-solution' ), 'textarea' ),
+				'ika_pres_mission_title'  => array( __( 'Mission — titre', 'ika-solution' ), 'text' ),
+				'ika_pres_mission_text'   => array( __( 'Mission — texte', 'ika-solution' ), 'textarea' ),
+				'ika_pres_values_title'   => array( __( 'Valeurs — titre', 'ika-solution' ), 'text' ),
+				'ika_pres_values_text'    => array( __( 'Valeurs — texte', 'ika-solution' ), 'textarea' ),
+			),
+		),
+		'ika_sec_pres_dg' => array(
+			'title'  => __( 'Page Société — Mot du Directeur Général', 'ika-solution' ),
+			'fields' => array(
+				'ika_pres_dg_name'  => array( __( 'Nom', 'ika-solution' ), 'text' ),
+				'ika_pres_dg_role'  => array( __( 'Fonction', 'ika-solution' ), 'text' ),
+				'ika_pres_dg_image' => array( __( 'Photo (chemin relatif)', 'ika-solution' ), 'text' ),
+				'ika_pres_dg_text1' => array( __( 'Paragraphe 1', 'ika-solution' ), 'textarea' ),
+				'ika_pres_dg_text2' => array( __( 'Paragraphe 2', 'ika-solution' ), 'textarea' ),
+				'ika_pres_dg_text3' => array( __( 'Paragraphe 3', 'ika-solution' ), 'textarea' ),
+			),
+		),
+		'ika_sec_pres_guide' => array(
+			'title'  => __( 'Page Société — Ce qui nous guide', 'ika-solution' ),
+			'fields' => array(
+				'ika_pres_guide_eyebrow' => array( __( 'Surtitre', 'ika-solution' ), 'text' ),
+				'ika_pres_guide_title'   => array( __( 'Titre', 'ika-solution' ), 'text' ),
+				'ika_pres_guide_1_title' => array( __( 'Engagement 1 — titre', 'ika-solution' ), 'text' ),
+				'ika_pres_guide_1_text'  => array( __( 'Engagement 1 — texte', 'ika-solution' ), 'textarea' ),
+				'ika_pres_guide_2_title' => array( __( 'Engagement 2 — titre', 'ika-solution' ), 'text' ),
+				'ika_pres_guide_2_text'  => array( __( 'Engagement 2 — texte', 'ika-solution' ), 'textarea' ),
+				'ika_pres_guide_3_title' => array( __( 'Engagement 3 — titre', 'ika-solution' ), 'text' ),
+				'ika_pres_guide_3_text'  => array( __( 'Engagement 3 — texte', 'ika-solution' ), 'textarea' ),
+				'ika_pres_guide_4_title' => array( __( 'Engagement 4 — titre', 'ika-solution' ), 'text' ),
+				'ika_pres_guide_4_text'  => array( __( 'Engagement 4 — texte', 'ika-solution' ), 'textarea' ),
 			),
 		),
 	);
