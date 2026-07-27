@@ -1,5 +1,7 @@
 <?php /* Template Name: Realisations */ ?>
 <?php
+  get_header();
+
   $typeLabels = array(
     'app'       => __( 'Application web & mobile', 'ika-solution' ),
     'site'      => __( 'Site web', 'ika-solution' ),

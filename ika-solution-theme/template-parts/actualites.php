@@ -9,8 +9,10 @@
 $ika_posts = get_posts(
 	array(
 		'post_type'      => 'post',
-		'posts_per_page' => 3,
-		'post_status'    => 'publish',
+		'posts_per_page'      => 3,
+		'post_status'         => 'publish',
+		'orderby'             => array( 'menu_order' => 'ASC', 'date' => 'DESC' ),
+		'ignore_sticky_posts' => true,
 	)
 );
 
@@ -31,7 +33,7 @@ if ( ! $ika_posts ) {
             $ika_color = ( $i % 2 === 0 ) ? 'bg-ikaBlue' : 'bg-ikaRed';
           ?>
           <article class="reveal flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-clean transition hover:-translate-y-2 hover:shadow-premium">
-            <img class="h-56 w-full object-cover" src="<?php echo esc_url( ika_post_image( $ika_post->ID ) ); ?>" alt="<?php echo esc_attr( get_the_title( $ika_post ) ); ?>" loading="lazy">
+            <img class="h-56 w-full object-cover" src="<?php echo esc_url( ika_post_image( $ika_post->ID, 'ika_post_image' ) ); ?>" alt="<?php echo esc_attr( get_the_title( $ika_post ) ); ?>" loading="lazy">
             <div class="flex flex-1 flex-col p-7">
               <?php if ( $ika_tag ) : ?>
               <span class="w-fit rounded-full <?php echo esc_attr( $ika_color ); ?> px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-white"><?php echo esc_html( $ika_tag ); ?></span>
