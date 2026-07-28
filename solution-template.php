@@ -172,7 +172,11 @@
         <h2 class="mt-4 text-3xl font-black leading-tight sm:text-4xl">Contactez IKA SOLUTION pour une présentation ou un devis.</h2>
         <p class="mt-5 text-base leading-8 text-white/75">Laissez vos coordonnées et décrivez votre besoin. L’équipe IKA SOLUTION pourra vous orienter sur la mise en place, l’adaptation et l’accompagnement de la solution.</p>
       </div>
-      <form class="rounded-[2rem] bg-white p-7 text-ikaInk shadow-premium sm:p-8" action="contact-submit.php" method="post">
+      <form class="relative rounded-[2rem] bg-white p-7 text-ikaInk shadow-premium sm:p-8" action="contact-submit.php" method="post">
+        <input type="hidden" name="form_time" value="<?= htmlspecialchars((string) time(), ENT_QUOTES, 'UTF-8') ?>">
+        <div class="absolute left-[-9999px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+          <label>Ne pas remplir ce champ <input type="text" name="site_web" tabindex="-1" autocomplete="off"></label>
+        </div>
         <input type="hidden" name="type" value="solution">
         <input type="hidden" name="page" value="<?= h($solution['name']) ?>">
         <input type="hidden" name="redirect" value="<?= h($solution['file']) ?>#interesse">

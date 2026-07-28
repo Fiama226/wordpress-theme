@@ -80,6 +80,19 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
   redirect_with_status('error', 'Méthode non autorisée.');
 }
 
+// --- Protection anti-spam (honeypot + délai minimal de soumission) ---
+// Le champ "site_web" est masqué visuellement : seul un robot le remplit.
+if (post_value('site_web') !== '') {
+  // On simule un succès pour ne pas informer le robot du rejet.
+  redirect_with_status('success', 'Votre message a bien été envoyé.');
+}
+
+// Un formulaire humain met plus de 3 secondes à être rempli.
+$formTime = (int) post_value('form_time');
+if ($formTime > 0 && (time() - $formTime) < 3) {
+  redirect_with_status('error', 'Envoi trop rapide. Merci de réessayer.');
+}
+
 $type = clean_line(post_value('type') ?: 'contact');
 $name = clean_line(post_value('nom'));
 $phone = clean_line(post_value('telephone'));

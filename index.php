@@ -639,7 +639,11 @@
               </div>
             </div>
           </div>
-          <form class="reveal grid gap-4 p-6 sm:p-8" action="contact-submit.php" method="post">
+          <form class="relative reveal grid gap-4 p-6 sm:p-8" action="contact-submit.php" method="post">
+        <input type="hidden" name="form_time" value="<?= htmlspecialchars((string) time(), ENT_QUOTES, 'UTF-8') ?>">
+        <div class="absolute left-[-9999px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+          <label>Ne pas remplir ce champ <input type="text" name="site_web" tabindex="-1" autocomplete="off"></label>
+        </div>
             <input type="hidden" name="type" value="contact">
             <input type="hidden" name="page" value="Accueil - Contact">
             <input type="hidden" name="redirect" value="index.php#contact">
