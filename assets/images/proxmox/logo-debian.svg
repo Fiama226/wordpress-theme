@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" role="img" aria-label="Debian GNU/Linux">
+  <rect x="2" y="2" width="196" height="76" rx="14" fill="#f7eef1" stroke="#a80030" stroke-width="2"/>
+  <path d="M46 24a22 22 0 1 0 12 40 18 18 0 1 1-6-38 22 22 0 0 0-6-2z" fill="#a80030"/>
+  <text x="128" y="40" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="22" font-weight="bold" fill="#a80030">Debian</text>
+  <text x="128" y="58" text-anchor="middle" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#8b3050">GNU/Linux</text>
+</svg>

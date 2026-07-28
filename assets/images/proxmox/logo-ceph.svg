@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 90" role="img" aria-label="Ceph">
+  <circle cx="45" cy="45" r="28" fill="none" stroke="#ffffff" stroke-width="4"/>
+  <circle cx="45" cy="45" r="11" fill="#ffffff"/>
+  <circle cx="45" cy="17" r="5.5" fill="#ffffff"/><circle cx="69" cy="59" r="5.5" fill="#ffffff"/><circle cx="21" cy="59" r="5.5" fill="#ffffff"/>
+  <text x="88" y="43" font-family="Helvetica,Arial,sans-serif" font-size="30" font-weight="bold" fill="#ffffff">ceph</text>
+  <text x="89" y="61" font-family="Helvetica,Arial,sans-serif" font-size="10" fill="#cfe3f5">Software-Defined Storage</text>
+</svg>

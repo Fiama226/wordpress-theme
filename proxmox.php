@@ -1,6 +1,6 @@
 <?php
   $pageTitle = 'Proxmox | IKA SOLUTION LTD';
-  $pageDescription = 'Proxmox Virtual Environment et Proxmox Backup Server : virtualisation d\'entreprise open source, KVM, conteneurs LXC, cluster haute disponibilité, stockage défini par logiciel et sauvegarde dédupliquée.';
+  $pageDescription = 'Proxmox Virtual Environment, Backup Server et Mail Gateway : virtualisation d\'entreprise open source, KVM, conteneurs LXC, cluster haute disponibilité, stockage Ceph, sauvegarde dédupliquée et sécurité de la messagerie (anti-spam, antivirus).';
 
   function p($value) {
     return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
@@ -19,7 +19,7 @@
         ],
         [
           'title' => 'Machine virtuelle basée sur le noyau (KVM)',
-          'text' => 'KVM est la technologie de virtualisation Linux leader de l\'industrie pour une virtualisation complète. Ce module de noyau s\'exécute avec des performances quasi natives sur tout matériel x86 compatible (Intel VT-x ou AMD-V). Vous pouvez exécuter Windows et Linux sur des VM dotées d\'un matériel privé virtualisé (carte réseau, disque, carte graphique). Proxmox VE inclut le support KVM depuis 2008.'
+          'text' => 'KVM est la technologie de virtualisation Linux leader de l\'industrie pour une virtualisation complète. Ce module de noyau s\'exécute avec des performances quasi natives sur tout matériel x86 compatible (Intel VT-x ou AMD-V). Vous pouvez exécuter Windows et Linux sur des VM dotées d\'un matériel privé virtualisé (carte réseau, disque, carte graphique). Proxmox VE inclut le support KVM depuis le début du projet, en 2008 (depuis la version 0.9beta2).'
         ],
         [
           'title' => 'Conteneurs Linux (LXC)',
@@ -173,6 +173,153 @@
         ]
       ]
     ]
+  ];
+
+  // --- Proxmox Mail Gateway : onglets de fonctionnalités ---
+  $pmgTabs = [
+    [
+      'id' => 'antispam',
+      'label' => 'Anti-Spam / Antivirus',
+      'icon' => '🛡',
+      'items' => [
+        [
+          'title' => 'Détection de spam et de virus',
+          'text' => 'Proxmox Mail Gateway est un proxy de messagerie qui protège votre serveur de messagerie de toutes les menaces, en mettant l\'accent sur les spams, les virus, les chevaux de Troie et le phishing. Déployé entre votre pare-feu et le serveur de messagerie interne, tout le trafic entrant et sortant est analysé et divers services de filtrage sont appliqués : Postfix Mail Transport Agent (MTA), moteur antivirus ClamAV® et projet Apache SpamAssassin™.'
+        ],
+        [
+          'title' => 'Analyse antivirus',
+          'text' => 'Proxmox Mail Gateway intègre ClamAV à la base de données Google Safe Browsing, pour bloquer les liens malveillants connus en plus des pièces jointes infectées.'
+        ],
+        [
+          'title' => 'ClamAV',
+          'text' => 'ClamAV est un moteur antivirus open source conçu pour détecter les chevaux de Troie, les virus, les logiciels malveillants et autres menaces. Il fournit un démon d\'analyse multithread hautes performances, des utilitaires en ligne de commande pour l\'analyse à la demande et un outil intelligent de mise à jour automatique des signatures.'
+        ],
+        [
+          'title' => 'Détection de spam',
+          'text' => 'Proxmox Mail Gateway utilise une grande variété de tests locaux et réseau pour identifier les signatures de spam : il est donc plus difficile pour les spammeurs de contourner le filtrage. Chaque e-mail est analysé et un score de spam lui est attribué, le système optimisant l\'efficacité des règles en minimisant les faux positifs et les faux négatifs.'
+        ],
+        [
+          'title' => 'Déploiement dans votre réseau',
+          'text' => 'Dans une architecture classique, le trafic SMTP arrive au pare-feu puis est transmis directement à votre serveur de messagerie. Avec Proxmox Mail Gateway, implémenté entre le pare-feu et le serveur de messagerie, tout le trafic SMTP est d\'abord transféré vers la passerelle : les e-mails indésirables sont filtrés, supprimés ou rejetés (filtrage avant la file d\'attente), et seuls les messages légitimes atteignent votre serveur.'
+        ],
+      ],
+    ],
+    [
+      'id' => 'filtrage',
+      'label' => 'Méthodes de filtrage',
+      'icon' => '⚙',
+      'items' => [
+        [
+          'title' => 'Vérification du récepteur',
+          'text' => 'La plupart des messages indésirables sont destinés à des utilisateurs inexistants. Proxmox Mail Gateway détecte ces e-mails au niveau SMTP, avant qu\'ils ne soient transférés sur vos réseaux. Cela réduit le trafic à analyser pour le spam et les virus jusqu\'à 90 % et allège la charge de vos serveurs de messagerie et scanners.'
+        ],
+        [
+          'title' => 'Sender Policy Framework (SPF)',
+          'text' => 'SPF est une norme ouverte pour valider les e-mails et empêcher la falsification de l\'adresse IP de l\'expéditeur. Elle permet à l\'administrateur d\'un domaine de spécifier quels ordinateurs sont autorisés à envoyer des e-mails pour ce domaine, via un enregistrement SPF dans le système de noms de domaine (DNS).'
+        ],
+        [
+          'title' => 'Liste noire basée sur le DNS (DNSBL)',
+          'text' => 'Une DNSBL est un moyen par lequel un site Internet publie une liste d\'adresses IP dans un format facilement interrogeable par des programmes sur Internet. La technologie est construite au-dessus du système de noms de domaine et sert à publier des listes d\'adresses liées au spam.'
+        ],
+        [
+          'title' => 'Liste blanche SMTP',
+          'text' => 'Excluez des expéditeurs du blocage SMTP. Pour empêcher tous les contrôles SMTP (liste grise, vérification du récepteur, SPF et RBL) et accepter les e-mails pour analyse dans le système de règles, vous pouvez ajouter : domaines (expéditeur/destinataire), adresses e-mail (expéditeur/destinataire), expressions régulières, adresses IP et réseaux IP (expéditeur).'
+        ],
+        [
+          'title' => 'Filtre bayésien',
+          'text' => 'Certains mots ont une probabilité plus élevée d\'apparaître dans les spams que dans les e-mails légitimes. Entraîné à reconnaître ces mots, le filtre bayésien vérifie chaque e-mail et ajuste automatiquement les probabilités dans sa base de données — des filtres statistiques formés automatiquement.'
+        ],
+        [
+          'title' => 'Listes noires et listes blanches',
+          'text' => 'Mécanisme de contrôle d\'accès pour accepter, bloquer ou mettre en quarantaine les e-mails des destinataires. Vous ajustez le système de règles en appliquant différents objets : domaines, adresse e-mail, expression régulière, réseau IP, groupe LDAP, etc.'
+        ],
+        [
+          'title' => 'Liste grise (Greylisting)',
+          'text' => 'Votre système rejette temporairement un e-mail d\'un expéditeur qu\'il ne reconnaît pas. Les échecs temporaires étant intégrés aux spécifications RFC, un serveur légitime réessaiera plus tard, contrairement aux spammeurs. La liste grise peut réduire le trafic de messagerie jusqu\'à 50 %. Un e-mail sur liste grise n\'atteint jamais votre serveur, qui n\'enverra donc pas de rapports de non-livraison inutiles aux spammeurs.'
+        ],
+        [
+          'title' => 'SURBL — blocage en temps réel',
+          'text' => 'Les SURBL détectent le spam en fonction des URI présents dans le corps du message (généralement des sites Web). Ils diffèrent des autres listes de blocage en temps réel car ils ne bloquent pas les expéditeurs : ils bloquent les messages dont les hôtes de spam sont mentionnés dans le corps.'
+        ],
+      ],
+    ],
+    [
+      'id' => 'suivi',
+      'label' => 'Suivi & journaux',
+      'icon' => '🔎',
+      'items' => [
+        [
+          'title' => 'Centre de suivi des messages',
+          'text' => 'Le centre innovant de suivi des messages Proxmox suit et résume tous les journaux disponibles. Grâce à l\'interface Web conviviale, l\'administrateur visualise et contrôle le flux d\'e-mails depuis un seul écran.'
+        ],
+        [
+          'title' => 'Performances éprouvées',
+          'text' => 'Le centre de suivi est très rapide et puissant, testé sur des sites Proxmox Mail Gateway traitant plus d\'un million d\'e-mails par jour. Tous les fichiers journaux des 7 derniers jours peuvent être interrogés, les résultats étant résumés par un algorithme intelligent.'
+        ],
+        [
+          'title' => 'Journaux corrélés affichés',
+          'text' => 'Tous les fichiers journaux correspondants sont affichés : arrivée du mail, traitement de filtrage Proxmox avec résultats, file d\'attente interne à votre serveur de messagerie et état de la livraison finale.'
+        ],
+        [
+          'title' => 'Journal en temps réel',
+          'text' => 'Le journal système en temps réel affiche les 100 dernières lignes. La sortie peut être filtrée en sélectionnant les fichiers journaux d\'un service ou en saisissant une chaîne de recherche individuelle.'
+        ],
+      ],
+    ],
+    [
+      'id' => 'cluster',
+      'label' => 'Cluster HA',
+      'icon' => '⛓',
+      'items' => [
+        [
+          'title' => 'Haute disponibilité avec Proxmox HA Cluster',
+          'text' => 'Pour fournir un système de messagerie 100 % sécurisé, le cluster Proxmox High Availability (HA) utilise un schéma de clustering unique au niveau de l\'application, offrant d\'excellentes performances. Configuration rapide en quelques minutes, gestion simple et intuitive : les besoins de maintenance sont réduits. Après des pannes temporaires, les nœuds se réintègrent automatiquement sans aucune interaction de l\'opérateur.'
+        ],
+        [
+          'title' => 'Synchronisation via tunnel VPN',
+          'text' => 'Le cluster Proxmox HA se compose d\'un maître et de plusieurs nœuds (minimum un nœud). Toute la configuration est effectuée sur le maître, puis synchronisée sur tous les nœuds du cluster via un tunnel VPN.'
+        ],
+        [
+          'title' => 'Avantages du cluster Proxmox HA',
+          'text' => 'Gestion de configuration centralisée, stockage de données entièrement redondant, haute disponibilité, haute performance, schéma de clustering unique au niveau de l\'application, configuration en quelques minutes et réintégration automatique des nœuds après une panne temporaire.'
+        ],
+        [
+          'title' => 'Équilibrage de charge avec enregistrements MX',
+          'text' => 'Avec les enregistrements MX, configurez simplement un cluster de messagerie à charge équilibrée : définissez deux enregistrements MX de même priorité et deux passerelles fonctionnelles, chacune avec sa propre adresse IP. Les e-mails sont reçus sur les deux hôtes selon une planification Round-robin (RR) qui alterne entre les systèmes ; si un hôte tombe en panne, l\'autre prend le relais.'
+        ],
+        [
+          'title' => 'Enregistrements PTR recommandés',
+          'text' => 'Il est très utile d\'ajouter des entrées de recherche inversée (enregistrements PTR) pour ces hôtes : de nombreux systèmes de messagerie rejettent aujourd\'hui les e-mails provenant d\'hôtes sans enregistrement PTR valide.'
+        ],
+        [
+          'title' => 'Plusieurs enregistrements d\'adresse',
+          'text' => 'Si vous avez plusieurs domaines, il est possible d\'utiliser un enregistrement MX par domaine et plusieurs enregistrements d\'adresse. Vous ajoutez ainsi un enregistrement DNS MX à tous vos domaines, pointant vers plusieurs adresses IP, ce qui évite d\'ajouter de multiples enregistrements à de nombreux domaines.'
+        ],
+      ],
+    ],
+    [
+      'id' => 'regles',
+      'label' => 'Système de règles',
+      'icon' => '🧩',
+      'items' => [
+        [
+          'title' => 'Système de règles orienté objet',
+          'text' => 'Le système de règles orienté objet vous permet de créer des règles personnalisées pour votre environnement. C\'est un moyen simple mais très puissant de définir des règles de filtrage par utilisateur, domaine, période, type de contenu et action résultante.'
+        ],
+        [
+          'title' => 'Objets de règles',
+          'text' => 'ACTIONS — définit ce qui doit se passer avec l\'e-mail. QUI — qui est l\'expéditeur ou le destinataire ? QUOI — qu\'y a-t-il dans l\'e-mail ? QUAND — à quel moment l\'e-mail est-il reçu par Proxmox Mail Gateway ?'
+        ],
+        [
+          'title' => 'Catégories',
+          'text' => 'Chaque règle comporte cinq catégories : DE, À, QUAND, QUOI et ACTION. Chacune peut contenir plusieurs objets et une direction (entrant, sortant ou les deux).'
+        ],
+        [
+          'title' => 'Du simple au sophistiqué',
+          'text' => 'Les options vont de simples configurations de filtres anti-spam et antivirus à des configurations sophistiquées et hautement personnalisées, bloquant certains types d\'e-mails et générant des notifications.'
+        ],
+      ],
+    ],
   ];
 
   // --- Proxmox Backup Server : onglets de fonctionnalités ---
@@ -329,12 +476,13 @@
         <p class="mt-8 text-sm font-black uppercase tracking-[0.2em] text-red-200">Virtualisation open source d'entreprise</p>
         <h1 class="mt-4 text-5xl font-black leading-tight tracking-normal sm:text-6xl">Proxmox</h1>
         <p class="mt-4 text-2xl font-black leading-tight text-white/90">Calcul, réseau et stockage dans une seule solution.</p>
-        <p class="mt-6 max-w-3xl text-base leading-8 text-white/80">Proxmox Virtual Environment et Proxmox Backup Server : une plate-forme complète, 100 % logicielle et open source, pour virtualiser votre infrastructure, optimiser vos ressources et sécuriser vos données — de la machine virtuelle à la sauvegarde dédupliquée.</p>
+        <p class="mt-6 max-w-3xl text-base leading-8 text-white/80">Proxmox Virtual Environment, Proxmox Backup Server et Proxmox Mail Gateway : une plate-forme complète, 100 % logicielle et open source, pour virtualiser votre infrastructure, optimiser vos ressources, sécuriser vos données et protéger votre messagerie — de la machine virtuelle à la sauvegarde dédupliquée.</p>
         <div class="mt-8 flex flex-wrap gap-3">
           <span class="rounded-full bg-white px-5 py-3 text-sm font-black text-ikaBlue">KVM & LXC</span>
           <span class="rounded-full bg-white px-5 py-3 text-sm font-black text-ikaBlue">Cluster HA</span>
           <span class="rounded-full bg-white px-5 py-3 text-sm font-black text-ikaBlue">Stockage Ceph</span>
           <span class="rounded-full bg-white px-5 py-3 text-sm font-black text-ikaBlue">Backup Server</span>
+          <span class="rounded-full bg-white px-5 py-3 text-sm font-black text-ikaBlue">Mail Gateway</span>
         </div>
         <div class="mt-9 flex flex-wrap gap-4">
           <a href="#proxmox-ve" class="inline-flex rounded-full bg-ikaRed px-7 py-4 text-sm font-extrabold text-white shadow-clean transition hover:bg-red-700">Découvrir Proxmox VE</a>
@@ -369,9 +517,9 @@
           <div class="mt-8">
             <p class="text-xs font-black uppercase tracking-[0.2em] text-slate-400">Technologies intégrées</p>
             <div class="mt-4 flex flex-wrap items-center gap-6">
-              <img class="h-8 w-auto opacity-60 transition hover:opacity-100" src="https://proxmox.com/images/proxmox/logos/debian-logo-100.png" alt="Debian GNU/Linux" loading="lazy">
-              <img class="h-11 w-auto opacity-60 transition hover:opacity-100" src="https://proxmox.com/images/proxmox/logos/kvm-logo-200.png" alt="KVM (Kernel-based Virtual Machine)" loading="lazy">
-              <img class="h-9 w-auto opacity-60 transition hover:opacity-100" src="https://proxmox.com/images/proxmox/logos/lxc-containers-logo-170.png" alt="LXC — Linux Containers" loading="lazy">
+              <img class="h-8 w-auto opacity-60 transition hover:opacity-100" src="assets/images/proxmox/logo-debian.svg" alt="Debian GNU/Linux" loading="lazy">
+              <img class="h-11 w-auto opacity-60 transition hover:opacity-100" src="assets/images/proxmox/logo-kvm.svg" alt="KVM (Kernel-based Virtual Machine)" loading="lazy">
+              <img class="h-9 w-auto opacity-60 transition hover:opacity-100" src="assets/images/proxmox/logo-lxc.svg" alt="LXC — Linux Containers" loading="lazy">
             </div>
           </div>
         </div>
@@ -388,7 +536,7 @@
           <span class="h-3 w-3 rounded-full bg-green-400"></span>
           <span class="ml-3 text-xs font-bold text-slate-500">Proxmox VE — Tableau de bord de l'hôte</span>
         </figcaption>
-        <img class="block w-full" src="https://www.proxmox.com/images/proxmox/screenshots/Proxmox-VE-8-1-Host-Summary-Secure-Boot.png#joomlaImage://local-images/proxmox/screenshots/Proxmox-VE-8-1-Host-Summary-Secure-Boot.png?width=1920&height=1080" alt="Tableau de bord Proxmox Virtual Environment (résumé de l'hôte)" loading="lazy">
+        <img class="block w-full" src="assets/images/Proxmox-VE-7-1-Host-Summary.svg" alt="Tableau de bord Proxmox Virtual Environment (résumé de l'hôte)" loading="lazy">
       </figure>
     </div>
   </section>
@@ -435,7 +583,7 @@
         <div class="grid gap-0 lg:grid-cols-2">
           <div class="p-8 sm:p-12">
             <div class="flex items-center gap-4">
-              <img class="h-12 w-auto" src="https://proxmox.com/images/proxmox/logos/Ceph_logo_stacked_220.png" alt="Ceph" loading="lazy">
+              <img class="h-12 w-auto" src="assets/images/proxmox/logo-ceph.svg" alt="Ceph" loading="lazy">
               <p class="text-sm font-black uppercase tracking-[0.2em] text-red-200">Stockage défini par logiciel</p>
             </div>
             <h2 class="mt-4 text-3xl font-black leading-tight sm:text-4xl">Ceph, intégré nativement à Proxmox VE.</h2>
@@ -461,6 +609,14 @@
                 </div>
               <?php endforeach; ?>
             </div>
+            <div class="mt-8 flex flex-wrap gap-3">
+              <a class="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-black text-ikaBlue transition hover:bg-ikaRed hover:text-white" href="https://pve.proxmox.com/wiki/Deploy_Hyper-Converged_Ceph_Cluster" target="_blank" rel="noopener noreferrer">
+                Déployer un cluster Ceph hyperconvergé <span aria-hidden="true">↗</span>
+              </a>
+              <a class="inline-flex items-center gap-2 rounded-full border border-white/40 px-5 py-3 text-sm font-black text-white transition hover:bg-white hover:text-ikaBlue" href="https://proxmox.com/en/downloads/item/proxmox-ve-ceph-benchmark-2020-09" target="_blank" rel="noopener noreferrer">
+                Benchmark Proxmox VE Ceph <span aria-hidden="true">↗</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -479,7 +635,7 @@
         <h2 class="mt-4 text-4xl font-black leading-tight sm:text-5xl">Solution de sauvegarde d'entreprise open source.</h2>
         <div class="mt-6 space-y-4 text-base leading-8 text-white/85">
           <p>Proxmox Backup Server est une solution de sauvegarde d'entreprise pour la sauvegarde et la restauration de machines virtuelles, de conteneurs et d'hôtes physiques. Grâce aux sauvegardes incrémentielles entièrement dédupliquées, il réduit considérablement la charge du réseau et économise un espace de stockage précieux.</p>
-          <p>Avec un cryptage fort et des méthodes garantissant l'intégrité des données, vous sauvegardez en toute sécurité, même sur des cibles qui ne sont pas entièrement fiables. Dans les centres de données modernes, un logiciel de sauvegarde fiable fait partie des composants d'infrastructure les plus essentiels.</p>
+          <p>Avec un cryptage fort et des méthodes garantissant l'intégrité des données, vous sauvegardez en toute sécurité, même sur des cibles qui ne sont pas entièrement fiables — par exemple une installation de colocation louée. Dans les centres de données modernes, un logiciel de sauvegarde fiable fait partie des composants d'infrastructure les plus essentiels.</p>
         </div>
         <div class="mt-8 flex flex-wrap gap-3">
           <span class="rounded-full bg-white px-5 py-3 text-sm font-black text-ikaBlue">Déduplication</span>
@@ -514,7 +670,7 @@
           <span class="h-3 w-3 rounded-full bg-green-400"></span>
           <span class="ml-3 text-xs font-bold text-slate-500">Proxmox Backup Server — Tableau de bord</span>
         </figcaption>
-        <img class="block w-full" src="https://www.nktek-holding.com/web/image/1254-08506d31/Proxmox-Backup-Server-2-3-dashboard.svg" alt="Tableau de bord Proxmox Backup Server" loading="lazy">
+        <img class="block w-full" src="assets/images/proxmox/proxmox-backup-server-dashboard.png" alt="Tableau de bord Proxmox Backup Server" loading="lazy">
       </figure>
 
       <div class="mt-10 flex flex-wrap gap-2.5" role="tablist" aria-label="Fonctionnalités Proxmox Backup Server">
@@ -538,6 +694,73 @@
           </div>
         </div>
       <?php endforeach; ?>
+    </div>
+  </section>
+
+  <!-- PROXMOX MAIL GATEWAY -->
+  <section id="proxmox-mail-gateway" class="bg-white py-16 sm:py-20">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="grid gap-10 lg:grid-cols-[1.05fr_.95fr] lg:items-center">
+        <div>
+          <p class="text-sm font-black uppercase tracking-[0.2em] text-ikaRed">Proxmox Mail Gateway</p>
+          <h2 class="mt-4 text-3xl font-black leading-tight text-ikaBlueDark sm:text-4xl">Plate-forme open source et complète de sécurité des e-mails.</h2>
+          <div class="mt-6 space-y-5 text-base leading-8 text-slate-600">
+            <p>Proxmox Mail Gateway est la principale solution de sécurité de messagerie open source qui vous aide à protéger votre serveur de messagerie contre toutes les menaces dès leur apparition. L'architecture flexible, combinée à l'interface de gestion Web conviviale, permet aux professionnels de l'informatique et aux entreprises de contrôler facilement tous les e-mails entrants et sortants et de protéger leurs utilisateurs contre les spams, les virus, le phishing et les chevaux de Troie.</p>
+            <p>Les organisations de toute taille peuvent déployer la plateforme anti-spam et anti-virus en quelques minutes seulement. Le proxy de messagerie complet est déployé entre le pare-feu et le serveur de messagerie interne, et permet de contrôler tout le trafic de messagerie à partir d'une seule plate-forme. Proxmox vous aide à maintenir une communication par e-mail sécurisée et professionnelle, à assurer la continuité des activités et à acquérir une réputation commerciale élevée ainsi que la satisfaction des clients.</p>
+          </div>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <span class="rounded-full bg-ikaSoft px-5 py-3 text-sm font-black text-ikaBlueDark">Postfix MTA</span>
+            <span class="rounded-full bg-ikaSoft px-5 py-3 text-sm font-black text-ikaBlueDark">ClamAV®</span>
+            <span class="rounded-full bg-ikaSoft px-5 py-3 text-sm font-black text-ikaBlueDark">SpamAssassin™</span>
+            <span class="rounded-full bg-ikaSoft px-5 py-3 text-sm font-black text-ikaBlueDark">Cluster HA</span>
+          </div>
+          <a class="mt-8 inline-flex items-center gap-2 rounded-full bg-ikaRed px-7 py-4 text-sm font-extrabold text-white shadow-clean transition hover:bg-red-700" href="#contact">
+            Prêt à démarrer Proxmox Mail Gateway ? <span aria-hidden="true">→</span>
+          </a>
+        </div>
+        <figure class="overflow-hidden rounded-[2rem] border border-slate-100 bg-white p-6 shadow-clean">
+          <img class="block w-full" src="assets/images/proxmox/proxmox-mail-gateway-infrastructure.png" alt="Architecture : Proxmox Mail Gateway déployé entre le pare-feu et le serveur de messagerie interne" loading="lazy">
+          <figcaption class="mt-4 text-center text-xs font-bold leading-6 text-slate-500">Tout le trafic SMTP transite d'abord par la passerelle : les e-mails indésirables sont filtrés avant la file d'attente, seuls les messages légitimes atteignent votre serveur de messagerie.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- FONCTIONNALITÉS PROXMOX MAIL GATEWAY (ONGLETS) -->
+  <section class="bg-ikaSoft py-16 sm:py-20">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="max-w-3xl">
+        <p class="text-sm font-black uppercase tracking-[0.2em] text-ikaRed">Liste des fonctionnalités</p>
+        <h2 class="mt-4 text-3xl font-black leading-tight text-ikaBlueDark sm:text-4xl">Une messagerie filtrée, tracée et hautement disponible.</h2>
+        <p class="mt-5 text-base leading-8 text-slate-600">Parcourez les capacités de Proxmox Mail Gateway : détection anti-spam et antivirus, méthodes de filtrage, suivi et journaux, cluster haute disponibilité et système de règles orienté objet.</p>
+      </div>
+
+      <div class="mt-10 flex flex-wrap gap-2.5" role="tablist" aria-label="Fonctionnalités Proxmox Mail Gateway">
+        <?php foreach ($pmgTabs as $index => $tab): ?>
+          <button type="button" class="pmg-tab rounded-full px-5 py-3 text-sm font-extrabold transition focus:outline-none focus:ring-4 focus:ring-ikaRed/25 <?= $index === 0 ? 'bg-ikaBlueDark text-white shadow-clean' : 'bg-white text-ikaBlueDark hover:bg-ikaBlueDark hover:text-white' ?>" data-pmg-tab="<?= p($tab['id']) ?>" role="tab" aria-selected="<?= $index === 0 ? 'true' : 'false' ?>">
+            <span class="mr-1.5"><?= p($tab['icon']) ?></span><?= p($tab['label']) ?>
+          </button>
+        <?php endforeach; ?>
+      </div>
+
+      <?php foreach ($pmgTabs as $index => $tab): ?>
+        <div id="pmg-panel-<?= p($tab['id']) ?>" class="pmg-panel mt-10 <?= $index === 0 ? '' : 'hidden' ?>" role="tabpanel">
+          <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <?php foreach ($tab['items'] as $i => $item): ?>
+              <article class="rounded-2xl bg-white p-7 shadow-clean">
+                <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-ikaBlue text-sm font-black text-white"><?= str_pad((string) ($i + 1), 2, '0', STR_PAD_LEFT) ?></span>
+                <h3 class="mt-5 text-lg font-black leading-snug text-ikaBlueDark"><?= p($item['title']) ?></h3>
+                <p class="mt-3 text-sm leading-7 text-slate-600"><?= p($item['text']) ?></p>
+              </article>
+            <?php endforeach; ?>
+          </div>
+        </div>
+      <?php endforeach; ?>
+
+      <p class="mt-10 text-sm font-semibold text-slate-500">
+        En savoir plus dans la
+        <a class="font-black text-ikaBlue underline decoration-ikaRed decoration-2 underline-offset-4 hover:text-ikaRed" href="https://pmg.proxmox.com/pmg-docs/pmg-admin-guide.html#chapter_mailfilter" target="_blank" rel="noopener noreferrer">documentation de référence du système de filtrage ↗</a>.
+      </p>
     </div>
   </section>
 
@@ -581,10 +804,14 @@
           <p>📍 Avenue de la Dignité, Ouagadougou, Burkina Faso</p>
         </div>
       </div>
-      <form class="rounded-[2rem] bg-white p-7 text-ikaInk shadow-premium sm:p-8" action="contact-submit.php" method="post">
+      <form class="relative rounded-[2rem] bg-white p-7 text-ikaInk shadow-premium sm:p-8" action="contact-submit.php" method="post">
         <input type="hidden" name="type" value="solution">
         <input type="hidden" name="page" value="Proxmox">
         <input type="hidden" name="redirect" value="proxmox.php#contact">
+        <input type="hidden" name="form_time" value="<?= p((string) time()) ?>">
+        <div class="absolute left-[-9999px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+          <label>Ne pas remplir ce champ <input type="text" name="site_web" tabindex="-1" autocomplete="off"></label>
+        </div>
         <?php if (isset($_GET['mail'], $_GET['notice'])): ?>
           <div class="mb-5 rounded-2xl <?= $_GET['mail'] === 'success' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800' ?> p-4 text-sm font-bold">
             <?= p((string) $_GET['notice']) ?>
@@ -701,6 +928,29 @@
         });
         pbsPanels.forEach(function (panel) {
           panel.classList.toggle('hidden', panel.id !== 'pbs-panel-' + id);
+        });
+      });
+    });
+  })();
+
+  // Onglets Proxmox Mail Gateway
+  (function () {
+    var pmgTabs = document.querySelectorAll('.pmg-tab');
+    var pmgPanels = document.querySelectorAll('.pmg-panel');
+    pmgTabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        var id = tab.getAttribute('data-pmg-tab');
+        pmgTabs.forEach(function (t) {
+          var active = t === tab;
+          t.classList.toggle('bg-ikaBlueDark', active);
+          t.classList.toggle('text-white', active);
+          t.classList.toggle('shadow-clean', active);
+          t.classList.toggle('bg-white', !active);
+          t.classList.toggle('text-ikaBlueDark', !active);
+          t.setAttribute('aria-selected', active ? 'true' : 'false');
+        });
+        pmgPanels.forEach(function (panel) {
+          panel.classList.toggle('hidden', panel.id !== 'pmg-panel-' + id);
         });
       });
     });

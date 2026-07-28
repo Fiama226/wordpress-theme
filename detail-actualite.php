@@ -74,7 +74,11 @@
         </div>
       </div>
 
-      <form id="commentForm" class="rounded-[2rem] bg-white p-7 shadow-clean sm:p-8" action="contact-submit.php" method="post">
+      <form id="commentForm" class="relative rounded-[2rem] bg-white p-7 shadow-clean sm:p-8" action="contact-submit.php" method="post">
+        <input type="hidden" name="form_time" value="<?= htmlspecialchars((string) time(), ENT_QUOTES, 'UTF-8') ?>">
+        <div class="absolute left-[-9999px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+          <label>Ne pas remplir ce champ <input type="text" name="site_web" tabindex="-1" autocomplete="off"></label>
+        </div>
         <input type="hidden" name="type" value="comment">
         <input type="hidden" name="article" value="<?= htmlspecialchars($article['title'], ENT_QUOTES, 'UTF-8') ?>">
         <input type="hidden" name="page" value="Actualité - <?= htmlspecialchars($article['title'], ENT_QUOTES, 'UTF-8') ?>">
