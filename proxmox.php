@@ -366,12 +366,30 @@
             <span class="rounded-2xl bg-ikaSoft px-5 py-3 text-sm font-black text-ikaBlue">Conteneurs LXC</span>
             <span class="rounded-2xl bg-ikaSoft px-5 py-3 text-sm font-black text-ikaBlue">Réseau & stockage SDS</span>
           </div>
+          <div class="mt-8">
+            <p class="text-xs font-black uppercase tracking-[0.2em] text-slate-400">Technologies intégrées</p>
+            <div class="mt-4 flex flex-wrap items-center gap-6">
+              <img class="h-8 w-auto opacity-60 transition hover:opacity-100" src="https://proxmox.com/images/proxmox/logos/debian-logo-100.png" alt="Debian GNU/Linux" loading="lazy">
+              <img class="h-11 w-auto opacity-60 transition hover:opacity-100" src="https://proxmox.com/images/proxmox/logos/kvm-logo-200.png" alt="KVM (Kernel-based Virtual Machine)" loading="lazy">
+              <img class="h-9 w-auto opacity-60 transition hover:opacity-100" src="https://proxmox.com/images/proxmox/logos/lxc-containers-logo-170.png" alt="LXC — Linux Containers" loading="lazy">
+            </div>
+          </div>
         </div>
         <div class="space-y-5 text-base leading-8 text-slate-600">
           <p>Proxmox VE est une plate-forme de gestion de serveur open source complète pour la virtualisation d'entreprise. Elle intègre étroitement l'hyperviseur KVM et les conteneurs Linux (LXC), ainsi que des fonctionnalités de stockage et de mise en réseau définies par logiciel, sur une plate-forme unique. Grâce à l'interface utilisateur Web intégrée, vous gérez facilement vos machines virtuelles et conteneurs, la haute disponibilité des clusters et les outils de reprise après sinistre.</p>
           <p>Les fonctionnalités de classe entreprise et l'orientation 100 % logicielle en font le choix idéal pour virtualiser votre infrastructure, optimiser les ressources existantes et augmenter l'efficacité avec un minimum de dépenses. Virtualisez même les charges de travail Linux et Windows les plus exigeantes, et faites évoluer dynamiquement le calcul et le stockage à mesure que vos besoins augmentent.</p>
         </div>
       </div>
+      <!-- Capture : tableau de bord Proxmox VE -->
+      <figure class="mt-4 overflow-hidden rounded-[2rem] border border-slate-100 bg-white shadow-clean">
+        <figcaption class="flex items-center gap-1.5 border-b border-slate-100 bg-ikaSoft px-5 py-3">
+          <span class="h-3 w-3 rounded-full bg-ikaRed"></span>
+          <span class="h-3 w-3 rounded-full bg-amber-400"></span>
+          <span class="h-3 w-3 rounded-full bg-green-400"></span>
+          <span class="ml-3 text-xs font-bold text-slate-500">Proxmox VE — Tableau de bord de l'hôte</span>
+        </figcaption>
+        <img class="block w-full" src="https://www.nktek-holding.com/web/image/1255-f11984b9/Proxmox-VE-7-1-Host-Summary.svg" alt="Tableau de bord Proxmox Virtual Environment (résumé de l'hôte)" loading="lazy">
+      </figure>
     </div>
   </section>
 
@@ -416,7 +434,10 @@
       <div class="overflow-hidden rounded-[2rem] bg-ikaBlueDark text-white shadow-premium">
         <div class="grid gap-0 lg:grid-cols-2">
           <div class="p-8 sm:p-12">
-            <p class="text-sm font-black uppercase tracking-[0.2em] text-red-200">Stockage défini par logiciel</p>
+            <div class="flex items-center gap-4">
+              <img class="h-12 w-auto" src="https://proxmox.com/images/proxmox/logos/Ceph_logo_stacked_220.png" alt="Ceph" loading="lazy">
+              <p class="text-sm font-black uppercase tracking-[0.2em] text-red-200">Stockage défini par logiciel</p>
+            </div>
             <h2 class="mt-4 text-3xl font-black leading-tight sm:text-4xl">Ceph, intégré nativement à Proxmox VE.</h2>
             <p class="mt-5 text-base leading-8 text-white/80">Ceph est un magasin d'objets distribué open source et un système de fichiers conçu pour d'excellentes performances, fiabilité et évolutivité. Proxmox VE intègre entièrement Ceph : exécutez et gérez le stockage Ceph directement depuis n'importe quel nœud de cluster.</p>
             <p class="mt-4 text-base leading-8 text-white/80">Ceph fournit deux types de stockage : <strong class="text-white">RADOS Block Device (RBD)</strong> pour le stockage au niveau des blocs (images de disque, instantanés) et <strong class="text-white">CephFS</strong>, un système de fichiers compatible POSIX.</p>
@@ -484,6 +505,17 @@
         <h2 class="mt-4 text-3xl font-black leading-tight text-ikaBlueDark sm:text-4xl">Sauvegarde, restauration et sécurité de bout en bout.</h2>
         <p class="mt-5 text-base leading-8 text-slate-600">Parcourez les capacités de Proxmox Backup Server : sauvegarde dédupliquée, architecture, intégrité et sécurité, restauration, gestion, intégration Proxmox VE et sauvegarde sur bande.</p>
       </div>
+
+      <!-- Capture : tableau de bord Proxmox Backup Server -->
+      <figure class="mt-8 overflow-hidden rounded-[2rem] border border-slate-100 bg-white shadow-clean">
+        <figcaption class="flex items-center gap-1.5 border-b border-slate-100 bg-white px-5 py-3">
+          <span class="h-3 w-3 rounded-full bg-ikaRed"></span>
+          <span class="h-3 w-3 rounded-full bg-amber-400"></span>
+          <span class="h-3 w-3 rounded-full bg-green-400"></span>
+          <span class="ml-3 text-xs font-bold text-slate-500">Proxmox Backup Server — Tableau de bord</span>
+        </figcaption>
+        <img class="block w-full" src="https://www.nktek-holding.com/web/image/1254-08506d31/Proxmox-Backup-Server-2-3-dashboard.svg" alt="Tableau de bord Proxmox Backup Server" loading="lazy">
+      </figure>
 
       <div class="mt-10 flex flex-wrap gap-2.5" role="tablist" aria-label="Fonctionnalités Proxmox Backup Server">
         <?php foreach ($pbsTabs as $index => $tab): ?>
