@@ -388,7 +388,7 @@
           <span class="h-3 w-3 rounded-full bg-green-400"></span>
           <span class="ml-3 text-xs font-bold text-slate-500">Proxmox VE — Tableau de bord de l'hôte</span>
         </figcaption>
-        <img class="block w-full" src="https://www.nktek-holding.com/web/image/1255-f11984b9/Proxmox-VE-7-1-Host-Summary.svg" alt="Tableau de bord Proxmox Virtual Environment (résumé de l'hôte)" loading="lazy">
+        <img class="block w-full" src="https://www.proxmox.com/images/proxmox/screenshots/Proxmox-VE-8-1-Host-Summary-Secure-Boot.png#joomlaImage://local-images/proxmox/screenshots/Proxmox-VE-8-1-Host-Summary-Secure-Boot.png?width=1920&height=1080" alt="Tableau de bord Proxmox Virtual Environment (résumé de l'hôte)" loading="lazy">
       </figure>
     </div>
   </section>
