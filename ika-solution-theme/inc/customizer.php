@@ -59,6 +59,22 @@ function ika_default_options() {
 		// --- Section hébergement ---
 		'ika_hosting_url'    => 'https://ikacloud.bf',
 
+		// --- Accueil : « Dernières réalisations » (3 cartes teaser) ---
+		// Contenu exact du site statique d'origine : ces cartes sont des teasers
+		// propres à l'accueil, distincts de la page Réalisations (CPT).
+		'ika_home_real_1_image'  => 'images/sonatur.png',
+		'ika_home_real_1_client' => 'SONATUR',
+		'ika_home_real_1_title'  => 'Plateforme Sonatur',
+		'ika_home_real_1_text'   => 'Plateforme de souscription officielle de parcelle de la Sonatur.',
+		'ika_home_real_2_image'  => 'images/intranetsonatur.png',
+		'ika_home_real_2_client' => 'SONATUR',
+		'ika_home_real_2_title'  => 'SONABHY Sonatur',
+		'ika_home_real_2_text'   => 'Intranet pour centraliser les informations internes et accompagner les équipes métier.',
+		'ika_home_real_3_image'  => 'images/sitesonatur.png',
+		'ika_home_real_3_client' => 'SONATUR',
+		'ika_home_real_3_title'  => 'Site web Sonatur',
+		'ika_home_real_3_text'   => 'Site web institutionnel pour valoriser les services, les informations et les démarches en ligne.',
+
 		// --- Page « Société » : hero ---
 		'ika_pres_hero_title' => 'Qui sommes-nous ?',
 		'ika_pres_hero_text1' => 'IKA SOLUTION LTD est une entreprise burkinabè spécialisée dans l’ingénierie informatique, la digitalisation, les réseaux, les logiciels métier, le cloud, les licences et la sécurité des systèmes d’information.',
@@ -208,6 +224,23 @@ function ika_customize_register( $wp_customize ) {
 				'ika_contact_text'  => array( __( 'Texte du bloc contact', 'ika-solution' ), 'textarea' ),
 				'ika_contact_form'  => array( __( 'Shortcode du formulaire (ex : [contact-form-7 id="123"])', 'ika-solution' ), 'text' ),
 				'ika_hosting_url'   => array( __( 'Lien « Découvrir nos offres »', 'ika-solution' ), 'url' ),
+			),
+		),
+		'ika_sec_home_real' => array(
+			'title'  => __( 'Accueil — Dernières réalisations', 'ika-solution' ),
+			'fields' => array(
+				'ika_home_real_1_image'  => array( __( 'Carte 1 — image (chemin relatif, ex : images/sonatur.png)', 'ika-solution' ), 'text' ),
+				'ika_home_real_1_client' => array( __( 'Carte 1 — client', 'ika-solution' ), 'text' ),
+				'ika_home_real_1_title'  => array( __( 'Carte 1 — titre', 'ika-solution' ), 'text' ),
+				'ika_home_real_1_text'   => array( __( 'Carte 1 — texte', 'ika-solution' ), 'textarea' ),
+				'ika_home_real_2_image'  => array( __( 'Carte 2 — image (chemin relatif)', 'ika-solution' ), 'text' ),
+				'ika_home_real_2_client' => array( __( 'Carte 2 — client', 'ika-solution' ), 'text' ),
+				'ika_home_real_2_title'  => array( __( 'Carte 2 — titre', 'ika-solution' ), 'text' ),
+				'ika_home_real_2_text'   => array( __( 'Carte 2 — texte', 'ika-solution' ), 'textarea' ),
+				'ika_home_real_3_image'  => array( __( 'Carte 3 — image (chemin relatif)', 'ika-solution' ), 'text' ),
+				'ika_home_real_3_client' => array( __( 'Carte 3 — client', 'ika-solution' ), 'text' ),
+				'ika_home_real_3_title'  => array( __( 'Carte 3 — titre', 'ika-solution' ), 'text' ),
+				'ika_home_real_3_text'   => array( __( 'Carte 3 — texte', 'ika-solution' ), 'textarea' ),
 			),
 		),
 		'ika_sec_why'     => array(

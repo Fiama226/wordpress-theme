@@ -47,13 +47,13 @@ $ika_notice    = ika_get_contact_notice();
             <?php echo do_shortcode( $ika_shortcode ); ?>
           </div>
           <?php else : ?>
-          <form class="reveal grid gap-4 p-6 sm:p-8" action="<?php echo esc_url( home_url( '/#contact' ) ); ?>" method="post">
+          <form class="relative reveal grid gap-4 p-6 sm:p-8" action="<?php echo esc_url( home_url( '/#contact' ) ); ?>" method="post">
             <?php wp_nonce_field( 'ika_contact', 'ika_contact_nonce' ); ?>
             <input type="hidden" name="action" value="ika_contact">
             <input type="hidden" name="ika_page" value="<?php echo esc_attr( get_the_title() ); ?>">
-            <p class="hidden" aria-hidden="true">
-              <label>&nbsp;<input type="text" name="ika_website" tabindex="-1" autocomplete="off" value=""></label>
-            </p>
+            <div class="absolute left-[-9999px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+              <label>Ne pas remplir ce champ <input type="text" name="ika_website" tabindex="-1" autocomplete="off" value=""></label>
+            </div>
 
             <?php if ( $ika_notice ) : ?>
               <div class="rounded-2xl <?php echo 'success' === $ika_notice['type'] ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'; ?> p-4 text-sm font-bold">

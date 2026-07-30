@@ -1,13 +1,22 @@
 /**
  * Animations du thème IKA Solution Pro.
  *
- * Slider du hero, onglets produits, menu mobile et révélation au défilement.
+ * Reproduction fidèle du script du site statique d'origine :
+ *  - menu mobile ;
+ *  - surlignage de la navigation selon l'ancre courante (applyNavHash) ;
+ *  - retour en haut fluide sur les liens « #top » ;
+ *  - slider du hero (mêmes temporisations : 220 ms de bascule, 5,6 s d'auto-rotation,
+ *    1,3 s de nettoyage de la slide sortante) ;
+ *  - onglets produits (rotation 6 s) ;
+ *  - révélation au défilement : ajout automatique de .reveal sur les sections,
+ *    articles, formulaires, iframes, images et blocs arrondis, variantes
+ *    (gauche/droite/haut/bas/zoom/tilt) en rotation, délais en cascade et
+ *    ré-apparition à chaque entrée dans le viewport (threshold 0.14).
+ *
  * Les données du hero sont injectées par wp_localize_script (ikaHero.slides).
  */
 (function () {
   'use strict';
-
-  var heroData = (window.ikaHero && window.ikaHero.slides) || [];
 
   /* ------------------------------------------------------------------ */
   /* Menu mobile                                                         */
@@ -24,24 +33,87 @@
   }
 
   /* ------------------------------------------------------------------ */
+  /* Surlignage de la navigation selon l'ancre courante                  */
+  /* (identique au site statique, page d'accueil détectée via body.home) */
+  /* ------------------------------------------------------------------ */
+  function applyNavHash(hash) {
+    var dCls = ['text-ikaBlue', 'underline', 'decoration-2', 'underline-offset-4', 'decoration-ikaBlue'];
+    var mCls = ['bg-ikaSoft/80', 'font-black', 'text-ikaBlue'];
+    var tracked = ['#expertises', '#produits', '#contact'];
+    var isIndex = document.body.classList.contains('home');
+
+    Array.prototype.forEach.call(document.querySelectorAll('header nav a, #mobileMenu a'), function (link) {
+      var href = link.getAttribute('href') || '';
+      if (link.classList.contains('rounded-full')) {
+        return;
+      }
+      var idx = href.indexOf('#');
+      if (idx < 1) {
+        return;
+      }
+      var linkHash = href.substring(idx);
+      var isMobile = !!link.closest('#mobileMenu');
+      var cls = isMobile ? mCls : dCls;
+      if (linkHash === '#top') {
+        cls.forEach(function (c) { link.classList.toggle(c, isIndex && tracked.indexOf(hash) === -1); });
+      } else {
+        cls.forEach(function (c) { link.classList.toggle(c, hash === linkHash); });
+      }
+    });
+  }
+
+  applyNavHash(window.location.hash);
+  window.addEventListener('hashchange', function () {
+    applyNavHash(window.location.hash);
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('header nav a, #mobileMenu a'), function (link) {
+    link.addEventListener('click', function () {
+      var href = link.getAttribute('href') || '';
+      var idx = href.indexOf('#');
+      if (idx > 0) {
+        window.setTimeout(function () { applyNavHash(href.substring(idx)); }, 10);
+      }
+    });
+  });
+
+  /* ------------------------------------------------------------------ */
+  /* Liens « #top » : retour en haut fluide (comme le site statique)     */
+  /* ------------------------------------------------------------------ */
+  Array.prototype.forEach.call(document.querySelectorAll('a[href$="#top"]'), function (link) {
+    link.addEventListener('click', function (event) {
+      if (!document.body.classList.contains('home')) {
+        return; // hors accueil : le lien mène à la page d'accueil (#top).
+      }
+
+      event.preventDefault();
+      window.history.pushState(null, '', '#top');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      if (mobileMenu && menuButton && !mobileMenu.classList.contains('hidden')) {
+        mobileMenu.classList.add('hidden');
+        menuButton.setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
+
+  /* ------------------------------------------------------------------ */
   /* Slider du hero                                                      */
   /* ------------------------------------------------------------------ */
-  var slides = document.querySelectorAll('#accueil .slide');
-  var dots = document.querySelectorAll('.hero-dot');
-  var heroCopy = document.getElementById('heroCopyPanel');
-  var heroVisual = document.getElementById('heroVisualImage');
-  var heroTitle = document.getElementById('heroTitle');
-  var heroEyebrow = document.getElementById('heroEyebrow');
-  var heroText = document.getElementById('heroText');
-  var heroPrimary = document.getElementById('heroPrimary');
-  var heroSecondary = document.getElementById('heroSecondary');
-  var heroMetricLabel = document.getElementById('heroMetricLabel');
-  var heroMetric = document.getElementById('heroMetric');
-  var heroMetricText = document.getElementById('heroMetricText');
+  var heroData = (window.ikaHero && window.ikaHero.slides) || [];
+  var heroSlides = document.querySelectorAll('#accueil .slide');
+  var heroDots = document.querySelectorAll('.hero-dot');
+  var heroCopyPanel = document.getElementById('heroCopyPanel');
+  var heroVisualImage = document.getElementById('heroVisualImage');
   var heroSection = document.getElementById('accueil');
+  var heroTitle = document.getElementById('heroTitle');
+  var heroIndex = 0;
+  var heroTimer = null;
 
-  var currentSlide = 0;
-  var slideInterval = null;
+  function setText(el, value) {
+    if (el && typeof value === 'string') {
+      el.textContent = value;
+    }
+  }
 
   function runHeroIntro() {
     if (!heroSection || !heroTitle || heroSection.dataset.introPlayed === 'true') {
@@ -64,214 +136,218 @@
 
     window.setTimeout(function () {
       heroSection.classList.remove('hero-intro');
-      if (heroData[0] && heroData[0].titleHtml) {
-        heroTitle.innerHTML = heroData[0].titleHtml;
+      if (heroData[heroIndex] && heroData[heroIndex].titleHtml) {
+        heroTitle.innerHTML = heroData[heroIndex].titleHtml;
       }
     }, 2600);
 
     return 2800;
   }
 
-  function setText(el, value) {
-    if (el && typeof value === 'string') {
-      el.textContent = value;
-    }
-  }
+  function showHero(index) {
+    var previousIndex = Array.prototype.findIndex.call(heroSlides, function (slide) {
+      return slide.classList.contains('active');
+    });
 
-  function setHeroContent(index) {
-    var data = heroData[index];
-    if (!data || !heroCopy || !heroVisual) {
-      return;
-    }
+    heroCopyPanel.classList.add('is-changing');
+    heroVisualImage.classList.add('is-changing');
 
-    heroCopy.classList.add('is-changing');
-    heroVisual.classList.add('is-changing');
+    window.setTimeout(function () {
+      var data = heroData[index];
+      if (!data) {
+        return;
+      }
 
-    setTimeout(function () {
-      setText(heroEyebrow, data.eyebrow);
+      Array.prototype.forEach.call(heroSlides, function (slide, i) {
+        var isIncoming = i === index;
+        var isLeaving = i === previousIndex && previousIndex !== index;
+        slide.classList.toggle('active', isIncoming);
+        slide.classList.toggle('leaving', isLeaving);
+      });
+
+      setText(document.getElementById('heroEyebrow'), data.eyebrow);
       if (heroTitle && data.titleHtml) {
         heroTitle.innerHTML = data.titleHtml;
       }
-      setText(heroText, data.text);
+      setText(document.getElementById('heroText'), data.text);
 
+      var heroPrimary = document.getElementById('heroPrimary');
       if (heroPrimary && data.primary) {
         setText(heroPrimary, data.primary.text);
         if (data.primary.href) {
           heroPrimary.setAttribute('href', data.primary.href);
         }
       }
+      var heroSecondary = document.getElementById('heroSecondary');
       if (heroSecondary && data.secondary) {
         setText(heroSecondary, data.secondary.text);
         if (data.secondary.href) {
           heroSecondary.setAttribute('href', data.secondary.href);
         }
       }
-      if (data.image) {
-        heroVisual.setAttribute('src', data.image);
+
+      if (data.image && heroVisualImage) {
+        heroVisualImage.setAttribute('src', data.image);
       }
       if (data.metric) {
-        setText(heroMetricLabel, data.metric.label);
-        setText(heroMetric, data.metric.value);
-        setText(heroMetricText, data.metric.text);
+        setText(document.getElementById('heroMetricLabel'), data.metric.label);
+        setText(document.getElementById('heroMetric'), data.metric.value);
+        setText(document.getElementById('heroMetricText'), data.metric.text);
       }
 
-      heroCopy.classList.remove('is-changing');
-      heroVisual.classList.remove('is-changing');
-    }, 320);
+      Array.prototype.forEach.call(heroDots, function (dot, i) {
+        dot.classList.toggle('bg-ikaRed', i === index);
+        dot.classList.toggle('bg-white/35', i !== index);
+      });
+
+      heroCopyPanel.classList.remove('is-changing');
+      heroVisualImage.classList.remove('is-changing');
+
+      window.setTimeout(function () {
+        Array.prototype.forEach.call(heroSlides, function (slide) {
+          slide.classList.remove('leaving');
+        });
+      }, 1300);
+    }, 220);
   }
 
-  function goToSlide(index) {
-    if (!slides.length) {
-      return;
-    }
-
-    slides[currentSlide].classList.remove('active');
-    slides[currentSlide].classList.add('leaving');
-
-    (function (leaving) {
-      setTimeout(function () {
-        leaving.classList.remove('leaving');
-      }, 900);
-    })(slides[currentSlide]);
-
-    if (dots[currentSlide]) {
-      dots[currentSlide].classList.remove('bg-ikaRed');
-      dots[currentSlide].classList.add('bg-white/35');
-    }
-
-    currentSlide = index;
-
-    slides[currentSlide].classList.add('active');
-    if (dots[currentSlide]) {
-      dots[currentSlide].classList.remove('bg-white/35');
-      dots[currentSlide].classList.add('bg-ikaRed');
-    }
-
-    setHeroContent(currentSlide);
-  }
-
-  function nextSlide() {
-    if (slides.length > 1) {
-      goToSlide((currentSlide + 1) % slides.length);
-    }
-  }
-
-  function startAutoplay() {
-    // Respecte la préférence système « animations réduites ».
+  function startHeroSlider() {
+    window.clearInterval(heroTimer);
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      return;
+      return; // respecte la préférence système « animations réduites ».
     }
-    if (slides.length > 1) {
-      slideInterval = setInterval(nextSlide, 5500);
+    if (heroSlides.length > 1) {
+      heroTimer = window.setInterval(function () {
+        heroIndex = (heroIndex + 1) % heroData.length;
+        showHero(heroIndex);
+      }, 5600);
     }
   }
 
-  Array.prototype.forEach.call(dots, function (dot, idx) {
-    dot.addEventListener('click', function () {
-      clearInterval(slideInterval);
-      goToSlide(idx);
-      startAutoplay();
+  if (heroSlides.length && heroDots.length && heroCopyPanel && heroVisualImage) {
+    Array.prototype.forEach.call(heroDots, function (dot) {
+      dot.addEventListener('click', function () {
+        heroIndex = Number(dot.getAttribute('data-hero'));
+        if (heroSection) {
+          heroSection.classList.remove('hero-intro');
+          heroSection.dataset.introPlayed = 'true';
+        }
+        showHero(heroIndex);
+        startHeroSlider();
+      });
     });
-  });
-
-  window.setTimeout(startAutoplay, runHeroIntro());
+    window.setTimeout(startHeroSlider, runHeroIntro());
+  }
 
   /* ------------------------------------------------------------------ */
-  /* Onglets des produits (compatible data-product ET data-target)       */
+  /* Onglets des produits (rotation automatique 6 s)                     */
   /* ------------------------------------------------------------------ */
   var productTabs = document.querySelectorAll('.product-tab');
   var productSlides = document.querySelectorAll('.product-slide');
-
-  Array.prototype.forEach.call(productTabs, function (tab) {
-    tab.addEventListener('click', function () {
-      var productIdx = tab.getAttribute('data-product');
-      var targetSlug = tab.getAttribute('data-target');
-
-      // Réinitialiser tous les onglets : style inactif (fond bleu foncé).
-      Array.prototype.forEach.call(productTabs, function (t) {
-        t.classList.remove('bg-white', 'text-ikaBlue');
-        t.classList.add('border', 'border-white/25', 'text-white');
-      });
-      // Activer l'onglet courant.
-      tab.classList.remove('border', 'border-white/25', 'text-white');
-      tab.classList.add('bg-white', 'text-ikaBlue');
-
-      // Masquer tous les slides.
-      Array.prototype.forEach.call(productSlides, function (s) {
-        s.classList.remove('active');
-      });
-
-      // Afficher le slide cible — par index ou par id.
-      if (productIdx !== null && productSlides[parseInt(productIdx, 10)]) {
-        productSlides[parseInt(productIdx, 10)].classList.add('active');
-      } else if (targetSlug) {
-        var el = document.getElementById(targetSlug);
-        if (el) {
-          el.classList.add('active');
-        }
-      }
-
-      // Redémarrer l'auto-rotation.
-      startProductSlider();
-    });
-  });
-
-  // Auto-rotation des produits toutes les 6 secondes.
   var productTimer = null;
+
   function showProduct(index) {
-    Array.prototype.forEach.call(productSlides, function (s) { s.classList.remove('active'); });
-    Array.prototype.forEach.call(productTabs, function (t, i) {
-      t.classList.toggle('bg-white', i === index);
-      t.classList.toggle('text-ikaBlue', i === index);
-      t.classList.toggle('border', i !== index);
-      t.classList.toggle('border-white/25', i !== index);
-      t.classList.toggle('text-white', i !== index);
+    Array.prototype.forEach.call(productSlides, function (slide, i) {
+      slide.classList.toggle('active', i === index);
     });
-    if (productSlides[index]) {
-      productSlides[index].classList.add('active');
-    }
+    Array.prototype.forEach.call(productTabs, function (tab, i) {
+      tab.classList.toggle('bg-white', i === index);
+      tab.classList.toggle('text-ikaBlue', i === index);
+      tab.classList.toggle('border', i !== index);
+      tab.classList.toggle('border-white/25', i !== index);
+      tab.classList.toggle('text-white', i !== index);
+    });
   }
 
   function startProductSlider() {
-    clearInterval(productTimer);
-    productTimer = setInterval(function () {
-      var activeIdx = Array.prototype.indexOf.call(productSlides, document.querySelector('.product-slide.active'));
-      var next = (activeIdx + 1) % productSlides.length;
-      showProduct(next);
+    window.clearInterval(productTimer);
+    if (!productSlides.length) {
+      return;
+    }
+    productTimer = window.setInterval(function () {
+      var current = Array.prototype.findIndex.call(productSlides, function (slide) {
+        return slide.classList.contains('active');
+      });
+      showProduct((current + 1) % productSlides.length);
     }, 6000);
   }
+
+  Array.prototype.forEach.call(productTabs, function (tab) {
+    tab.addEventListener('click', function () {
+      var idx = Number(tab.getAttribute('data-product'));
+      if (!isNaN(idx)) {
+        showProduct(idx);
+      }
+      startProductSlider();
+    });
+  });
 
   if (productTabs.length && productSlides.length) {
     startProductSlider();
   }
 
   /* ------------------------------------------------------------------ */
-  /* Révélation au défilement                                            */
+  /* Révélation au défilement — identique au site statique               */
   /* ------------------------------------------------------------------ */
-  var reveals = document.querySelectorAll('.reveal');
 
+  // 1. Ajouter automatiquement .reveal aux éléments structurels.
+  var revealTargets = [
+    'main > section',
+    'main article',
+    'main form',
+    'main iframe',
+    'main img:not(#heroVisualImage)',
+    'main a[class*="rounded-2xl"]',
+    'main div[class*="rounded-2xl"]',
+    'main div[class*="rounded-[2rem]"]'
+  ];
+
+  Array.prototype.forEach.call(document.querySelectorAll(revealTargets.join(',')), function (element) {
+    var isDecorativeLayer =
+      element.getAttribute('aria-hidden') === 'true' ||
+      element.classList.contains('absolute') ||
+      element.classList.contains('fixed') ||
+      element.className.includes('inset-0');
+
+    if (!isDecorativeLayer && !element.classList.contains('reveal') && !element.closest('#accueil')) {
+      element.classList.add('reveal');
+    }
+  });
+
+  // 2. Variantes en rotation + délais en cascade.
+  var revealVariants = ['reveal-up', 'reveal-left', 'reveal-right', 'reveal-zoom', 'reveal-tilt', 'reveal-down'];
+  var revealElements = document.querySelectorAll('.reveal');
+  Array.prototype.forEach.call(revealElements, function (element, index) {
+    var hasVariant = revealVariants.some(function (variant) {
+      return element.classList.contains(variant);
+    });
+    if (!hasVariant) {
+      element.classList.add(revealVariants[index % revealVariants.length]);
+    }
+    element.style.transitionDelay = (Math.min(index % 4, 3) * 70) + 'ms';
+  });
+
+  // 3. Observation : apparition à l'entrée, disparition à la sortie (réversible).
   if (!('IntersectionObserver' in window)) {
     // Repli : tout est visible si l'API n'existe pas.
-    Array.prototype.forEach.call(reveals, function (r) {
-      r.classList.add('visible');
+    Array.prototype.forEach.call(revealElements, function (element) {
+      element.classList.add('visible');
     });
     return;
   }
 
-  var observer = new IntersectionObserver(
-    function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.12 }
-  );
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      } else {
+        entry.target.classList.remove('visible');
+      }
+    });
+  }, { threshold: 0.14 });
 
-  Array.prototype.forEach.call(reveals, function (r) {
-    observer.observe(r);
+  Array.prototype.forEach.call(revealElements, function (element) {
+    observer.observe(element);
   });
 })();
 

@@ -155,6 +155,7 @@ pre = 'ika-solution-theme/'
 inzip = {n[len(pre):] for n in z.namelist() if n.startswith(pre) and n.endswith(('.php', '.css'))}
 disk = set()
 for r, d, f in os.walk(os.path.join(root, 'ika-solution-theme')):
+    d[:] = [x for x in d if x not in ('node_modules', 'vendor')]
     for x in f:
         if x.endswith(('.php', '.css')):
             disk.add(os.path.relpath(os.path.join(r, x), os.path.join(root, 'ika-solution-theme')))

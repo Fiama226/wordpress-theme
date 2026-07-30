@@ -4,7 +4,7 @@ Contributors: ikasolution
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.2.0
+Stable tag: 1.3.0
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Tags: custom-menu, featured-images, translation-ready, full-width-template, custom-logo, threaded-comments
@@ -90,6 +90,26 @@ Contrôler la qualité du thème :        bash tools/audit-theme.sh
   (`Personnaliser > Contenu IKA Solution`).
 * Plus aucun texte codé en dur dans le thème : `bash tools/audit-theme.sh`
   retourne 0 bloquant et 0 avertissement.
+
+= 1.3.0 =
+* Parité stricte avec le site statique : régénération du CSS Tailwind compilé
+  (classes manquantes : espacements de la grille « Nos domaines d'expertise »,
+  décalages verticaux des cartes, ancrage du bandeau WhatsApp en bas à droite).
+* Animations de révélation au défilement identiques au site statique : cibles
+  automatiques (sections, articles, formulaires, images, blocs arrondis),
+  variantes gauche/droite/haut/bas/zoom/tilt en rotation, délais en cascade,
+  ré-apparition à chaque entrée dans le viewport ; surlignage du menu selon
+  l'ancre courante rétabli.
+* Accueil : les 3 cartes « Dernières réalisations » reproduisent le contenu
+  exact du site statique (teasers Sonatur), éditables dans
+  `Personnaliser > Contenu IKA Solution > Accueil — Dernières réalisations`.
+* Page Réalisations : les 6 boutons de filtre sont toujours affichés, comme
+  sur le site statique.
+* Section « Nos solutions » de l'accueil : badges identiques au site statique
+  (nouveau meta « ika_home_tags » seedé par solution).
+* À l'activation, toutes les images du site (+ la brochure PDF) sont importées
+  dans la médiathèque WordPress ; les templates utilisent automatiquement ces
+  copies. Import idempotent, réparable depuis l'administration si interrompu.
 
 = 1.0.0 =
 * Version initiale.
