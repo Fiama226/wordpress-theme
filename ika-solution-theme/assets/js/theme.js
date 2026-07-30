@@ -147,29 +147,38 @@
   startAutoplay();
 
   /* ------------------------------------------------------------------ */
-  /* Onglets des produits                                                */
+  /* Onglets des produits (compatible data-product ET data-target)       */
   /* ------------------------------------------------------------------ */
   var productTabs = document.querySelectorAll('.product-tab');
   var productSlides = document.querySelectorAll('.product-slide');
 
   Array.prototype.forEach.call(productTabs, function (tab) {
     tab.addEventListener('click', function () {
-      var target = tab.getAttribute('data-target');
+      var productIdx = tab.getAttribute('data-product');
+      var targetSlug = tab.getAttribute('data-target');
 
+      // Réinitialiser tous les onglets : style inactif (fond bleu foncé).
       Array.prototype.forEach.call(productTabs, function (t) {
-        t.classList.remove('bg-ikaBlue', 'text-white', 'shadow-clean');
-        t.classList.add('bg-ikaSoft', 'text-slate-700');
+        t.classList.remove('bg-white', 'text-ikaBlue');
+        t.classList.add('border', 'border-white/25', 'text-white');
       });
-      tab.classList.remove('bg-ikaSoft', 'text-slate-700');
-      tab.classList.add('bg-ikaBlue', 'text-white', 'shadow-clean');
+      // Activer l'onglet courant.
+      tab.classList.remove('border', 'border-white/25', 'text-white');
+      tab.classList.add('bg-white', 'text-ikaBlue');
 
+      // Masquer tous les slides.
       Array.prototype.forEach.call(productSlides, function (s) {
         s.classList.remove('active');
       });
 
-      var el = document.getElementById(target);
-      if (el) {
-        el.classList.add('active');
+      // Afficher le slide cible — par index ou par id.
+      if (productIdx !== null && productSlides[parseInt(productIdx, 10)]) {
+        productSlides[parseInt(productIdx, 10)].classList.add('active');
+      } else if (targetSlug) {
+        var el = document.getElementById(targetSlug);
+        if (el) {
+          el.classList.add('active');
+        }
       }
     });
   });
