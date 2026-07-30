@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Version des données de démonstration importées depuis le site statique.
 if ( ! defined( 'IKA_SOLUTION_SEED_VERSION' ) ) {
-    define( 'IKA_SOLUTION_SEED_VERSION', '2026-07-30-static-v4' );
+    define( 'IKA_SOLUTION_SEED_VERSION', '2026-07-30-static-v5' );
 }
 
 /**
@@ -742,7 +742,7 @@ function ika_seed_solutions() {
             'title'       => 'IKA VISITE',
             'eyebrow'     => 'Accueil et sécurité',
             'image'       => 'images/ikavisite.jpg',
-            'intro'       => 'Gérez, suivez et optimisez vos visites avec une solution simple, sécurisée et ergonomique.',
+            'intro'       => 'IKA VISITE permet de gérer, suivre et optimiser vos visites en toute simplicité. La solution sécurise les accès, identifie les visiteurs, suit les heures d\'entrée et de sortie et propose des interfaces ergonomiques pour les agents d\'accueil.',
             'description' => 'IKA VISITE simplifie la gestion des visiteurs tout en renforçant la sécurité des accès. La solution permet d’identifier les visiteurs, suivre les heures d’entrée et de sortie, organiser les passages et offrir aux agents une interface claire pour mieux piloter l’accueil.',
             'features'    => array(
                 'Gestion et sécurisation des accès pour mieux contrôler les entrées dans vos locaux.',
@@ -759,7 +759,7 @@ function ika_seed_solutions() {
             'title'       => 'IKA COURRIER',
             'eyebrow'     => 'Gestion administrative',
             'image'       => 'images/ikacourrier.jpg',
-            'intro'       => 'Fini les recherches interminables : centralisez vos documents, rôles, modules et workflows.',
+            'intro'       => 'IKA COURRIER met fin aux recherches interminables avec une gestion intelligente des documents, des utilisateurs et des rôles. La solution facilite l\'intégration de nouveaux modules et personnalise les workflows pour automatiser vos processus.',
             'description' => 'IKA COURRIER facilite la gestion intelligente des documents et automatise les processus administratifs. La solution intègre la gestion des utilisateurs et des rôles, l’ajout de nouveaux modules et la personnalisation des workflows selon vos circuits internes.',
             'features'    => array(
                 'Gestion intelligente des documents pour classer, retrouver et suivre les informations sans recherches interminables.',
@@ -776,7 +776,7 @@ function ika_seed_solutions() {
             'title'       => 'IKA ARCHIVE',
             'eyebrow'     => 'Gestion documentaire',
             'image'       => 'images/ikaarchive.jpg',
-            'intro'       => 'Classez, recherchez et sécurisez vos documents avec une archive numérique organisée et contrôlée.',
+            'intro'       => 'IKA ARCHIVE facilite le classement, la conservation et la recherche de documents sensibles ou volumineux. Indexation, filtres, accès contrôlés et organisation par dossiers permettent de retrouver rapidement l\'information et de mieux sécuriser le patrimoine documentaire.',
             'description' => 'IKA ARCHIVE facilite la conservation et l’exploitation des documents importants. La solution aide à structurer les dossiers, indexer les documents, contrôler les accès et retrouver rapidement l’information utile sans dépendre uniquement des armoires physiques ou de dossiers dispersés.',
             'features'    => array(
                 'Classement par dossiers, catégories, services, années, types de documents et mots-clés.',
@@ -793,7 +793,7 @@ function ika_seed_solutions() {
             'title'       => 'IKA PORTAIL',
             'eyebrow'     => 'Portail digital sécurisé',
             'image'       => 'images/ikaportail.jpg',
-            'intro'       => 'Centralisez demandes, accès, validations et tableaux de bord dans un portail web sécurisé.',
+            'intro'       => 'IKA PORTAIL crée un espace digital sécurisé pour connecter clients, agents, partenaires et services internes. La plateforme centralise les demandes, circuits de validation, tableaux de bord et notifications afin de simplifier les échanges et améliorer le pilotage.',
             'description' => 'IKA PORTAIL crée un espace digital adapté aux échanges entre clients, usagers, agents, partenaires et services internes. Il permet de centraliser les demandes, suivre les traitements, automatiser les circuits de validation et offrir une interface claire à chaque profil utilisateur.',
             'features'    => array(
                 'Espace sécurisé avec authentification, profils utilisateurs et droits d’accès.',
@@ -1061,31 +1061,31 @@ function ika_seed_slides() {
             'metric_label'=> 'Depuis 2014', 'metric_value' => 'Expert digital', 'metric_text' => 'Conseil, logiciels, réseaux, cloud et sécurité.',
         ),
         'slide-2' => array(
-            'title'       => "Logiciels sur mesure\net automatisation",
-            'eyebrow'     => 'Ingénierie & Progiciels Métiers',
-            'text'        => 'Développez des solutions performantes adaptées à vos spécificités métiers : gestion d’accueil, courrier, archives et portails citoyens.',
-            'primary_text'=> 'Explorer nos logiciels', 'primary_url' => '#produits',
-            'secondary_text'=> 'Demander une démo', 'secondary_url' => '#contact',
+            'title'       => "Nous boostons votre\nproductivité !",
+            'eyebrow'     => 'Performance opérationnelle | Automatisation et pilotage',
+            'text'        => 'Nous supprimons les tâches répétitives, automatisons vos circuits de validation et connectons vos outils pour aider vos équipes à travailler plus vite, avec moins d\'erreurs.',
+            'primary_text'=> 'Voir nos solutions', 'primary_url' => '#produits',
+            'secondary_text'=> 'Nos réalisations', 'secondary_url' => '#realisations',
             'image'       => 'images/slide2.jpg',
-            'metric_label'=> 'Progiciels', 'metric_value' => 'IKA Suite', 'metric_text' => 'Visite, Courrier, Archive, Portail.',
+            'metric_label'=> 'Suites opérationnelles', 'metric_value' => 'Vite et bien', 'metric_text' => 'Vous serez surement le prochain partenaire satisfaits !',
         ),
         'slide-3' => array(
-            'title'       => "Réseaux robustes\net hébergement cloud",
-            'eyebrow'     => 'Infrastructures & Réseaux Sécurisés',
-            'text'        => 'Sécurisez vos données et interconnectez vos sites avec nos expertises en infrastructure serveur, pare-feu, cloud et énergie.',
-            'primary_text'=> 'Nos infrastructures', 'primary_url' => '#expertises',
-            'secondary_text'=> 'Audit réseau', 'secondary_url' => '#contact',
+            'title'       => "Nos solutions métiers\nsur mesure",
+            'eyebrow'     => 'Logiciels IKA | Applications, portails et intégrations',
+            'text'        => 'Chaque métier a ses contraintes. Nous concevons des portails, workflows, applications et intégrations adaptés à vos règles internes et à votre manière de travailler.',
+            'primary_text'=> 'Découvrir nos solutions', 'primary_url' => '#produits',
+            'secondary_text'=> 'Lancer un projet', 'secondary_url' => '#contact',
             'image'       => 'images/slide3.jpg',
-            'metric_label'=> 'Sécurité', 'metric_value' => 'Haute Disponibilité', 'metric_text' => 'Protection des données et continuité.',
+            'metric_label'=> 'Sur mesure', 'metric_value' => 'Solutions métier', 'metric_text' => 'Visite, courrier, archive et portail sécurisé.',
         ),
         'slide-4' => array(
-            'title'       => "Accompagnement global\net infogérance IT",
-            'eyebrow'     => 'Partenaire de Confiance au Burkina Faso',
-            'text'        => 'Bénéficiez d’un support technique réactif, de conseils stratégiques et d’une assistance quotidienne pour tous vos équipements informatiques.',
-            'primary_text'=> 'Contacter l’équipe', 'primary_url' => '#contact',
-            'secondary_text'=> 'En savoir plus', 'secondary_url' => 'presentation',
+            'title'       => "Hébergement local\nau Burkina Faso",
+            'eyebrow'     => 'Cloud local | VPS, domaine .bf, sauvegarde et support',
+            'text'        => 'Hébergez vos sites, applications et données plus près de vos utilisateurs avec une infrastructure locale, un support réactif et une meilleure maîtrise de vos environnements critiques.',
+            'primary_text'=> 'Voir l\'hébergement', 'primary_url' => '#hosting',
+            'secondary_text'=> 'Demander un devis', 'secondary_url' => '#contact',
             'image'       => 'images/slide4.jpg',
-            'metric_label'=> 'Support', 'metric_value' => '24/7 & Proximité', 'metric_text' => 'Intervention rapide à Ouagadougou et sous-région.',
+            'metric_label'=> 'Local', 'metric_value' => 'VPS & cloud', 'metric_text' => 'Hébergement, sauvegarde, supervision et domaines .bf.',
         ),
     );
     $order = 0;

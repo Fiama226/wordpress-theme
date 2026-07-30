@@ -108,11 +108,25 @@ $ika_wa_link   = 'https://wa.me/' . $ika_wa_number . '?text=' . rawurlencode( (s
 
   <?php if ( $ika_wa_number ) : ?>
   <!-- Widget WhatsApp -->
-  <div class="fixed bottom-6 right-6 z-50 flex items-end gap-3">
-    <a href="<?php echo esc_url( $ika_wa_link ); ?>" target="_blank" rel="noopener noreferrer" class="whatsapp-widget flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-2xl transition hover:scale-110" aria-label="<?php esc_attr_e( 'Contact WhatsApp', 'ika-solution' ); ?>">
-      <svg class="h-8 w-8 fill-current" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38c1.45.79 3.08 1.21 4.79 1.21 5.46 0 9.91-4.45 9.91-9.91 0-5.46-4.45-9.91-9.91-9.91zm0 18.06c-1.5 0-2.97-.4-4.24-1.16l-.3-.18-3.12.82.83-3.04-.2-.31c-.82-1.31-1.25-2.83-1.25-4.38 0-4.56 3.71-8.27 8.27-8.27 4.56 0 8.27 3.71 8.27 8.27 0 4.56-3.71 8.27-8.27 8.27zm4.53-6.19c-.25-.13-1.48-.73-1.71-.82-.23-.09-.4-.13-.57.13-.17.25-.66.82-.81.99-.15.17-.31.19-.56.06-.25-.13-1.05-.39-2-1.23-.74-.66-1.24-1.48-1.39-1.73-.15-.25-.02-.38.11-.51.11-.11.25-.31.38-.47.13-.17.17-.29.25-.48.08-.19.04-.36-.02-.5-.06-.13-.57-1.38-.78-1.89-.2-.5-.4-.43-.57-.44l-.49-.01c-.17 0-.45.06-.69.31-.24.25-.92.9-.92 2.19 0 1.29.94 2.53 1.07 2.71.13.17 1.85 2.82 4.48 3.95.63.27 1.12.43 1.5.55.63.2 1.21.17 1.66.10.51-.08 1.48-.6 1.69-1.18.21-.58.21-1.08.15-1.18-.06-.1-.23-.16-.48-.29z"/></svg>
-    </a>
-  </div>
+  <a
+    href="<?php echo esc_url( $ika_wa_link ); ?>"
+    class="whatsapp-widget fixed bottom-4 right-3 z-50 flex max-w-[calc(100vw-1.5rem)] items-center gap-2 rounded-full border border-white/70 bg-white px-3 py-2 text-ikaBlueDark shadow-premium transition hover:-translate-y-1 hover:shadow-[0_22px_60px_rgba(37,211,102,.28)] sm:bottom-5 sm:right-6 sm:gap-3 sm:px-4 sm:py-3"
+    target="_blank"
+    rel="noopener"
+    aria-label="<?php esc_attr_e( 'Contacter IKA SOLUTION sur WhatsApp', 'ika-solution' ); ?>"
+  >
+    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#25D366] sm:h-12 sm:w-12">
+      <svg class="h-5 w-5 sm:h-6 sm:w-6" fill="white" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+    </span>
+    <span class="grid min-w-0 gap-0.5 sm:gap-1">
+      <span class="text-[10px] font-black uppercase tracking-[0.12em] text-ikaRed sm:text-xs sm:tracking-[0.16em]">Support IKASOLUTION</span>
+      <span class="whatsapp-message relative block h-5 min-w-[155px] overflow-hidden text-xs font-black text-ikaBlueDark sm:min-w-[270px] sm:text-sm">
+        <span class="absolute inset-0">Contactez-nous maintenant</span>
+        <span class="absolute inset-0 opacity-0">Besoin d'un devis rapide ?</span>
+        <span class="absolute inset-0 opacity-0">Parlez à un expert IKA</span>
+      </span>
+    </span>
+  </a>
   <?php endif; ?>
 
   <?php wp_footer(); ?>
