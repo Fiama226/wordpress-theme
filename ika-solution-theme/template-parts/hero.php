@@ -27,9 +27,12 @@ if ( $ika_first ) {
 ?>
     <section id="accueil" class="relative min-h-[96svh] overflow-hidden pt-32 text-white">
       <div class="absolute inset-0">
-        <?php foreach ( $ika_slides as $i => $slide ) :
-            $img = ika_asset( get_post_meta( $slide->ID, 'ika_slide_image', true ) );
-            $cls = $i === 0 ? 'slide active effect-orbit' : 'slide effect-decompose';
+        <?php
+        $slide_effects = array( 'effect-orbit', 'effect-decompose', 'effect-parallax', 'effect-hosting' );
+        foreach ( $ika_slides as $i => $slide ) :
+            $img    = ika_asset( get_post_meta( $slide->ID, 'ika_slide_image', true ) );
+            $effect = isset( $slide_effects[ $i ] ) ? $slide_effects[ $i ] : 'effect-decompose';
+            $cls    = $i === 0 ? 'slide active ' . $effect : 'slide ' . $effect;
         ?>
         <div class="<?php echo esc_attr( $cls ); ?> absolute inset-0 bg-cover bg-center" style="background-image:url('<?php echo esc_url( $img ); ?>')"></div>
         <?php endforeach; ?>

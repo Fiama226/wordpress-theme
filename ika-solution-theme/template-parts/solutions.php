@@ -1,63 +1,76 @@
 <?php
 /**
  * Template part: Solutions / Produits logiciels (section "produits")
- * Products are driven by the ika_solution CPT (editable from the WordPress admin).
+ * Produits pilotés par le CPT ika_solution, éditables depuis l'administration.
+ * Reproduction fidèle du site statique : fond bleu nuit, onglets blancs,
+ * carte blanche avec image à gauche et contenu à droite.
+ *
+ * @package ika-solution
  */
+
 $solutions = get_posts( array(
     'post_type'      => 'ika_solution',
     'posts_per_page' => 20,
     'orderby'        => 'menu_order',
     'order'          => 'ASC',
 ) );
+
+if ( ! $solutions ) {
+    return;
+}
+
+// Récupère les 3 premiers bénéfices pour les badges (3 par ligne comme le statique).
+function ika_get_first_benefits( $post_id, $count = 3 ) {
+    $benefits = ika_get_list_meta( $post_id, 'ika_benefits' );
+    $features = ika_get_list_meta( $post_id, 'ika_features' );
+    $items    = ! empty( $benefits ) ? $benefits : $features;
+    return array_slice( $items, 0, $count );
+}
 ?>
-    <section id="produits" class="bg-white py-20 sm:py-28">
+    <section id="produits" class="bg-ikaBlueDark py-20 text-white sm:py-28">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="reveal text-center max-w-3xl mx-auto">
-          <p class="text-sm font-black uppercase tracking-[0.2em] text-ikaRed">Logiciels phares</p>
-          <h2 class="mt-4 text-4xl font-black tracking-normal text-ikaBlueDark sm:text-5xl">Nos solutions logicielles métiers</h2>
-          <p class="mt-4 text-base text-slate-600">Des progiciels conçus et développés pour automatiser vos processus administratifs, sécuriser vos accueils et valoriser vos archives.</p>
+        <div class="grid gap-10 lg:grid-cols-[.85fr_1.15fr] lg:items-end">
+          <div class="reveal">
+            <p class="text-sm font-black uppercase tracking-[0.2em] text-red-300"><?php esc_html_e( 'Nos solutions', 'ika-solution' ); ?></p>
+            <h2 class="mt-4 text-4xl font-black tracking-normal sm:text-5xl"><?php esc_html_e( 'Des solutions prêtes pour vos opérations.', 'ika-solution' ); ?></h2>
+            <p class="mt-5 max-w-xl text-base leading-8 text-white/75"><?php esc_html_e( 'Des logiciels IKA pensés pour améliorer l’accueil, le courrier, l’archivage et les services numériques métiers.', 'ika-solution' ); ?></p>
+          </div>
+          <div class="reveal flex gap-3 overflow-x-auto no-scrollbar lg:justify-end">
+            <?php foreach ( $solutions as $i => $sol ) : ?>
+            <button class="product-tab whitespace-nowrap rounded-full px-5 py-3 text-sm font-black transition <?php echo $i === 0 ? 'bg-white text-ikaBlue' : 'border border-white/25 text-white'; ?>" data-product="<?php echo (int) $i; ?>"><?php echo esc_html( get_the_title( $sol ) ); ?></button>
+            <?php endforeach; ?>
+          </div>
         </div>
 
-        <?php if ( $solutions ) : ?>
-        <div class="mt-14 flex flex-wrap justify-center gap-3">
-          <?php foreach ( $solutions as $i => $sol ) : ?>
-            <button class="product-tab rounded-full px-7 py-3 text-sm font-black transition <?php echo $i === 0 ? 'bg-ikaBlue text-white shadow-clean' : 'bg-ikaSoft text-slate-700 hover:bg-slate-200'; ?>" data-target="<?php echo esc_attr( $sol->post_name ); ?>"><?php echo esc_html( get_the_title( $sol ) ); ?></button>
-          <?php endforeach; ?>
-        </div>
-
-        <div class="mt-12 rounded-[2.5rem] bg-ikaSoft p-6 sm:p-10 lg:p-14">
+        <div class="mt-12 overflow-hidden rounded-[2rem] bg-white text-ikaInk shadow-premium">
           <?php foreach ( $solutions as $i => $sol ) :
-            $sol_img      = ika_asset( get_post_meta( $sol->ID, 'ika_image', true ) );
-            $sol_eyebrow  = get_post_meta( $sol->ID, 'ika_eyebrow', true );
-            $sol_features = ika_get_list_meta( $sol->ID, 'ika_features' );
-            $sol_brochure = get_post_meta( $sol->ID, 'ika_brochure', true );
+              $sol_image    = ika_asset( get_post_meta( $sol->ID, 'ika_image', true ) );
+              $sol_brochure = get_post_meta( $sol->ID, 'ika_brochure', true );
+              $sol_badges   = ika_get_first_benefits( $sol->ID );
+              $brochure_ext = $sol_brochure ? pathinfo( $sol_brochure, PATHINFO_EXTENSION ) : 'png';
+              $brochure_name = $sol_brochure ? 'Brochure_' . sanitize_file_name( get_the_title( $sol ) ) . '.' . $brochure_ext : '';
           ?>
-          <div id="<?php echo esc_attr( $sol->post_name ); ?>" class="product-slide <?php echo $i === 0 ? 'active' : ''; ?> grid gap-10 lg:grid-cols-2 lg:items-center">
-            <div class="reveal">
-              <span class="inline-flex rounded-full bg-ikaBlue/10 px-4 py-1.5 text-xs font-black text-ikaBlue"><?php echo esc_html( $sol_eyebrow ); ?></span>
-              <h3 class="mt-4 text-3xl font-black text-ikaBlueDark sm:text-4xl"><?php echo esc_html( get_the_title( $sol ) ); ?></h3>
-              <p class="mt-4 text-base leading-7 text-slate-600"><?php echo esc_html( get_the_excerpt( $sol ) ); ?></p>
-              <ul class="mt-6 grid gap-3 text-sm font-semibold text-slate-700">
-                <?php foreach ( $sol_features as $feature ) : ?>
-                  <li class="flex items-center gap-3"><span class="h-2 w-2 rounded-full bg-ikaRed"></span> <?php echo esc_html( $feature ); ?></li>
+          <article class="product-slide grid-cols-1 lg:grid-cols-2 <?php echo $i === 0 ? 'active' : ''; ?>">
+            <img class="h-80 w-full object-cover lg:h-[520px]" src="<?php echo esc_url( $sol_image ); ?>" alt="<?php echo esc_attr( get_the_title( $sol ) ); ?>">
+            <div class="flex flex-col justify-center p-8 sm:p-12">
+              <h3 class="mt-4 text-4xl font-black text-ikaBlue"><?php echo esc_html( get_the_title( $sol ) ); ?></h3>
+              <p class="mt-5 text-lg leading-8 text-slate-600"><?php echo esc_html( get_the_excerpt( $sol ) ); ?></p>
+              <?php if ( $sol_badges ) : ?>
+              <div class="mt-8 grid gap-3 sm:grid-cols-3">
+                <?php foreach ( $sol_badges as $badge ) : ?>
+                <span class="rounded-xl bg-ikaSoft px-4 py-3 text-sm font-bold"><?php echo esc_html( $badge ); ?></span>
                 <?php endforeach; ?>
-              </ul>
+              </div>
+              <?php endif; ?>
               <div class="mt-8 flex flex-wrap gap-4">
-                <a href="<?php echo esc_url( get_permalink( $sol ) ); ?>" class="rounded-full bg-ikaBlue px-7 py-4 text-sm font-bold text-white transition hover:bg-ikaBlueDark"><?php
-                  /* translators: %s: nom de la solution */
-                  printf( esc_html__( 'Découvrir %s', 'ika-solution' ), esc_html( get_the_title( $sol ) ) );
-                ?></a>
+                <a href="<?php echo esc_url( get_permalink( $sol ) ); ?>" class="inline-flex rounded-full bg-ikaRed px-7 py-4 text-sm font-extrabold text-white shadow-clean transition hover:bg-red-700"><?php esc_html_e( 'En savoir plus', 'ika-solution' ); ?></a>
                 <?php if ( $sol_brochure ) : ?>
-                <a href="<?php echo esc_url( ika_asset( $sol_brochure ) ); ?>" download="<?php echo esc_attr( 'Brochure_' . sanitize_file_name( get_the_title( $sol ) ) . '.' . pathinfo( $sol_brochure, PATHINFO_EXTENSION ) ); ?>" class="inline-flex rounded-full border border-slate-200 px-7 py-4 text-sm font-extrabold text-slate-700 transition hover:border-ikaBlue hover:bg-ikaSoft hover:text-ikaBlue"><?php esc_html_e( 'Télécharger la brochure', 'ika-solution' ); ?></a>
+                <a href="<?php echo esc_url( ika_asset( $sol_brochure ) ); ?>" download="<?php echo esc_attr( $brochure_name ); ?>" class="inline-flex rounded-full border border-slate-200 px-7 py-4 text-sm font-extrabold text-slate-700 transition hover:border-ikaBlue hover:text-ikaBlue hover:bg-ikaSoft"><?php esc_html_e( 'Télécharger la brochure', 'ika-solution' ); ?></a>
                 <?php endif; ?>
               </div>
             </div>
-            <div class="reveal relative">
-              <img class="h-80 w-full object-cover rounded-[1.5rem] shadow-premium lg:h-[520px]" src="<?php echo esc_url( $sol_img ); ?>" alt="<?php echo esc_attr( get_the_title( $sol ) ); ?>">
-            </div>
-          </div>
+          </article>
           <?php endforeach; ?>
         </div>
-        <?php endif; ?>
       </div>
     </section>
