@@ -349,7 +349,6 @@
         <a class="transition hover:text-ikaBlue" href="index.php#expertises">Expertise</a>
         <a class="transition hover:text-ikaBlue <?= navActive('realisations.php', $currentPage) ?>" href="realisations.php">Réalisations</a>
         <a class="transition hover:text-ikaBlue" href="index.php#produits">Solutions</a>
-        <a class="transition hover:text-ikaBlue <?= navActive('proxmox.php', $currentPage) ?>" href="proxmox.php">Proxmox</a>
         <a class="transition hover:text-ikaBlue <?= navActive('actualites.php', $currentPage) ?>" href="actualites.php">Actualités</a>
         <a class="rounded-full bg-ikaRed px-5 py-3 text-white shadow-clean transition hover:bg-red-700" href="index.php#contact">Demander un devis</a>
         <a class="transition hover:text-ikaBlue" href="index.php#contact">Contact</a>
@@ -370,7 +369,6 @@
         <a class="rounded-xl px-3 py-3 hover:bg-ikaSoft" href="index.php#expertises">Expertise</a>
         <a class="rounded-xl px-3 py-3 hover:bg-ikaSoft <?= navActive('realisations.php', $currentPage, true) ?>" href="realisations.php">Réalisations</a>
         <a class="rounded-xl px-3 py-3 hover:bg-ikaSoft" href="index.php#produits">Solutions</a>
-        <a class="rounded-xl px-3 py-3 hover:bg-ikaSoft <?= navActive('proxmox.php', $currentPage, true) ?>" href="proxmox.php">Proxmox</a>
         <a class="rounded-xl px-3 py-3 hover:bg-ikaSoft <?= navActive('actualites.php', $currentPage, true) ?>" href="actualites.php">Actualités</a>
         <a class="rounded-xl px-3 py-3 text-ikaRed hover:bg-ikaSoft" href="index.php#contact">Demander un devis</a>
         <a class="rounded-xl px-3 py-3 hover:bg-ikaSoft" href="index.php#contact">Contact</a>

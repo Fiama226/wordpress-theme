@@ -517,9 +517,9 @@
           <div class="mt-8">
             <p class="text-xs font-black uppercase tracking-[0.2em] text-slate-400">Technologies intégrées</p>
             <div class="mt-4 flex flex-wrap items-center gap-6">
-              <img class="h-8 w-auto opacity-60 transition hover:opacity-100" src="assets/images/proxmox/logo-debian.svg" alt="Debian GNU/Linux" loading="lazy">
-              <img class="h-11 w-auto opacity-60 transition hover:opacity-100" src="assets/images/proxmox/logo-kvm.svg" alt="KVM (Kernel-based Virtual Machine)" loading="lazy">
-              <img class="h-9 w-auto opacity-60 transition hover:opacity-100" src="assets/images/proxmox/logo-lxc.svg" alt="LXC — Linux Containers" loading="lazy">
+              <img class="h-8 w-auto opacity-60 transition hover:opacity-100" src="assets/images/proxmox/logo-debian.png" alt="Debian GNU/Linux" loading="lazy">
+              <img class="h-11 w-auto opacity-60 transition hover:opacity-100" src="assets/images/proxmox/logo-kvm.png" alt="KVM (Kernel-based Virtual Machine)" loading="lazy">
+              <img class="h-9 w-auto opacity-60 transition hover:opacity-100" src="assets/images/proxmox/logo-lxc.png" alt="LXC — Linux Containers" loading="lazy">
             </div>
           </div>
         </div>
@@ -536,7 +536,7 @@
           <span class="h-3 w-3 rounded-full bg-green-400"></span>
           <span class="ml-3 text-xs font-bold text-slate-500">Proxmox VE — Tableau de bord de l'hôte</span>
         </figcaption>
-        <img class="block w-full" src="assets/images/Proxmox-VE-7-1-Host-Summary.svg" alt="Tableau de bord Proxmox Virtual Environment (résumé de l'hôte)" loading="lazy">
+        <img class="block w-full h-full" src="assets/images/proxmox/proxmox-backup-server-dashboard.png" alt="Tableau de bord Proxmox Virtual Environment (résumé de l'hôte)" loading="lazy">
       </figure>
     </div>
   </section>
@@ -583,7 +583,7 @@
         <div class="grid gap-0 lg:grid-cols-2">
           <div class="p-8 sm:p-12">
             <div class="flex items-center gap-4">
-              <img class="h-12 w-auto" src="assets/images/proxmox/logo-ceph.svg" alt="Ceph" loading="lazy">
+              <img class="h-12 w-auto" src="assets/images/proxmox/logo-ceph.png" alt="Ceph" loading="lazy">
               <p class="text-sm font-black uppercase tracking-[0.2em] text-red-200">Stockage défini par logiciel</p>
             </div>
             <h2 class="mt-4 text-3xl font-black leading-tight sm:text-4xl">Ceph, intégré nativement à Proxmox VE.</h2>

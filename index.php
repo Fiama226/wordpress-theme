@@ -505,10 +505,11 @@
       <div class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean">
         <img class="max-h-20 max-w-full object-contain" src="assets/images/fortinet.png" alt="Fortinet">
       </div>
-      <a href="proxmox.php" class="reveal flex h-32 flex-col items-center justify-center rounded-2xl bg-ikaBlueDark p-6 text-center shadow-clean transition hover:-translate-y-1 hover:shadow-premium focus:outline-none focus:ring-4 focus:ring-ikaRed/25" aria-label="En savoir plus sur Proxmox">
-        <span class="text-xl font-black text-white">Proxmox</span>
-        <span class="mt-1 text-[11px] font-black uppercase tracking-[0.14em] text-red-200">Virtualisation & sauvegarde</span>
-      </a>
+      <div class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean">
+        <a href="proxmox.php">
+        <img class="max-h-20 max-w-full object-contain" src="assets/images/Proxmox.png" alt="Proxmox">
+        </a>
+      </div>
     </div>
   </div>
 </section>
