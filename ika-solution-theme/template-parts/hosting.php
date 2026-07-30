@@ -42,7 +42,7 @@ $ika_offers = apply_filters(
             <p class="text-sm font-black uppercase tracking-[0.2em] text-ikaRed"><?php esc_html_e( 'Web, cloud et domaines', 'ika-solution' ); ?></p>
             <h2 class="mt-4 text-4xl font-black tracking-normal text-ikaBlueDark sm:text-5xl"><?php esc_html_e( 'Une infrastructure solide pour vos sites, portails et applications.', 'ika-solution' ); ?></h2>
             <p class="mt-6 text-base leading-8 text-slate-600"><?php esc_html_e( 'Hébergement, VPS, domaine et administration technique pour garder vos services disponibles, rapides et alignés avec votre marché.', 'ika-solution' ); ?></p>
-            <a href="<?php echo esc_url( ika_opt( 'ika_hosting_url' ) ); ?>" target="_blank" rel="noopener" class="mt-8 inline-flex rounded-full bg-ikaBlue px-7 py-4 text-sm font-extrabold text-white shadow-clean transition hover:bg-ikaBlueDark"><?php esc_html_e( 'Découvrir nos offres', 'ika-solution' ); ?></a>
+            <a href="<?php echo esc_url( ika_opt( 'ika_hosting_url' ) ); ?>" target="_blank" rel="noopener" class="mt-8 inline-flex rounded-full bg-ikaBlue px-7 py-4 text-sm font-extrabold text-white shadow-clean transition hover:bg-ikaBlueDark"><?php esc_html_e( 'Decouvrir nos offres', 'ika-solution' ); ?></a>
           </div>
           <div class="grid gap-5 sm:grid-cols-2">
             <?php foreach ( $ika_offers as $ika_offer ) : ?>

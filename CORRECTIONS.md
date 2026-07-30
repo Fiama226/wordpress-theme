@@ -9,6 +9,31 @@ Réponse au rapport `AUDIT-THEME.md`. Les 21 actions planifiées ont été réal
 | Bloquants | **13** | **0** | **0** |
 | Avertissements | 26 | 2 | **0** |
 
+## Mise à jour v1.3.0 — parité stricte avec le site statique
+
+Retour terrain : malgré la v1.2.0, quelques écarts subsistaient entre le thème
+installé et le site statique. Chacun a été corrigé à la racine :
+
+| Écart constaté | Cause | Correction |
+|---|---|---|
+| **Espacements absents dans « Nos domaines d'expertise »** | `assets/css/tailwind.css` compilé **périmé** (généré avant les template-parts) : `gap-7` et les décalages `lg:translate-y-*` n'existaient pas | Recompilation `npm run build:css` + script de build qui impose une compilation fraîche ; la 2ᵉ carte (« Infrastructures ») n'a volontairement **aucun** décalage, comme sur le statique — matrice corrigée |
+| **Bandeau de contact fixe (WhatsApp) introuvable** | Le widget existait mais les classes d'ancrage (`bottom-4`, `right-3`, `sm:bottom-5`, `sm:right-6`, `max-w-[calc(100vw-1.5rem)]`) avaient disparu avec le CSS périmé | Corrigé par la même recompilation ; apostrophe typographique (`d’un`) alignée sur le statique |
+| **Section « Dernières réalisations » différente (accueil)** | Le statique affiche 3 cartes teaser Sonatur propres à l'accueil ; le thème affichait les 3 premiers projets CPT | Les 3 cartes sont désormais pilotées par le Customizer (**Contenu IKA Solution > Accueil — Dernières réalisations**) avec le contenu exact du statique par défaut — page Réalisations inchangée (15 projets) |
+| **Page Réalisations : boutons de filtre manquants** | Le thème n'affichait que les types utilisés | Les **6 boutons** (Application web & mobile, Site web, Intranet, Formations, Licences, Infrastructure serveur) sont toujours affichés, comme sur le statique |
+| **Animations de défilement différentes** | `theme.js` était simplifié : révélation one-shot, sans variantes ni cascade | Réécriture à l'identique du script statique : ajout automatique de `.reveal` (sections, articles, formulaires, iframe, images, blocs arrondis), variantes `reveal-up/left/right/zoom/tilt/down` en rotation, délais `(i % 4) × 70 ms`, threshold **0.14**, ré-apparition à la sortie du viewport ; **surlignage du menu selon l'ancre** (`applyNavHash`) restauré ; temporisations du hero alignées (220 ms / 5,6 s / 1,3 s) |
+| **Images absentes de la médiathèque** | Jamais importées | À l'activation, **les 77 images + la brochure PDF** sont copiées dans `uploads/` et créées comme pièces jointes (**visibles dans Médiathèque**) ; `ika_asset()` sert automatiquement ces copies. Import idempotent (meta `_ika_source_path`), relançable depuis l'admin s'il est interrompu, jamais exécuté en front-office |
+
+**Contrôles de parité automatisés rejoués après correction :**
+- 0 texte visible du site statique introuvable dans le thème (accueil,
+  réalisations, équipe, société, actualités) ;
+- 8/8 cartes expertises strictement identiques (classes, fonds, décalages) ;
+- 0 classe manquante dans les 14 sections de l'accueil ;
+- 52 images référencées par le thème toutes présentes dans ses assets ;
+- `node --check` (JS) et parseur PHP : OK ; `tools/audit-theme.sh` : 0/0.
+
+À noter : les 3 fiches d'équipe « manquantes » sont **commentées dans le site
+statique lui-même** (donc invisibles là-bas) — le thème est conforme.
+
 ## Mise à jour v1.2.0 — 100 % éditable
 
 Les 2 derniers avertissements ont été traités : `page-presentation.php`

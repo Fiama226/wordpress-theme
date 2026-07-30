@@ -34,9 +34,8 @@
     );
   }
 
-  // N'afficher que les filtres réellement utilisés.
-  $usedTypes  = array_filter( wp_list_pluck( $realisations, 'type' ) );
-  $typeLabels = array_intersect_key( $typeLabels, array_flip( $usedTypes ) );
+  // Comme sur le site statique : les 6 boutons de type sont toujours affichés
+  // (même ceux sans projet pour l'instant), dans l'ordre d'origine.
 ?>
 
   <main>

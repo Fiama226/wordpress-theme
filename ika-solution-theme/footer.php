@@ -122,7 +122,7 @@ $ika_wa_link   = 'https://wa.me/' . $ika_wa_number . '?text=' . rawurlencode( (s
       <span class="text-[10px] font-black uppercase tracking-[0.12em] text-ikaRed sm:text-xs sm:tracking-[0.16em]">Support IKASOLUTION</span>
       <span class="whatsapp-message relative block h-5 min-w-[155px] overflow-hidden text-xs font-black text-ikaBlueDark sm:min-w-[270px] sm:text-sm">
         <span class="absolute inset-0">Contactez-nous maintenant</span>
-        <span class="absolute inset-0 opacity-0">Besoin d'un devis rapide ?</span>
+        <span class="absolute inset-0 opacity-0">Besoin d’un devis rapide ?</span>
         <span class="absolute inset-0 opacity-0">Parlez à un expert IKA</span>
       </span>
     </span>

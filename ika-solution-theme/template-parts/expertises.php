@@ -20,16 +20,6 @@ if ( ! $expertises ) {
     return;
 }
 
-// Mapping des expertises vers leurs slugs pour les liens.
-// On reconstruit le slug WordPress à partir du CPT.
-function ika_expertise_url( $post ) {
-    $link = get_post_meta( $post->ID, 'ika_expertise_link', true );
-    if ( $link ) {
-        return esc_url( $link );
-    }
-    return esc_url( get_permalink( $post ) );
-}
-
 // Alternance des couleurs de fond comme dans le site statique :
 // indices 0-3 → fond blanc ; indices 4-7 → fond bleu nuit.
 $dark_indices = array( 4, 5, 6, 7 );
@@ -46,10 +36,11 @@ $dark_indices = array( 4, 5, 6, 7 );
 
         <div class="mt-12 grid gap-7 md:grid-cols-2 lg:grid-cols-4">
           <?php
-          // Décalages verticaux alternés comme le site statique.
+          // Décalages verticaux alternés — reproduits à l'identique du site
+          // statique (la 2e carte, « Infrastructures », n'a aucun décalage).
           $translate_classes = array(
               'lg:-translate-y-4',
-              'lg:-translate-y-4',
+              '',
               'lg:translate-y-6',
               'lg:-translate-y-2',
               'lg:translate-y-2',
@@ -74,7 +65,7 @@ $dark_indices = array( 4, 5, 6, 7 );
                   ? 'text-sm leading-7 text-white/75'
                   : 'text-sm leading-7 text-slate-600';
           ?>
-          <div onclick="window.location.href='<?php echo $exp_url; ?>'" class="expertise-card reveal group relative flex h-full flex-col rounded-2xl <?php echo esc_attr( $card_class . ' ' . $translate ); ?> transition hover:-translate-y-2 hover:shadow-premium focus:outline-none focus:ring-4 focus:ring-ikaRed/25 cursor-pointer" role="link" tabindex="0">
+          <div onclick="window.location.href='<?php echo $exp_url; ?>'" class="expertise-card reveal group relative flex h-full flex-col rounded-2xl <?php echo esc_attr( trim( $card_class . ' ' . $translate ) ); ?> transition hover:-translate-y-2 hover:shadow-premium focus:outline-none focus:ring-4 focus:ring-ikaRed/25 cursor-pointer" role="link" tabindex="0">
             <div class="expertise-visual <?php echo esc_attr( $cut ); ?>">
               <img src="<?php echo esc_url( ika_asset( $exp_img ) ); ?>" alt="<?php echo esc_attr( get_the_title( $exp ) ); ?>">
             </div>

@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Version des données de démonstration importées depuis le site statique.
 if ( ! defined( 'IKA_SOLUTION_SEED_VERSION' ) ) {
-    define( 'IKA_SOLUTION_SEED_VERSION', '2026-07-30-static-v5' );
+    define( 'IKA_SOLUTION_SEED_VERSION', '2026-07-30-static-v6' );
 }
 
 /**
@@ -224,7 +224,18 @@ function ika_asset( $path ) {
         // Fallback : on essaie comme chemin relatif.
     }
 
-    return get_template_directory_uri() . '/assets/' . ltrim( $path, '/' );
+    // Chemin relatif : si le fichier a été importé dans la médiathèque
+    // (à l'activation du thème), on sert la copie WordPress.
+    $rel = ltrim( $path, '/' );
+    $map = ika_get_media_map();
+    if ( isset( $map[ $rel ] ) ) {
+        $url = wp_get_attachment_url( (int) $map[ $rel ] );
+        if ( $url ) {
+            return $url;
+        }
+    }
+
+    return get_template_directory_uri() . '/assets/' . $rel;
 }
 
 /**
@@ -244,6 +255,43 @@ require_once get_template_directory() . '/inc/contact-form.php';
 function ika_page_url( $slug ) {
     $page = get_page_by_path( $slug );
     return $page ? get_permalink( $page ) : home_url( '/' . ltrim( $slug, '/' ) );
+}
+
+/**
+ * URL d'une expertise : lien personnalisé saisi en meta, sinon permalien.
+ *
+ * @param WP_Post $post Contenu de type ika_expertise.
+ * @return string
+ */
+function ika_expertise_url( $post ) {
+    $link = get_post_meta( $post->ID, 'ika_expertise_link', true );
+    if ( $link ) {
+        return esc_url( $link );
+    }
+    return esc_url( get_permalink( $post ) );
+}
+
+/**
+ * Badges affichés sur les cartes de la section « produits » de l'accueil.
+ *
+ * Sur le site statique, ces libellés courts (ex : « Entrées / sorties »)
+ * sont propres à l'accueil et différents de la liste « benefits » des pages
+ * détail. Priorité au meta ika_home_tags ; repli sur benefits/features.
+ *
+ * @param int $post_id Identifiant de la solution.
+ * @param int $count   Nombre de badges retournés.
+ * @return array<int,string>
+ */
+function ika_get_first_benefits( $post_id, $count = 3 ) {
+    $home_tags = ika_get_list_meta( $post_id, 'ika_home_tags' );
+    if ( ! empty( $home_tags ) ) {
+        return array_slice( $home_tags, 0, $count );
+    }
+
+    $benefits = ika_get_list_meta( $post_id, 'ika_benefits' );
+    $features = ika_get_list_meta( $post_id, 'ika_features' );
+    $items    = ! empty( $benefits ) ? $benefits : $features;
+    return array_slice( $items, 0, $count );
 }
 
 /**
@@ -742,6 +790,7 @@ function ika_seed_solutions() {
             'title'       => 'IKA VISITE',
             'eyebrow'     => 'Accueil et sécurité',
             'image'       => 'images/ikavisite.jpg',
+            'home_tags'   => array( 'Accès sécurisés', 'Identification', 'Entrées / sorties' ),
             'intro'       => 'IKA VISITE permet de gérer, suivre et optimiser vos visites en toute simplicité. La solution sécurise les accès, identifie les visiteurs, suit les heures d\'entrée et de sortie et propose des interfaces ergonomiques pour les agents d\'accueil.',
             'description' => 'IKA VISITE simplifie la gestion des visiteurs tout en renforçant la sécurité des accès. La solution permet d’identifier les visiteurs, suivre les heures d’entrée et de sortie, organiser les passages et offrir aux agents une interface claire pour mieux piloter l’accueil.',
             'features'    => array(
@@ -759,6 +808,7 @@ function ika_seed_solutions() {
             'title'       => 'IKA COURRIER',
             'eyebrow'     => 'Gestion administrative',
             'image'       => 'images/ikacourrier.jpg',
+            'home_tags'   => array( 'Documents', 'Utilisateurs & rôles', 'Workflows' ),
             'intro'       => 'IKA COURRIER met fin aux recherches interminables avec une gestion intelligente des documents, des utilisateurs et des rôles. La solution facilite l\'intégration de nouveaux modules et personnalise les workflows pour automatiser vos processus.',
             'description' => 'IKA COURRIER facilite la gestion intelligente des documents et automatise les processus administratifs. La solution intègre la gestion des utilisateurs et des rôles, l’ajout de nouveaux modules et la personnalisation des workflows selon vos circuits internes.',
             'features'    => array(
@@ -776,6 +826,7 @@ function ika_seed_solutions() {
             'title'       => 'IKA ARCHIVE',
             'eyebrow'     => 'Gestion documentaire',
             'image'       => 'images/ikaarchive.jpg',
+            'home_tags'   => array( 'Indexation', 'Recherche', 'Conservation' ),
             'intro'       => 'IKA ARCHIVE facilite le classement, la conservation et la recherche de documents sensibles ou volumineux. Indexation, filtres, accès contrôlés et organisation par dossiers permettent de retrouver rapidement l\'information et de mieux sécuriser le patrimoine documentaire.',
             'description' => 'IKA ARCHIVE facilite la conservation et l’exploitation des documents importants. La solution aide à structurer les dossiers, indexer les documents, contrôler les accès et retrouver rapidement l’information utile sans dépendre uniquement des armoires physiques ou de dossiers dispersés.',
             'features'    => array(
@@ -793,6 +844,7 @@ function ika_seed_solutions() {
             'title'       => 'IKA PORTAIL',
             'eyebrow'     => 'Portail digital sécurisé',
             'image'       => 'images/ikaportail.jpg',
+            'home_tags'   => array( 'Accès', 'Circuit de validation', 'Tableaux de bord' ),
             'intro'       => 'IKA PORTAIL crée un espace digital sécurisé pour connecter clients, agents, partenaires et services internes. La plateforme centralise les demandes, circuits de validation, tableaux de bord et notifications afin de simplifier les échanges et améliorer le pilotage.',
             'description' => 'IKA PORTAIL crée un espace digital adapté aux échanges entre clients, usagers, agents, partenaires et services internes. Il permet de centraliser les demandes, suivre les traitements, automatiser les circuits de validation et offrir une interface claire à chaque profil utilisateur.',
             'features'    => array(
@@ -832,6 +884,7 @@ function ika_seed_solutions() {
             if ( isset( $brochures[ $slug ] ) ) {
                 ika_solution_update_meta_if_empty( $id, 'ika_brochure', $brochures[ $slug ] );
             }
+            ika_solution_update_meta_if_empty( $id, 'ika_home_tags', $data['home_tags'] );
             ika_solution_update_meta_if_empty( $id, 'ika_benefits', $data['benefits'] );
             ika_solution_update_meta_if_empty( $id, 'ika_use_cases', $data['use_cases'] );
         }
@@ -1558,6 +1611,185 @@ function ika_solution_remove_default_wp_sample_content() {
 function ika_solution_has_seed_gaps() {
     return get_option( 'ika_solution_seed_version' ) !== IKA_SOLUTION_SEED_VERSION;
 }
+
+/* ------------------------------------------------------------------------ */
+/* Import des visuels du thème dans la médiathèque WordPress                 */
+/* ------------------------------------------------------------------------ */
+
+/**
+ * Correspondance « chemin relatif d'asset → ID d'attachment ».
+ *
+ * Remplie par ika_import_theme_media() à l'activation du thème : toutes les
+ * images utilisées par le site sont alors visibles (et remplaçables) dans
+ * Médiathèque, et ika_asset() sert automatiquement ces copies.
+ *
+ * @return array<string,int>
+ */
+function ika_get_media_map() {
+    $map = get_option( 'ika_media_map', array() );
+    return is_array( $map ) ? $map : array();
+}
+
+/**
+ * Type MIME minimal pour l'import (inclut les SVG, non couverts par les
+ * mimes autorisés par défaut de WordPress).
+ *
+ * @param string $ext Extension de fichier en minuscules.
+ * @return string
+ */
+function ika_media_mime( $ext ) {
+    $mimes = array(
+        'jpg'  => 'image/jpeg',
+        'jpeg' => 'image/jpeg',
+        'png'  => 'image/png',
+        'gif'  => 'image/gif',
+        'webp' => 'image/webp',
+        'svg'  => 'image/svg+xml',
+        'pdf'  => 'application/pdf',
+    );
+    return isset( $mimes[ $ext ] ) ? $mimes[ $ext ] : 'application/octet-stream';
+}
+
+/**
+ * Retrouve un attachment déjà importé pour un chemin d'asset donné.
+ *
+ * @param string $rel Chemin relatif (ex : images/logo.png).
+ * @return int ID d'attachment ou 0.
+ */
+function ika_find_attachment_by_source( $rel ) {
+    $query = new WP_Query(
+        array(
+            'post_type'      => 'attachment',
+            'post_status'    => 'inherit',
+            'posts_per_page' => 1,
+            'fields'         => 'ids',
+            'meta_key'       => '_ika_source_path',
+            'meta_value'     => $rel,
+            'no_found_rows'  => true,
+        )
+    );
+    return ! empty( $query->posts ) ? (int) $query->posts[0] : 0;
+}
+
+/**
+ * Importe toutes les images (et le PDF de la brochure) du dossier assets/ du
+ * thème dans la médiathèque WordPress.
+ *
+ * Idempotent : un meta `_ika_source_path` mémorise la correspondance, donc un
+ * second passage ne crée ni doublon ni nouvelle copie. Les templates utilisent
+ * ensuite automatiquement les URL des pièces jointes via ika_asset().
+ */
+function ika_import_theme_media() {
+    $dirs    = array( 'images', 'pdf' );
+    $allowed = array( 'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'pdf' );
+
+    $uploads = wp_upload_dir();
+    if ( ! empty( $uploads['error'] ) ) {
+        return;
+    }
+
+    require_once ABSPATH . 'wp-admin/includes/file.php';
+    require_once ABSPATH . 'wp-admin/includes/media.php';
+    require_once ABSPATH . 'wp-admin/includes/image.php';
+
+    @set_time_limit( 300 ); // phpcs:ignore — import unique à l'activation.
+
+    $map = ika_get_media_map();
+
+    foreach ( $dirs as $dir ) {
+        $base = trailingslashit( get_template_directory() . '/assets/' . $dir );
+        if ( ! is_dir( $base ) ) {
+            continue;
+        }
+
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator( $base, FilesystemIterator::SKIP_DOTS )
+        );
+
+        foreach ( $iterator as $file ) {
+            if ( ! $file->isFile() ) {
+                continue;
+            }
+            $ext = strtolower( pathinfo( $file->getFilename(), PATHINFO_EXTENSION ) );
+            if ( ! in_array( $ext, $allowed, true ) ) {
+                continue;
+            }
+
+            // Chemin relatif canonique, ex : images/clients/ONEA.jpg.
+            $within = str_replace( '\\', '/', substr( $file->getPathname(), strlen( $base ) ) );
+            $rel    = $dir . '/' . ltrim( $within, '/' );
+
+            // Déjà importé lors d'un passage précédent ?
+            if ( isset( $map[ $rel ] ) && get_post( (int) $map[ $rel ] ) ) {
+                continue;
+            }
+            $found = ika_find_attachment_by_source( $rel );
+            if ( $found ) {
+                $map[ $rel ] = $found;
+                continue;
+            }
+
+            // Copie physique dans le dossier uploads de WordPress.
+            $filename = wp_unique_filename( $uploads['path'], $file->getFilename() );
+            $dest     = trailingslashit( $uploads['path'] ) . $filename;
+            if ( ! @copy( $file->getPathname(), $dest ) ) {
+                continue;
+            }
+
+            $attachment_id = wp_insert_attachment(
+                array(
+                    'guid'           => trailingslashit( $uploads['url'] ) . $filename,
+                    'post_mime_type' => ika_media_mime( $ext ),
+                    'post_title'     => preg_replace( '/\.[^.]+$/', '', $file->getFilename() ),
+                    'post_content'   => '',
+                    'post_status'    => 'inherit',
+                ),
+                $dest
+            );
+
+            if ( ! $attachment_id || is_wp_error( $attachment_id ) ) {
+                continue;
+            }
+
+            // Tailles d'image + métadonnées (la génération peut échouer pour
+            // les SVG/PDF selon l'hébergement : ce n'est pas bloquant).
+            $metadata = @wp_generate_attachment_metadata( $attachment_id, $dest ); // phpcs:ignore
+            if ( $metadata && ! is_wp_error( $metadata ) ) {
+                wp_update_attachment_metadata( $attachment_id, $metadata );
+            }
+
+            update_post_meta( $attachment_id, '_ika_source_path', $rel );
+            $map[ $rel ] = $attachment_id;
+            update_option( 'ika_media_map', $map, false );
+        }
+    }
+
+    update_option( 'ika_media_map', $map, false );
+}
+
+/**
+ * Import + marqueur de version : ne se relance que si la version des données
+ * du thème a changé.
+ */
+function ika_import_theme_media_versioned() {
+    ika_import_theme_media();
+    update_option( 'ika_media_import_version', IKA_SOLUTION_SEED_VERSION, false );
+}
+add_action( 'after_switch_theme', 'ika_import_theme_media_versioned' );
+
+/**
+ * Auto-réparation : si le thème était déjà actif avant cette version, l'import
+ * se fait au prochain passage dans l'administration (jamais en front-office,
+ * pour ne pas pénaliser les visiteurs). En attendant, ika_asset() continue de
+ * servir les fichiers du thème : rien ne s'affiche cassé.
+ */
+function ika_solution_ensure_media_imported() {
+    if ( get_option( 'ika_media_import_version' ) === IKA_SOLUTION_SEED_VERSION ) {
+        return;
+    }
+    ika_import_theme_media_versioned();
+}
+add_action( 'admin_init', 'ika_solution_ensure_media_imported' );
 
 /**
  * Seed all editable content (idempotent).

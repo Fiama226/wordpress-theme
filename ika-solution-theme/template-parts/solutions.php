@@ -18,14 +18,6 @@ $solutions = get_posts( array(
 if ( ! $solutions ) {
     return;
 }
-
-// Récupère les 3 premiers bénéfices pour les badges (3 par ligne comme le statique).
-function ika_get_first_benefits( $post_id, $count = 3 ) {
-    $benefits = ika_get_list_meta( $post_id, 'ika_benefits' );
-    $features = ika_get_list_meta( $post_id, 'ika_features' );
-    $items    = ! empty( $benefits ) ? $benefits : $features;
-    return array_slice( $items, 0, $count );
-}
 ?>
     <section id="produits" class="bg-ikaBlueDark py-20 text-white sm:py-28">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
