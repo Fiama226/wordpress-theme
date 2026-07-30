@@ -38,9 +38,39 @@
   var heroMetricLabel = document.getElementById('heroMetricLabel');
   var heroMetric = document.getElementById('heroMetric');
   var heroMetricText = document.getElementById('heroMetricText');
+  var heroSection = document.getElementById('accueil');
 
   var currentSlide = 0;
   var slideInterval = null;
+
+  function runHeroIntro() {
+    if (!heroSection || !heroTitle || heroSection.dataset.introPlayed === 'true') {
+      return 0;
+    }
+
+    heroSection.dataset.introPlayed = 'true';
+    heroSection.classList.add('hero-intro');
+
+    var words = heroTitle.textContent.trim().split(/\s+/);
+    var charIndex = 0;
+    heroTitle.innerHTML = words.map(function (word) {
+      var chars = word.split('').map(function (char) {
+        var delay = 0.28 + (charIndex * 0.035);
+        charIndex++;
+        return '<span class="hero-char" style="animation-delay:' + delay + 's">' + char + '</span>';
+      }).join('');
+      return '<span class="hero-word">' + chars + '</span>';
+    }).join(' ');
+
+    window.setTimeout(function () {
+      heroSection.classList.remove('hero-intro');
+      if (heroData[0] && heroData[0].titleHtml) {
+        heroTitle.innerHTML = heroData[0].titleHtml;
+      }
+    }, 2600);
+
+    return 2800;
+  }
 
   function setText(el, value) {
     if (el && typeof value === 'string') {
@@ -144,7 +174,7 @@
     });
   });
 
-  startAutoplay();
+  window.setTimeout(startAutoplay, runHeroIntro());
 
   /* ------------------------------------------------------------------ */
   /* Onglets des produits (compatible data-product ET data-target)       */
@@ -180,8 +210,40 @@
           el.classList.add('active');
         }
       }
+
+      // Redémarrer l'auto-rotation.
+      startProductSlider();
     });
   });
+
+  // Auto-rotation des produits toutes les 6 secondes.
+  var productTimer = null;
+  function showProduct(index) {
+    Array.prototype.forEach.call(productSlides, function (s) { s.classList.remove('active'); });
+    Array.prototype.forEach.call(productTabs, function (t, i) {
+      t.classList.toggle('bg-white', i === index);
+      t.classList.toggle('text-ikaBlue', i === index);
+      t.classList.toggle('border', i !== index);
+      t.classList.toggle('border-white/25', i !== index);
+      t.classList.toggle('text-white', i !== index);
+    });
+    if (productSlides[index]) {
+      productSlides[index].classList.add('active');
+    }
+  }
+
+  function startProductSlider() {
+    clearInterval(productTimer);
+    productTimer = setInterval(function () {
+      var activeIdx = Array.prototype.indexOf.call(productSlides, document.querySelector('.product-slide.active'));
+      var next = (activeIdx + 1) % productSlides.length;
+      showProduct(next);
+    }, 6000);
+  }
+
+  if (productTabs.length && productSlides.length) {
+    startProductSlider();
+  }
 
   /* ------------------------------------------------------------------ */
   /* Révélation au défilement                                            */

@@ -28,7 +28,7 @@ function ika_default_options() {
 		'ika_phone2'         => '+226 25 65 59 54',
 		'ika_email'          => 'infos@ikasolution.com',
 		'ika_whatsapp'       => '22672089090',
-		'ika_whatsapp_text'  => 'Bonjour IKA SOLUTION, je souhaite en savoir plus sur vos services.',
+		'ika_whatsapp_text'  => 'Bonjour IKA SOLUTION, je souhaite avoir des informations sur vos services.',
 		'ika_maps_embed'     => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3897.813956935869!2d-1.5510319!3d12.3283057!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xe2e97959a8cca5d%3A0xf30ca6cdfc799f34!2sIKA%20SOLUTION!5e0!3m2!1sfr!2sci!4v1780451050715!5m2!1sfr!2sci',
 
 		// --- Baseline / footer ---
@@ -106,12 +106,12 @@ function ika_default_options() {
 		'ika_why_title'   => 'Une expertise pensée pour optimiser votre rendement.',
 		'ika_why_1_title' => 'Proximité',
 		'ika_why_1_text'  => 'Une équipe disponible à Ouagadougou pour analyser vos besoins, cadrer vos projets et assurer le suivi.',
-		'ika_why_2_title' => 'Fiabilité',
-		'ika_why_2_text'  => 'Des infrastructures sécurisées, des logiciels robustes et des méthodologies éprouvées depuis 2014.',
-		'ika_why_3_title' => 'Réactivité',
-		'ika_why_3_text'  => 'Un support technique à l’écoute et des interventions rapides pour garantir la continuité de vos services.',
-		'ika_why_4_title' => 'Sur-mesure',
-		'ika_why_4_text'  => 'Des solutions adaptées à vos contraintes budgétaires, réglementaires et opérationnelles.',
+		'ika_why_2_title' => 'Sécurité',
+		'ika_why_2_text'  => 'Des choix techniques orientés sauvegarde, contrôle d\'accès, disponibilité et traçabilité.',
+		'ika_why_3_title' => 'Productivité',
+		'ika_why_3_text'  => 'Des solutions conçues pour simplifier le travail, accélérer les processus et améliorer le pilotage.',
+		'ika_why_4_title' => 'Accompagnement',
+		'ika_why_4_text'  => 'Formation, documentation, support et amélioration continue après la mise en service.',
 	);
 }
 
