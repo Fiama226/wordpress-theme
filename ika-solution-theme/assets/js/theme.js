@@ -352,36 +352,194 @@
 })();
 
 /**
- * Filtres de la page Réalisations.
+ * Pagination instantanée des grilles (Réalisations et Actualités).
+ *
+ * - Nombre d'éléments par page lu dans l'attribut data-per-page de la grille
+ *   (réglable dans Apparence > Personnaliser > Contenu IKA Solution >
+ *   Pagination ; 0 = tout afficher).
+ * - 100 % côté navigateur : aucun rechargement, les filtres de la page
+ *   Réalisations restent actifs sur l'ensemble des projets (la pagination
+ *   suit le filtre courant et revient en page 1).
+ * - Sans JavaScript, toutes les cartes restent affichées (dégradation douce).
  */
 (function () {
   'use strict';
 
-  var btns = document.querySelectorAll('.filter-btn');
-  var cards = document.querySelectorAll('.realisation-card');
-
-  if (!btns.length || !cards.length) {
-    return;
+  function ikaPageBtn(label, opts) {
+    opts = opts || {};
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'ika-page-btn' + (opts.current ? ' is-current' : '');
+    btn.textContent = label;
+    if (opts.ariaLabel) {
+      btn.setAttribute('aria-label', opts.ariaLabel);
+    }
+    if (opts.current) {
+      btn.setAttribute('aria-current', 'page');
+    }
+    if (opts.disabled) {
+      btn.disabled = true;
+    }
+    return btn;
   }
 
-  Array.prototype.forEach.call(btns, function (btn) {
-    btn.addEventListener('click', function () {
-      Array.prototype.forEach.call(btns, function (b) {
-        b.classList.remove('bg-ikaRed', 'text-white');
-        b.classList.add('border', 'border-slate-200', 'bg-white', 'text-ikaBlue');
-        b.setAttribute('aria-pressed', 'false');
+  function ikaSetupGrid(grid) {
+    var perPage = parseInt(grid.getAttribute('data-per-page'), 10);
+    if (isNaN(perPage) || perPage < 0) {
+      perPage = 0;
+    }
+    var slot = document.querySelector('[data-pagination-for="' + grid.id + '"]');
+    var items = Array.prototype.slice.call(grid.children);
+    var state = { page: 1, filter: 'all' };
+
+    function visibleItems() {
+      if (state.filter === 'all') {
+        return items;
+      }
+      return items.filter(function (item) {
+        return item.getAttribute('data-type') === state.filter;
       });
+    }
 
-      btn.classList.remove('border', 'border-slate-200', 'bg-white', 'text-ikaBlue');
-      btn.classList.add('bg-ikaRed', 'text-white');
-      btn.setAttribute('aria-pressed', 'true');
+    function apply(scroll) {
+      var shown = visibleItems();
+      var effectivePerPage = perPage > 0 ? perPage : shown.length || 1;
+      var pages = Math.max(1, Math.ceil(shown.length / effectivePerPage));
+      if (state.page > pages) {
+        state.page = pages;
+      }
 
-      var filter = btn.getAttribute('data-filter');
+      items.forEach(function (item) {
+        item.style.display = 'none';
+      });
+      shown
+        .slice((state.page - 1) * effectivePerPage, state.page * effectivePerPage)
+        .forEach(function (item) {
+          item.style.display = '';
+        });
 
-      Array.prototype.forEach.call(cards, function (card) {
-        var show = filter === 'all' || card.getAttribute('data-type') === filter;
-        card.style.display = show ? '' : 'none';
+      renderNav(pages);
+
+      if (scroll) {
+        var top = grid.getBoundingClientRect().top + window.pageYOffset - 140;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+      }
+    }
+
+    function renderNav(pages) {
+      if (!slot) {
+        return;
+      }
+      slot.innerHTML = '';
+      if (pages <= 1) {
+        slot.hidden = true;
+        return;
+      }
+      slot.hidden = false;
+
+      var prev = ikaPageBtn('‹', { ariaLabel: 'Page précédente', disabled: state.page === 1 });
+      prev.addEventListener('click', function () {
+        state.page = Math.max(1, state.page - 1);
+        apply(true);
+      });
+      slot.appendChild(prev);
+
+      for (var p = 1; p <= pages; p++) {
+        (function (pageNumber) {
+          var btn = ikaPageBtn(String(pageNumber), {
+            current: pageNumber === state.page,
+            ariaLabel: 'Page ' + pageNumber,
+          });
+          btn.addEventListener('click', function () {
+            state.page = pageNumber;
+            apply(true);
+          });
+          slot.appendChild(btn);
+        })(p);
+      }
+
+      var next = ikaPageBtn('›', { ariaLabel: 'Page suivante', disabled: state.page === pages });
+      next.addEventListener('click', function () {
+        state.page = Math.min(pages, state.page + 1);
+        apply(true);
+      });
+      slot.appendChild(next);
+    }
+
+    // Filtres de la page Réalisations : re-filtre la grille sans recharger.
+    var filterBarId = grid.getAttribute('data-filter-bar');
+    if (filterBarId) {
+      var bar = document.getElementById(filterBarId);
+      if (bar) {
+        var btns = bar.querySelectorAll('.filter-btn');
+        Array.prototype.forEach.call(btns, function (btn) {
+          btn.addEventListener('click', function () {
+            Array.prototype.forEach.call(btns, function (b) {
+              b.classList.remove('bg-ikaRed', 'text-white');
+              b.classList.add('border', 'border-slate-200', 'bg-white', 'text-ikaBlue');
+              b.setAttribute('aria-pressed', 'false');
+            });
+            btn.classList.remove('border', 'border-slate-200', 'bg-white', 'text-ikaBlue');
+            btn.classList.add('bg-ikaRed', 'text-white');
+            btn.setAttribute('aria-pressed', 'true');
+
+            state.filter = btn.getAttribute('data-filter') || 'all';
+            state.page = 1;
+            apply(false);
+          });
+        });
+      }
+    }
+
+    apply(false);
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-per-page]'), function (grid) {
+    if (grid.id) {
+      ikaSetupGrid(grid);
+    }
+  });
+})();
+
+/**
+ * Onglets accessibles de la page Proxmox.
+ * Boutons .pmx-tab (attribut data-pmx-target = id du panneau) → .pmx-panel.
+ */
+(function () {
+  'use strict';
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-pmx-tabs]'), function (group) {
+    var tabs = group.querySelectorAll('.pmx-tab');
+    var panels = group.querySelectorAll('.pmx-panel');
+
+    if (!tabs.length || !panels.length) {
+      return;
+    }
+
+    function activate(targetId) {
+      Array.prototype.forEach.call(tabs, function (tab) {
+        var isActive = tab.getAttribute('data-pmx-target') === targetId;
+        tab.classList.toggle('bg-ikaBlue', isActive);
+        tab.classList.toggle('text-white', isActive);
+        tab.classList.toggle('border-ikaBlue', isActive);
+        tab.classList.toggle('border', !isActive);
+        tab.classList.toggle('border-slate-200', !isActive);
+        tab.classList.toggle('bg-white', !isActive);
+        tab.classList.toggle('text-ikaBlue', !isActive);
+        tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        tab.setAttribute('tabindex', isActive ? '0' : '-1');
+      });
+      Array.prototype.forEach.call(panels, function (panel) {
+        panel.hidden = panel.id !== targetId;
+      });
+    }
+
+    Array.prototype.forEach.call(tabs, function (tab) {
+      tab.addEventListener('click', function () {
+        activate(tab.getAttribute('data-pmx-target'));
       });
     });
+
+    activate(tabs[0].getAttribute('data-pmx-target'));
   });
 })();

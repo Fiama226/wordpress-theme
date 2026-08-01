@@ -3,6 +3,10 @@
  * Template part : partenaires (section « partenaires »).
  * Alimenté par le CPT ika_partenaire, éditable depuis l'administration.
  *
+ * Chaque partenaire peut avoir un lien (meta ika_partenaire_url) :
+ * renseigné → le logo est cliquable (ex : Proxmox → page /proxmox) ;
+ * vide      → le logo s'affiche sans lien, comme sur le site statique.
+ *
  * @package ika-solution
  */
 
@@ -18,6 +22,9 @@ $ika_partners = get_posts(
 if ( ! $ika_partners ) {
 	return;
 }
+
+// Pré-charge les métas de tous les partenaires en une passe.
+update_postmeta_cache( wp_list_pluck( $ika_partners, 'ID' ) );
 ?>
 <section id="partenaires" class="bg-ikaSoft py-20 sm:py-28">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -34,14 +41,22 @@ if ( ! $ika_partners ) {
         $ika_logo   = get_post_meta( $ika_partner->ID, 'ika_partenaire_image', true );
         $ika_height = get_post_meta( $ika_partner->ID, 'ika_partenaire_height', true );
         $ika_height = $ika_height ? $ika_height : 'max-h-16';
+        $ika_link   = trim( (string) get_post_meta( $ika_partner->ID, 'ika_partenaire_url', true ) );
+        $ika_url    = $ika_link ? ika_slide_url( $ika_link ) : '';
+
+        $ika_card_content = $ika_logo
+          ? '<img class="' . esc_attr( $ika_height ) . ' max-w-full object-contain" src="' . esc_url( ika_asset( $ika_logo ) ) . '" alt="' . esc_attr( get_the_title( $ika_partner ) ) . '" loading="lazy">'
+          : '<span class="text-xl font-black text-ikaBlue">' . esc_html( get_the_title( $ika_partner ) ) . '</span>';
       ?>
+      <?php if ( $ika_url ) : ?>
+      <a class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean" href="<?php echo esc_url( $ika_url ); ?>"<?php echo preg_match( '#^https?://#i', $ika_url ) ? ' target="_blank" rel="noopener"' : ''; ?>>
+        <?php echo $ika_card_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- contenu déjà échappé ci-dessus. ?>
+      </a>
+      <?php else : ?>
       <div class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean">
-        <?php if ( $ika_logo ) : ?>
-          <img class="<?php echo esc_attr( $ika_height ); ?> max-w-full object-contain" src="<?php echo esc_url( ika_asset( $ika_logo ) ); ?>" alt="<?php echo esc_attr( get_the_title( $ika_partner ) ); ?>" loading="lazy">
-        <?php else : ?>
-          <span class="text-xl font-black text-ikaBlue"><?php echo esc_html( get_the_title( $ika_partner ) ); ?></span>
-        <?php endif; ?>
+        <?php echo $ika_card_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- contenu déjà échappé ci-dessus. ?>
       </div>
+      <?php endif; ?>
       <?php endforeach; ?>
     </div>
   </div>

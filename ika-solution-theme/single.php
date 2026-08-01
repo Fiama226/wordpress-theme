@@ -7,7 +7,7 @@ get_header();
 ?>
 <main class="bg-ikaSoft pt-36">
   <article class="mx-auto max-w-5xl px-4 pb-20 sm:px-6 lg:px-8">
-    <a href="<?php echo esc_url( ika_page_url( 'actualites' ) ); ?>" class="inline-flex rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-black text-ikaBlue transition hover:border-ikaBlue"><?php esc_html_e( 'Retour aux actualités', 'ika-solution' ); ?></a>
+    <a href="<?php echo esc_url( ika_page_url( 'actualites' ) ); ?>" class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-black text-ikaBlue transition hover:border-ikaBlue"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg><?php esc_html_e( 'Retour aux actualités', 'ika-solution' ); ?></a>
 
     <?php while ( have_posts() ) : the_post(); ?>
       <?php

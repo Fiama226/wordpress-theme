@@ -59,6 +59,10 @@ function ika_default_options() {
 		// --- Section hébergement ---
 		'ika_hosting_url'    => 'https://ikacloud.bf',
 
+		// --- Pagination (pages Réalisations & Actualités) ---
+		'ika_realisations_per_page' => '9',
+		'ika_actualites_per_page'   => '9',
+
 		// --- Accueil : « Dernières réalisations » (3 cartes teaser) ---
 		// Contenu exact du site statique d'origine : ces cartes sont des teasers
 		// propres à l'accueil, distincts de la page Réalisations (CPT).
@@ -243,6 +247,13 @@ function ika_customize_register( $wp_customize ) {
 				'ika_home_real_3_text'   => array( __( 'Carte 3 — texte', 'ika-solution' ), 'textarea' ),
 			),
 		),
+		'ika_sec_pagination' => array(
+			'title'  => __( 'Pagination (Réalisations & Actualités)', 'ika-solution' ),
+			'fields' => array(
+				'ika_realisations_per_page' => array( __( 'Réalisations affichées par page (0 = tout afficher)', 'ika-solution' ), 'number' ),
+				'ika_actualites_per_page'   => array( __( 'Actualités affichées par page (0 = tout afficher)', 'ika-solution' ), 'number' ),
+			),
+		),
 		'ika_sec_why'     => array(
 			'title'  => __( 'Accueil — Pourquoi nous choisir', 'ika-solution' ),
 			'fields' => array(
@@ -337,6 +348,8 @@ function ika_customize_register( $wp_customize ) {
 				$sanitize = 'sanitize_textarea_field';
 			} elseif ( 'url' === $type ) {
 				$sanitize = 'esc_url_raw';
+			} elseif ( 'number' === $type ) {
+				$sanitize = 'absint';
 			} elseif ( 'ika_email' === $key ) {
 				$sanitize = 'sanitize_email';
 				$type     = 'email';

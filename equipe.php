@@ -113,7 +113,7 @@
             <img class="h-full w-full object-cover" src="assets/images/willi.jpg" alt="Williams woba">
           </div>
           <h3 class="mt-6 text-xl font-black text-ikaBlue">Williams woba</h3>
-          <p class="mt-1 text-sm font-bold text-ikaRed">Technicien , helpdesk</p>
+          <p class="mt-1 text-sm font-bold text-ikaRed">Technicien, helpdesk</p>
           <p class="mt-4 text-sm leading-7 text-slate-600">Premier point de contact pour le support technique, il résout les incidents, assiste les utilisateurs et assure la maintenance du parc.</p>
         </article>
 

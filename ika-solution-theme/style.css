@@ -3,8 +3,8 @@ Theme Name: IKA Solution Pro
 Theme URI: https://ikasolution.com
 Author: IKA SOLUTION LTD
 Author URI: https://ikasolution.com
-Description: Thème WordPress professionnel et 100% open source pour IKA SOLUTION LTD. Reproduit fidèlement le site d'origine (mise en page et animations) et rend l'ensemble des contenus administrables : slides, expertises, solutions, réalisations, équipe, clients, partenaires, actualités et coordonnées. Tailwind CSS compilé localement, aucune dépendance à un CDN.
-Version: 1.3.0
+Description: Thème WordPress professionnel et 100% open source pour IKA SOLUTION LTD. Reproduit fidèlement le site d'origine (mise en page et animations) et rend l'ensemble des contenus administrables : slides, expertises, solutions, réalisations, équipe, clients, partenaires, actualités, page Proxmox, réglages SMTP et coordonnées. Tailwind CSS compilé localement, aucune dépendance à un CDN.
+Version: 1.4.0
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
@@ -110,9 +110,12 @@ body { font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSyst
 
 /* ─── Utilitaires requis par les templates statiques ───
    Ces classes existent dans le HTML d'origine. Elles sont ajoutées ici pour
-   garantir le rendu exact même si Tailwind n'est pas recompilé immédiatement. */
-.bg-ikaBlueDark\/88 { background-color: rgb(13 74 126 / .88); }
-.bg-ikaBlueDark\/92 { background-color: rgb(13 74 126 / .92); }
+   garantir le rendu exact même si Tailwind n'est pas recompilé immédiatement.
+   NB : bg-ikaBlueDark/92 (et /88) n'existent PAS dans l'échelle Tailwind, le
+   CDN du site statique ne les générait donc pas — l'image de fond y reste
+   visible à 10 %. Ne PAS les définir ici manuellement : c'est ce qui rendait
+   les héros des pages Équipe/Réalisations/Actualités entièrement opaques dans
+   le thème, contrairement au site statique. */
 .max-w-5xl { max-width: 64rem; }
 .h-\[320px\] { height: 320px; }
 @media (min-width: 640px) {
@@ -382,3 +385,96 @@ main .rounded-\[2rem\]:hover > img {
 
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ─── Menu WordPress personnalisé (emplacement « Menu Principal ») ───
+   Quand un menu est assigné dans Apparence > Menus, wp_nav_menu génère des
+   <li> : on retire les puces et on reproduit l'état actif du site statique
+   (entrée courante soulignée et bleue). */
+header nav ul,
+#mobileMenu ul,
+footer ul {
+  margin: 0;
+  padding: 0;
+}
+header nav li,
+#mobileMenu li,
+footer li {
+  list-style: none;
+}
+header nav li > a {
+  display: inline-flex;
+  align-items: center;
+  transition: color .2s ease;
+}
+header nav li > a:hover {
+  color: #1270b8;
+}
+header nav .current-menu-item > a,
+header nav .current_page_item > a,
+header nav .current-page-ancestor > a {
+  color: #1270b8;
+  text-decoration-line: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+  text-decoration-color: #1270b8;
+}
+#mobileMenu li > a {
+  display: block;
+  border-radius: .75rem;
+  padding: .75rem;
+  transition: background-color .2s ease, color .2s ease;
+}
+#mobileMenu li > a:hover {
+  background: rgb(244 247 251 / .8);
+}
+#mobileMenu .current-menu-item > a,
+#mobileMenu .current_page_item > a,
+#mobileMenu .current-page-ancestor > a {
+  background: rgb(244 247 251 / .8);
+  font-weight: 900;
+  color: #1270b8;
+}
+footer li > a {
+  display: inline-flex;
+}
+
+/* ─── Pagination (pages Réalisations & Actualités) ─── */
+.ika-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+}
+.ika-pagination[hidden] {
+  display: none;
+}
+.ika-page-btn {
+  min-width: 2.75rem;
+  border-radius: 9999px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  padding: .75rem 1rem;
+  font-size: .875rem;
+  font-weight: 900;
+  color: #1270b8;
+  transition: background-color .2s ease, color .2s ease, border-color .2s ease;
+  cursor: pointer;
+}
+.ika-page-btn:hover:not(:disabled) {
+  border-color: #1270b8;
+}
+.ika-page-btn.is-current {
+  background: #e51a37;
+  border-color: #e51a37;
+  color: #fff;
+}
+.ika-page-btn:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
+
+/* ─── Onglets de la page Proxmox ─── */
+.pmx-panel[hidden] {
+  display: none;
+}

@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Version des données de démonstration importées depuis le site statique.
 if ( ! defined( 'IKA_SOLUTION_SEED_VERSION' ) ) {
-    define( 'IKA_SOLUTION_SEED_VERSION', '2026-07-30-static-v6' );
+    define( 'IKA_SOLUTION_SEED_VERSION', '2026-08-01-static-v7' );
 }
 
 /**
@@ -243,6 +243,65 @@ function ika_asset( $path ) {
  */
 require_once get_template_directory() . '/inc/customizer.php';
 require_once get_template_directory() . '/inc/contact-form.php';
+require_once get_template_directory() . '/inc/smtp-settings.php';
+
+/**
+ * Classes « élément courant » du menu de repli, fidèles au site statique :
+ * l'entrée de la page en cours est soulignée et colorée en bleu.
+ *
+ * @param string $target Identifiant d'entrée (accueil, presentation, equipe…).
+ * @param bool   $mobile Vrai pour la variante menu mobile.
+ * @return string Classes CSS ou chaîne vide si l'entrée n'est pas courante.
+ */
+function ika_nav_active( $target, $mobile = false ) {
+    $active = false;
+
+    switch ( $target ) {
+        case 'accueil':
+            $active = is_front_page();
+            break;
+        case 'presentation':
+            $active = is_page( 'presentation' );
+            break;
+        case 'equipe':
+            $active = is_page( 'equipe' );
+            break;
+        case 'expertises':
+            $active = is_singular( 'ika_expertise' ) || is_page( 'proxmox' );
+            break;
+        case 'realisations':
+            $active = is_page( 'realisations' ) || is_singular( 'ika_realisation' ) || is_post_type_archive( 'ika_realisation' );
+            break;
+        case 'solutions':
+            $active = is_singular( 'ika_solution' ) || is_post_type_archive( 'ika_solution' );
+            break;
+        case 'actualites':
+            $active = is_page( 'actualites' )
+                || ( is_single() && 'post' === get_post_type() )
+                || is_category()
+                || is_home();
+            break;
+        case 'contact':
+            $active = false; // ancre d'accueil gérée en JavaScript (applyNavHash).
+            break;
+    }
+
+    /**
+     * Filtre l'état actif d'une entrée du menu de repli.
+     *
+     * @param bool   $active État courant.
+     * @param string $target Identifiant d'entrée.
+     */
+    $active = (bool) apply_filters( 'ika_nav_active', $active, $target );
+
+    if ( ! $active ) {
+        return '';
+    }
+
+    return $mobile
+        ? 'bg-ikaSoft/80 font-black text-ikaBlue'
+        : 'text-ikaBlue underline decoration-2 underline-offset-4 decoration-ikaBlue';
+}
 
 /**
  * URL d'une page du thème à partir de son slug, avec repli sur home_url().
@@ -410,6 +469,10 @@ function ika_solution_create_default_pages() {
             'template' => 'page-actualites.php',
             'slug'     => 'actualites',
         ),
+        'Proxmox'      => array(
+            'template' => 'page-proxmox.php',
+            'slug'     => 'proxmox',
+        ),
     );
 
     foreach ( $default_pages as $title => $args ) {
@@ -500,6 +563,7 @@ $ika_meta_config = array(
             'ika_expertise_image'      => array( 'label' => 'Image (chemin relatif, ex: images/development2.jpg)', 'type' => 'text' ),
             'ika_expertise_eyebrow'    => array( 'label' => 'Surtitre (eyebrow)', 'type' => 'text' ),
             'ika_expertise_link'       => array( 'label' => 'Lien de la carte (optionnel, vide = page de l’expertise)', 'type' => 'text' ),
+            'ika_expertise_card_text'  => array( 'label' => 'Texte de la carte sur l’accueil (vide = extrait)', 'type' => 'textarea' ),
             'ika_expertise_highlights' => array( 'label' => 'Points forts (un par ligne)', 'type' => 'list' ),
             'ika_expertise_capabilities' => array( 'label' => 'Capacités / actions (un par ligne)', 'type' => 'list' ),
             'ika_expertise_process'    => array( 'label' => 'Étapes du process (un par ligne)', 'type' => 'list' ),
@@ -544,12 +608,14 @@ $ika_meta_config = array(
         'fields' => array(
             'ika_partenaire_image'  => array( 'label' => 'Logo (chemin relatif, ex: images/odoo.png). Vide = le nom s’affiche en texte.', 'type' => 'text' ),
             'ika_partenaire_height' => array( 'label' => 'Hauteur max (classe Tailwind : max-h-14, max-h-16, max-h-20)', 'type' => 'text' ),
+            'ika_partenaire_url'    => array( 'label' => 'Lien du logo (optionnel : vide = non cliquable, ex : proxmox ou https://exemple.com)', 'type' => 'text' ),
         ),
     ),
     'ika_client' => array(
         'box'    => 'Logo du client',
         'fields' => array(
             'ika_client_image' => array( 'label' => 'Logo (chemin relatif, ex: images/clients/APEC.png)', 'type' => 'text' ),
+            'ika_client_url'   => array( 'label' => 'Lien du logo (optionnel : vide = non cliquable, ex : https://exemple.com)', 'type' => 'text' ),
         ),
     ),
 );
@@ -655,6 +721,8 @@ function ika_solution_meta_box_render( $post ) {
 
         if ( 'list' === $field['type'] ) {
             echo '<textarea id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" rows="5" style="width:100%">' . esc_textarea( $list ) . '</textarea>';
+        } elseif ( 'textarea' === $field['type'] ) {
+            echo '<textarea id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" rows="3" style="width:100%">' . esc_textarea( $list ) . '</textarea>';
         } else {
             echo '<input id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" value="' . esc_attr( $list ) . '" style="width:100%">';
         }
@@ -700,6 +768,8 @@ function ika_solution_meta_box_save( $post_id ) {
         if ( 'list' === $field['type'] ) {
             $items = array_filter( array_map( 'trim', explode( "\n", wp_unslash( $_POST[ $key ] ) ) ), 'strlen' );
             update_post_meta( $post_id, $key, array_values( $items ) );
+        } elseif ( 'textarea' === $field['type'] ) {
+            update_post_meta( $post_id, $key, sanitize_textarea_field( wp_unslash( $_POST[ $key ] ) ) );
         } else {
             update_post_meta( $post_id, $key, sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) );
         }
@@ -891,13 +961,24 @@ function ika_seed_solutions() {
     }
 }
 
-function ika_seed_expertises() {
-    $expertises = array(
+/**
+ * Données par défaut des expertises = contenu EXACT du site statique.
+ *
+ * - 'intro' : phrase d'accroche de la page détail (extrait WordPress) ;
+ * - 'card'  : texte de la carte sur la page d'accueil (différent de l'intro,
+ *             comme sur le site statique) — meta ika_expertise_card_text ;
+ * - le reste alimente les sections « Capacités / Process / Livrables ».
+ *
+ * @return array<string,array<string,mixed>>
+ */
+function ika_get_default_expertises() {
+    return array(
         'developpement-app' => array(
             'title'       => "Développement & intégration d’applications",
             'image'       => 'images/development2.jpg',
             'eyebrow'     => 'Applications métier',
-            'desc'        => "Applications web, mobiles, portails et intégrations adaptées à vos processus métier.",
+            'intro'       => 'Des applications web, mobiles et portails conçus pour automatiser vos processus, connecter vos équipes et fiabiliser vos opérations.',
+            'card'        => "Applications web, mobiles, portails et intégrations adaptées à vos processus métier.",
             'description' => "IKA SOLUTION conçoit des solutions digitales adaptées à votre organisation : plateformes de gestion, portails clients, espaces internes, workflows de validation, tableaux de bord et connexions avec vos outils existants. L’objectif est simple : transformer vos méthodes de travail en applications fiables, sécurisées et faciles à utiliser.",
             'highlights'  => array('Applications web et mobiles', 'Portails sécurisés', 'Intégrations API et métiers'),
             'capabilities' => array(
@@ -915,7 +996,8 @@ function ika_seed_expertises() {
             'title'       => 'Infrastructures serveurs & réseaux',
             'image'       => 'images/slide4.jpg',
             'eyebrow'     => 'Socle technique',
-            'desc'        => "Premier fournisseur de services d’hébergement avec des datacenters locaux au Burkina Faso. Une infrastructure de pointe sur le sol national.",
+            'intro'       => "Premier fournisseur de services d’hébergement avec des datacenters locaux au Burkina Faso, IKA SOLUTION garantit une infrastructure de pointe sur le sol national.",
+            'card'        => "Premier fournisseur de services d’hébergement avec des datacenters locaux au Burkina Faso. Une infrastructure de pointe sur le sol national.",
             'description' => "Avec IKA Cloud, nous accompagnons les entreprises et institutions dans l’hébergement local, la vente de noms de domaine, les serveurs dédiés, les VPS, les réseaux et la continuité de service. Nos datacenters au Burkina Faso permettent de rapprocher vos données de vos utilisateurs, de renforcer la souveraineté numérique et de garantir un socle technique fiable pour vos applications critiques.",
             'highlights'  => array('Datacenters locaux', 'Hébergement IKA Cloud', 'Noms de domaine'),
             'capabilities' => array(
@@ -934,7 +1016,8 @@ function ika_seed_expertises() {
             'title'       => 'Solutions cloud & licences logicielles',
             'image'       => 'images/cloud2.jpg',
             'eyebrow'     => 'Cloud et productivité',
-            'desc'        => "Microsoft 365, Fortinet, Odoo, cloud, licences professionnelles et solutions logicielles pour vos équipes.",
+            'intro'       => 'Des solutions Microsoft 365, Fortinet, Odoo, cloud et licences logicielles sélectionnées pour vos besoins réels.',
+            'card'        => "Microsoft 365, Fortinet, Odoo, cloud, licences professionnelles et solutions logicielles pour vos équipes.",
             'description' => "IKA SOLUTION vous accompagne dans le choix, la fourniture, la configuration et l’administration de solutions cloud et licences professionnelles : Microsoft 365 pour la collaboration et la messagerie, Fortinet pour la sécurité réseau, Odoo pour la gestion d’entreprise, ainsi que les services cloud, VPS, sauvegarde et outils de productivité adaptés à vos équipes.",
             'highlights'  => array('Microsoft 365', 'Fortinet', 'Odoo'),
             'capabilities' => array(
@@ -953,7 +1036,8 @@ function ika_seed_expertises() {
             'title'       => 'Conseil, audit & stratégie IT',
             'image'       => 'images/conseil2.jpg',
             'eyebrow'     => 'Pilotage digital',
-            'desc'        => "Diagnostic, cadrage, feuille de route, choix techniques et accompagnement à la décision.",
+            'intro'       => 'Un accompagnement clair pour diagnostiquer votre système d’information, prioriser vos projets et sécuriser vos choix techniques.',
+            'card'        => "Diagnostic, cadrage, feuille de route, choix techniques et accompagnement à la décision.",
             'description' => "Avant d’investir dans un logiciel, un réseau ou une infrastructure, il faut comprendre les enjeux, les dépendances et les risques. IKA SOLUTION vous aide à poser un diagnostic fiable, définir une feuille de route réaliste et choisir les solutions qui servent réellement vos objectifs.",
             'highlights'  => array('Audit SI', 'Feuille de route digitale', 'Aide à la décision'),
             'capabilities' => array(
@@ -971,7 +1055,8 @@ function ika_seed_expertises() {
             'title'       => "Cybersécurité & protection des données",
             'image'       => 'images/securite.jpg',
             'eyebrow'     => 'Protection numérique',
-            'desc'        => "Contrôle d’accès, sauvegarde, continuité de service et sécurisation des systèmes critiques.",
+            'intro'       => 'Des mesures concrètes pour protéger vos accès, vos données, vos sauvegardes et la continuité de vos services.',
+            'card'        => "Contrôle d’accès, sauvegarde, continuité de service et sécurisation des systèmes critiques.",
             'description' => "La sécurité numérique doit être intégrée dans les usages quotidiens : comptes utilisateurs, sauvegardes, postes de travail, serveurs, applications, messagerie et procédures de reprise. Nous mettons en place une protection pragmatique, adaptée à votre niveau de risque.",
             'highlights'  => array("Contrôle d’accès", 'Sauvegarde et reprise', 'Durcissement des systèmes'),
             'capabilities' => array(
@@ -989,7 +1074,8 @@ function ika_seed_expertises() {
             'title'       => 'Support technique & infogérance',
             'image'       => 'images/support2.png',
             'eyebrow'     => 'Exploitation IT',
-            'desc'        => "Assistance, supervision, maintenance préventive et suivi opérationnel des plateformes.",
+            'intro'       => 'Une assistance réactive pour maintenir vos postes, serveurs, réseaux, applications et services numériques en bon état.',
+            'card'        => "Assistance, supervision, maintenance préventive et suivi opérationnel des plateformes.",
             'description' => "IKA SOLUTION prend en charge le suivi quotidien de vos environnements techniques : support utilisateur, maintenance préventive, surveillance des services, gestion des incidents et amélioration continue. L’objectif est de réduire les interruptions et de garder vos équipes concentrées sur leur métier.",
             'highlights'  => array('Support utilisateur', 'Maintenance préventive', 'Supervision technique'),
             'capabilities' => array(
@@ -998,34 +1084,36 @@ function ika_seed_expertises() {
                 "Gestion des incidents, qualification, résolution, escalade et compte rendu.",
                 'Supervision des services essentiels et suivi des indicateurs de disponibilité.',
                 'Administration courante des comptes, droits, licences, mises à jour et configurations.',
-                'Rapports mensuels, bilans techniques et recommandations d’optimisation.',
+                "Documentation des interventions et recommandations pour améliorer la fiabilité.",
             ),
-            'process'     => array('Audit initial', 'Contrat de service', 'Maintenance et supervision', 'Bilan et amélioration'),
-            'deliverables' => array('Contrat de maintenance', 'Rapports mensuels', 'Suivi des incidents', 'Plan d’optimisation'),
+            'process'     => array('Prise en charge', 'Diagnostic', 'Résolution', 'Suivi préventif'),
+            'deliverables' => array("Rapports d’intervention", 'Tableau de suivi', 'Plan de maintenance', 'Support continu'),
         ),
         'equipements-services-energetiques' => array(
             'title'       => "Équipements & services énergétiques",
             'image'       => 'images/energie2.jpg',
-            'eyebrow'     => 'Infrastructure physique',
-            'desc'        => "Onduleurs, groupes électrogènes, solutions solaires et continuité énergétique.",
-            'description' => "IKA SOLUTION fournit les équipements informatiques et les solutions énergétiques adaptées aux contraintes locales : ordinateurs, onduleurs, énergie solaire, baies de brassage, climatisation technique et alimentation de secours pour garantir la disponibilité continue de vos systèmes.",
-            'highlights'  => array('Matériel informatique', 'Onduleurs et UPS', "Énergie solaire"),
+            'eyebrow'     => 'Continuité énergétique',
+            'intro'       => 'Des solutions pour protéger vos équipements informatiques contre les coupures, variations électriques et interruptions de service.',
+            'card'        => "Onduleurs, groupes électrogènes, solutions solaires et continuité énergétique.",
+            'description' => "La performance informatique dépend aussi de la qualité de l’alimentation électrique. Nous accompagnons les organisations dans le choix et la mise en place d’onduleurs, groupes électrogènes, solutions solaires et dispositifs de continuité adaptés aux serveurs, réseaux et postes critiques.",
+            'highlights'  => array('Onduleurs', 'Groupes et solaire', 'Protection des équipements'),
             'capabilities' => array(
-                'Fourniture d’ordinateurs, imprimantes, équipements réseau et accessoires informatiques.',
-                'Installation d’onduleurs, UPS et alimentation de secours pour salles serveurs.',
-                "Déploiement de solutions énergétiques solaires pour sites isolés ou à faible connectivité.",
-                "Câblage, baie informatique, climatisation technique et aménagement de salles serveurs.",
-                'Livraison, installation et configuration sur site avec documentation.',
-                'Maintenance des équipements, suivi des pannes et renouvellement du parc.',
+                'Analyse des besoins électriques des postes, serveurs, baies réseau et équipements sensibles.',
+                "Conseil sur le choix d’onduleurs, batteries, groupes électrogènes et solutions solaires.",
+                'Installation, raccordement, tests de charge et vérification de l’autonomie.',
+                'Protection contre les variations, surtensions et interruptions imprévues.',
+                'Maintenance préventive, remplacement de batteries et suivi de l’état des équipements.',
+                "Documentation des capacités, consignes d’usage et procédures de bascule.",
             ),
-            'process'     => array('Diagnostic terrain', 'Choix équipements', 'Installation', 'Maintenance'),
-            'deliverables' => array('Équipements livrés et installés', 'Schéma d’infrastructure', 'Documentation site', 'Contrat de maintenance'),
+            'process'     => array('Dimensionnement', 'Choix équipement', 'Installation', 'Tests et maintenance'),
+            'deliverables' => array('Plan de continuité énergétique', 'Équipements installés', "Fiche d’autonomie", "Consignes d’exploitation"),
         ),
         'formation-utilisateurs' => array(
             'title'       => 'Formation & accompagnement utilisateurs',
             'image'       => 'images/formation2.jpg',
             'eyebrow'     => 'Adoption digitale',
-            'desc'        => "Prise en main, documentation, transfert de compétences et adoption des outils.",
+            'intro'       => 'Des formations pratiques pour aider vos équipes à adopter les outils numériques et à travailler avec plus d’autonomie.',
+            'card'        => "Prise en main, documentation, transfert de compétences et adoption des outils.",
             'description' => "Un projet digital réussit quand les utilisateurs comprennent l’outil, savent l’exploiter et adoptent les bons réflexes. IKA SOLUTION prépare vos équipes à l’usage quotidien des applications, plateformes, services cloud, procédures de sécurité et méthodes de travail associées.",
             'highlights'  => array('Prise en main', 'Documentation', 'Transfert de compétences'),
             'capabilities' => array(
@@ -1040,6 +1128,10 @@ function ika_seed_expertises() {
             'deliverables' => array('Supports de cours', 'Guides utilisateurs', 'Sessions pratiques', 'Bilan de formation'),
         ),
     );
+}
+
+function ika_seed_expertises() {
+    $expertises = ika_get_default_expertises();
     $order = 0;
     foreach ( $expertises as $slug => $data ) {
         $order++;
@@ -1051,7 +1143,7 @@ function ika_seed_expertises() {
                 'post_name'    => $slug,
                 'post_title'   => $data['title'],
                 'post_content' => $data['description'],
-                'post_excerpt' => $data['desc'],
+                'post_excerpt' => $data['intro'],
                 'menu_order'   => $order,
                 'post_status'  => 'publish',
             ) );
@@ -1060,13 +1152,14 @@ function ika_seed_expertises() {
                 'ID'         => $id,
                 'menu_order' => $order,
             ) );
-            ika_solution_update_post_field_if_empty( $id, 'post_excerpt', $data['desc'] );
+            ika_solution_update_post_field_if_empty( $id, 'post_excerpt', $data['intro'] );
             ika_solution_update_post_field_if_empty( $id, 'post_content', $data['description'] );
         }
 
         if ( $id && ! is_wp_error( $id ) ) {
             ika_solution_update_meta_if_empty( $id, 'ika_expertise_image', $data['image'] );
             ika_solution_update_meta_if_empty( $id, 'ika_expertise_eyebrow', $data['eyebrow'] );
+            ika_solution_update_meta_if_empty( $id, 'ika_expertise_card_text', $data['card'] );
             ika_solution_update_meta_if_empty( $id, 'ika_expertise_highlights', $data['highlights'] );
             ika_solution_update_meta_if_empty( $id, 'ika_expertise_capabilities', $data['capabilities'] );
             ika_solution_update_meta_if_empty( $id, 'ika_expertise_process', $data['process'] );
@@ -1076,15 +1169,18 @@ function ika_seed_expertises() {
 }
 
 function ika_seed_clients() {
+    // Ordre et libellés strictement identiques au site statique.
     $clients = array(
-        'apec'     => array( 'title' => 'APEC', 'image' => 'images/clients/APEC.png' ),
-        'coris'    => array( 'title' => 'Coris Bank', 'image' => 'images/clients/coris.jpg' ),
-        'lonab'    => array( 'title' => 'LONAB', 'image' => 'images/clients/Lonab.png' ),
-        'onea'     => array( 'title' => 'ONEA', 'image' => 'images/clients/ONEA.jpg' ),
         'sonatur'  => array( 'title' => 'SONATUR', 'image' => 'images/clients/Sonatur.png' ),
         'sonabhy'  => array( 'title' => 'SONABHY', 'image' => 'images/clients/sonabhy.png' ),
+        'onea'     => array( 'title' => 'ONEA', 'image' => 'images/clients/ONEA.jpg' ),
+        'lonab'    => array( 'title' => 'LONAB', 'image' => 'images/clients/Lonab.png' ),
+        'coris'    => array( 'title' => 'CORIS BANK', 'image' => 'images/clients/coris.jpg' ),
+        'apec'     => array( 'title' => 'APEC', 'image' => 'images/clients/APEC.png' ),
     );
+    $order = 0;
     foreach ( $clients as $slug => $data ) {
+        $order++;
         $id = ika_solution_get_post_id_by_slug( 'ika_client', $slug );
 
         if ( ! $id ) {
@@ -1092,7 +1188,13 @@ function ika_seed_clients() {
                 'post_type'   => 'ika_client',
                 'post_name'   => $slug,
                 'post_title'  => $data['title'],
+                'menu_order'  => $order,
                 'post_status' => 'publish',
+            ) );
+        } else {
+            wp_update_post( array(
+                'ID'         => $id,
+                'menu_order' => $order,
             ) );
         }
 
@@ -1222,7 +1324,7 @@ function ika_get_default_membres() {
         ),
         'williams-woba' => array(
             'name'  => 'Williams woba',
-            'role'  => 'Technicien , helpdesk',
+            'role'  => 'Technicien, helpdesk',
             'image' => 'images/willi.jpg',
             'bio'   => 'Premier point de contact pour le support technique, il résout les incidents, assiste les utilisateurs et assure la maintenance du parc.',
         ),
@@ -1447,16 +1549,18 @@ function ika_seed_realisations() {
 
 /**
  * Seed : partenaires (CPT ika_partenaire).
+ *
+ * Liste strictement identique au site statique : Microsoft, Odoo, Palo Alto,
+ * Fortinet et Proxmox — ce dernier renvoie vers la page /proxmox, comme sur
+ * le site d'origine (lien optionnel : vide = logo non cliquable).
  */
 function ika_seed_partenaires() {
     $partenaires = array(
-        'microsoft' => array( 'name' => 'Microsoft', 'image' => '', 'height' => 'max-h-14' ),
-        'odoo' => array( 'name' => 'Odoo', 'image' => 'images/odoo.png', 'height' => 'max-h-14' ),
-        'abdi' => array( 'name' => 'ABDI', 'image' => 'images/abdi.jpg', 'height' => 'max-h-16' ),
-        'arcep' => array( 'name' => 'ARCEP', 'image' => 'images/arcep.png', 'height' => 'max-h-16' ),
-        'coris' => array( 'name' => 'Coris', 'image' => 'images/coris.jpg', 'height' => 'max-h-14' ),
-        'fortinet' => array( 'name' => 'Fortinet', 'image' => 'images/fortinet.png', 'height' => 'max-h-20' ),
-        'proxmox' => array( 'name' => 'Proxmox', 'image' => 'images/Proxmox.png', 'height' => 'max-h-20' ),
+        'microsoft' => array( 'name' => 'Microsoft', 'image' => 'images/microsoft.png', 'height' => 'max-h-14', 'url' => '' ),
+        'odoo'      => array( 'name' => 'Odoo', 'image' => 'images/odoo.png', 'height' => 'max-h-14', 'url' => '' ),
+        'palo-alto' => array( 'name' => 'Palo Alto', 'image' => 'images/paloalto.svg', 'height' => 'max-h-16', 'url' => '' ),
+        'fortinet'  => array( 'name' => 'Fortinet', 'image' => 'images/fortinet.png', 'height' => 'max-h-20', 'url' => '' ),
+        'proxmox'   => array( 'name' => 'Proxmox', 'image' => 'images/Proxmox.png', 'height' => 'max-h-20', 'url' => 'proxmox' ),
     );
     $order = 0;
     foreach ( $partenaires as $slug => $data ) {
@@ -1481,6 +1585,7 @@ function ika_seed_partenaires() {
         if ( $id && ! is_wp_error( $id ) ) {
             ika_solution_update_meta_if_empty( $id, 'ika_partenaire_image', $data['image'] );
             ika_solution_update_meta_if_empty( $id, 'ika_partenaire_height', $data['height'] );
+            ika_solution_update_meta_if_empty( $id, 'ika_partenaire_url', $data['url'] );
         }
     }
 }
@@ -1792,12 +1897,146 @@ function ika_solution_ensure_media_imported() {
 add_action( 'admin_init', 'ika_solution_ensure_media_imported' );
 
 /**
+ * Migration v7 : aligne le contenu déjà seedé sur le site statique.
+ *
+ * Ne met à jour un champ QUE si sa valeur actuelle est vide ou égale à
+ * l'ancienne valeur seedée : toute modification faite dans l'administration
+ * est préservée.
+ */
+function ika_solution_migrate_to_v7() {
+    $expertises = ika_get_default_expertises();
+
+    // Anciennes valeurs seedées (version v6) qui divergeaient du statique.
+    $old_intro = array(
+        'developpement-app' => 'Applications web, mobiles, portails et intégrations adaptées à vos processus métier.',
+        'infrastructures-serveurs-reseaux' => 'Premier fournisseur de services d’hébergement avec des datacenters locaux au Burkina Faso. Une infrastructure de pointe sur le sol national.',
+        'solutions-cloud-licences' => 'Microsoft 365, Fortinet, Odoo, cloud, licences professionnelles et solutions logicielles pour vos équipes.',
+        'conseil-audit-strategie-it' => 'Diagnostic, cadrage, feuille de route, choix techniques et accompagnement à la décision.',
+        'cybersecurite-donnees' => 'Contrôle d’accès, sauvegarde, continuité de service et sécurisation des systèmes critiques.',
+        'support-technique-infogerance' => 'Assistance, supervision, maintenance préventive et suivi opérationnel des plateformes.',
+        'equipements-services-energetiques' => 'Onduleurs, groupes électrogènes, solutions solaires et continuité énergétique.',
+        'formation-utilisateurs' => 'Prise en main, documentation, transfert de compétences et adoption des outils.',
+    );
+    $old_equipements = array(
+        'ika_expertise_eyebrow'    => 'Infrastructure physique',
+        'ika_expertise_highlights' => array( 'Matériel informatique', 'Onduleurs et UPS', 'Énergie solaire' ),
+        'ika_expertise_capabilities' => array(
+            'Fourniture d’ordinateurs, imprimantes, équipements réseau et accessoires informatiques.',
+            'Installation d’onduleurs, UPS et alimentation de secours pour salles serveurs.',
+            'Déploiement de solutions énergétiques solaires pour sites isolés ou à faible connectivité.',
+            'Câblage, baie informatique, climatisation technique et aménagement de salles serveurs.',
+            'Livraison, installation et configuration sur site avec documentation.',
+            'Maintenance des équipements, suivi des pannes et renouvellement du parc.',
+        ),
+        'ika_expertise_process'    => array( 'Diagnostic terrain', 'Choix équipements', 'Installation', 'Maintenance' ),
+        'ika_expertise_deliverables' => array( 'Équipements livrés et installés', 'Schéma d’infrastructure', 'Documentation site', 'Contrat de maintenance' ),
+        'post_content' => 'IKA SOLUTION fournit les équipements informatiques et les solutions énergétiques adaptées aux contraintes locales : ordinateurs, onduleurs, énergie solaire, baies de brassage, climatisation technique et alimentation de secours pour garantir la disponibilité continue de vos systèmes.',
+    );
+    $old_support = array(
+        'ika_expertise_capabilities' => array(
+            'Assistance aux utilisateurs sur postes, logiciels, messagerie, accès et périphériques.',
+            'Maintenance préventive des serveurs, réseaux, sauvegardes et équipements critiques.',
+            'Gestion des incidents, qualification, résolution, escalade et compte rendu.',
+            'Supervision des services essentiels et suivi des indicateurs de disponibilité.',
+            'Administration courante des comptes, droits, licences, mises à jour et configurations.',
+            'Rapports mensuels, bilans techniques et recommandations d’optimisation.',
+        ),
+        'ika_expertise_process'    => array( 'Audit initial', 'Contrat de service', 'Maintenance et supervision', 'Bilan et amélioration' ),
+        'ika_expertise_deliverables' => array( 'Contrat de maintenance', 'Rapports mensuels', 'Suivi des incidents', 'Plan d’optimisation' ),
+    );
+
+    foreach ( $expertises as $slug => $data ) {
+        $id = ika_solution_get_post_id_by_slug( 'ika_expertise', $slug );
+        if ( ! $id ) {
+            continue;
+        }
+        $post = get_post( $id );
+        if ( ! $post ) {
+            continue;
+        }
+
+        // Extrait = intro de la page détail (les cartes d'accueil utilisent
+        // désormais la meta ika_expertise_card_text, remplie par le seeder).
+        if ( isset( $old_intro[ $slug ] )
+            && ( '' === trim( $post->post_excerpt ) || $old_intro[ $slug ] === $post->post_excerpt )
+            && $post->post_excerpt !== $data['intro'] ) {
+            wp_update_post( array( 'ID' => $id, 'post_excerpt' => $data['intro'] ) );
+        }
+
+        // Champs « Équipements & services énergétiques » réalignés sur le statique.
+        if ( 'equipements-services-energetiques' === $slug ) {
+            foreach ( $old_equipements as $field => $old_value ) {
+                if ( 'post_content' === $field ) {
+                    if ( '' === trim( $post->post_content ) || $old_value === $post->post_content ) {
+                        wp_update_post( array( 'ID' => $id, 'post_content' => $data['description'] ) );
+                    }
+                    continue;
+                }
+                $new_value = array(
+                    'ika_expertise_eyebrow'      => $data['eyebrow'],
+                    'ika_expertise_highlights'   => $data['highlights'],
+                    'ika_expertise_capabilities' => $data['capabilities'],
+                    'ika_expertise_process'      => $data['process'],
+                    'ika_expertise_deliverables' => $data['deliverables'],
+                );
+                $current = get_post_meta( $id, $field, true );
+                $empty   = ( '' === $current ) || ( is_array( $current ) && empty( $current ) );
+                if ( $empty || $current === $old_value ) {
+                    update_post_meta( $id, $field, $new_value[ $field ] );
+                }
+            }
+        }
+
+        // Champs « Support technique & infogérance » réalignés sur le statique.
+        if ( 'support-technique-infogerance' === $slug ) {
+            foreach ( $old_support as $field => $old_value ) {
+                $new_value = array(
+                    'ika_expertise_capabilities' => $data['capabilities'],
+                    'ika_expertise_process'      => $data['process'],
+                    'ika_expertise_deliverables' => $data['deliverables'],
+                );
+                $current = get_post_meta( $id, $field, true );
+                $empty   = ( '' === $current ) || ( is_array( $current ) && empty( $current ) );
+                if ( $empty || $current === $old_value ) {
+                    update_post_meta( $id, $field, $new_value[ $field ] );
+                }
+            }
+        }
+    }
+
+    // Coquille « Technicien , helpdesk » corrigée (membre seedé).
+    $williams = ika_solution_get_post_id_by_slug( 'ika_membre', 'williams-woba' );
+    if ( $williams && 'Technicien , helpdesk' === get_post_meta( $williams, 'ika_membre_role', true ) ) {
+        update_post_meta( $williams, 'ika_membre_role', 'Technicien, helpdesk' );
+    }
+
+    // Libellé client « Coris Bank » → « CORIS BANK » (comme sur le statique).
+    $coris = ika_solution_get_post_id_by_slug( 'ika_client', 'coris' );
+    if ( $coris && 'Coris Bank' === get_the_title( $coris ) ) {
+        wp_update_post( array( 'ID' => $coris, 'post_title' => 'CORIS BANK' ) );
+    }
+
+    // Partenaires ajoutés par l'ancien seeder mais absents du site statique :
+    // ABDI, ARCEP et Coris sont retirés pour une parité stricte.
+    foreach ( array( 'abdi', 'arcep', 'coris' ) as $stale_slug ) {
+        $stale_id = ika_solution_get_post_id_by_slug( 'ika_partenaire', $stale_slug );
+        if ( $stale_id ) {
+            wp_delete_post( $stale_id, true );
+        }
+    }
+}
+
+/**
  * Seed all editable content (idempotent).
  */
 function ika_solution_seed_content() {
     // Assure que les CPT existent avant l'import et le flush, même pendant after_switch_theme.
     ika_solution_custom_post_types();
     ika_solution_post_types();
+
+    if ( ika_solution_has_seed_gaps() ) {
+        ika_solution_migrate_to_v7();
+    }
 
     ika_solution_create_default_pages();
     ika_solution_remove_default_wp_sample_content();
