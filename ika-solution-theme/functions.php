@@ -244,6 +244,7 @@ function ika_asset( $path ) {
 require_once get_template_directory() . '/inc/customizer.php';
 require_once get_template_directory() . '/inc/contact-form.php';
 require_once get_template_directory() . '/inc/smtp-settings.php';
+require_once get_template_directory() . '/inc/recommended-plugins.php';
 
 /**
  * Classes « élément courant » du menu de repli, fidèles au site statique :

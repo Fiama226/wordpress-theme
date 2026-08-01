@@ -4,10 +4,69 @@ Réponse au rapport `AUDIT-THEME.md`. Les 21 actions planifiées ont été réal
 
 **Résultat de `bash tools/audit-theme.sh` :**
 
-| | Avant | Après (v1.1.0) | Après (v1.2.0) | Après (v1.4.0) |
-|---|---:|---:|---:|---:|
-| Bloquants | **13** | **0** | **0** | **0** |
-| Avertissements | 26 | 2 | **0** | **0** |
+| | Avant | Après (v1.1.0) | Après (v1.2.0) | Après (v1.4.0) | Après (v1.5.0) |
+|---|---:|---:|---:|---:|---:|
+| Bloquants | **13** | **0** | **0** | **0** | **0** |
+| Avertissements | 26 | 2 | **0** | **0** | **0** |
+
+## Mise à jour v1.5.0 — extensions recommandées : installation et configuration par le thème
+
+Nouveau module
+[`inc/recommended-plugins.php`](ika-solution-theme/inc/recommended-plugins.php)
+(aucune librairie externe, uniquement les API natives de WordPress) :
+
+### Page `Apparence ▸ Extensions IKA`
+
+- **Installation et activation en un clic** des 7 extensions gratuites
+  recommandées, téléchargées depuis wordpress.org (aucune extension n'est
+  embarquée dans le thème ; le serveur doit avoir accès à Internet) :
+  Simple Custom Post Order, UpdraftPlus, Wordfence Security, Yoast SEO,
+  Smush, Duplicate Page, Contact Form 7.
+- Sécurité : liste blanche stricte des slugs, nonces (`wp_nonce_url` /
+  `check_admin_referer`) et contrôle des capacités (`install_plugins`,
+  `activate_plugins`) ; skin de mise à niveau silencieux qui n'affiche rien
+  et ne demande jamais d'identifiants FTP (échec propre + message clair).
+- Statut en direct de chaque extension (Actif / Installé / Non installé),
+  lien direct vers ses **réglages**, et **guide en français** des réglages
+  conseillés pour chaque extension.
+
+### Configuration automatique par le thème
+
+Appliquée dès l'activation d'une extension, re-vérifiée régulièrement en
+tâche de fond, et déclenchable à la main (bouton « Appliquer les réglages
+recommandés maintenant »). **Un réglage déjà personnalisé n'est jamais
+écrasé** — seules les valeurs absentes sont complétées :
+
+- **Simple Custom Post Order** : `scporder_options[objects]` ← les 7 types
+  de contenus IKA (`ika_realisation`, `ika_membre`, `ika_partenaire`,
+  `ika_client`, `ika_solution`, `ika_expertise`, `ika_slide`) dont
+  l'affichage public suit `menu_order`. Le glisser-déposer fonctionne donc
+  immédiatement dans les listes d'admin.
+- **UpdraftPlus** : `updraft_interval` / `updraft_interval_database` ‹
+  `weekly`, 4 exemplaires conservés (`updraft_retain`,
+  `updraft_retain_db`), puis appel de `schedule_backup()` /
+  `schedule_backup_database()` pour planifier réellement les crons.
+
+Une notification d'accompagnement (masquable, auto-masquée quand tout est
+actif) guide l'équipe vers la page. Un rappel y est aussi affiché : **ne
+pas installer WP Mail SMTP** — le thème possède déjà `Réglages ▸ Email
+(SMTP)`, utiliser les deux provoquerait des conflits d'envoi.
+
+> WP Mail SMTP reste donc volontairement **hors** du catalogue (redondant
+> avec le SMTP du thème) ; Contact Form 7 y est marqué « Optionnel » (le
+> formulaire d'accueil natif du thème reste le canal principal).
+
+### Vérification
+
+```bash
+bash tools/audit-theme.sh      # 0 bloquant, 0 avertissement (19 sections)
+bash tools/build-theme-zip.sh  # régénère l'archive distribuable
+```
+
+**Non testable ici** (à valider sur la préproduction) : le téléchargement
+wordpress.org et l'activation réelle des extensions, l'apparition du
+glisser-déposer dans les listes après auto-configuration, et la planification
+cron d'UpdraftPlus.
 
 ## Mise à jour v1.4.0 — retours terrain (août 2026)
 
@@ -126,7 +185,10 @@ de `tools/audit-theme.sh`) bloque toute réintroduction.
 
 ### 9. Plugins gratuits recommandés (maintenance par des non-techniciens)
 
-À installer depuis `Extensions > Ajouter` (versions gratuites suffisantes) :
+**Depuis la v1.5.0 : installation en un clic depuis `Apparence > Extensions
+IKA`** (le thème applique ensuite automatiquement les réglages utiles).
+Sinon, toujours possible depuis `Extensions > Ajouter` (versions gratuites
+suffisantes) :
 
 | Plugin (gratuit) | Utilité pour l'équipe |
 |---|---|
@@ -347,5 +409,7 @@ formulaire de contact.
 1. **Changer le mot de passe SMTP** et activer le 2FA. *(prioritaire)*
 2. Purger `mail-config.php` de l'historique Git, ou passer le dépôt en privé.
 3. Tester le ZIP sur une préproduction avant la mise en ligne.
-4. Installer **WP Mail SMTP** pour fiabiliser l'envoi des emails.
+4. Configurer l'envoi des emails dans **Réglages ▸ Email (SMTP)** (bouton de
+   test intégré), puis installer les extensions recommandées en un clic
+   depuis **Apparence ▸ Extensions IKA**.
 5. Après activation : **Réglages > Permaliens > Enregistrer**.

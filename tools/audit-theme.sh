@@ -94,7 +94,9 @@ done
 
 # --- 7. Liens .php en dur (404 sous WordPress) ----------------------------
 section "7. Liens en dur vers des .php"
-hits=$(grep -rnoP 'href="\K(?!https?://)(?!.*admin-post\.php)[^"]*\.php[^"]*' "$THEME" --include=*.php 2>/dev/null)
+# Les href construits dynamiquement via admin_url() (admin-post.php, pages
+# d'admin comme themes.php?page=…) ne sont pas des liens en dur : exclus.
+hits=$(grep -rnoP 'href="\K(?!https?://)(?!.*admin-post\.php)(?!.*admin_url\s*\()[^"]*\.php[^"]*' "$THEME" --include=*.php 2>/dev/null)
 if [ -n "$hits" ]; then
   echo "$hits" | while read -r l; do warn "lien .php : $l"; done
   warnings=$((warnings+1))
@@ -261,6 +263,34 @@ if grep -qsE '\.bg-ikaBlueDark\\/9[28]\b' "$THEME/style.css"; then
   ko "style.css redéfinit bg-ikaBlueDark/92 : masque l'image de fond (différent du statique, où la classe est inerte)"
 else
   ok "overlay /92 non redéfini (image de fond visible à 10 %, comme sur le statique)"
+fi
+
+# --- 19. Extensions recommandées (installation/configuration par le thème) -
+section "19. Extensions recommandées"
+REC="$THEME/inc/recommended-plugins.php"
+[ -f "$REC" ] && grep -qs "inc/recommended-plugins.php" "$THEME/functions.php" \
+  && ok "module inc/recommended-plugins.php chargé par functions.php" \
+  || ko "inc/recommended-plugins.php absent ou non chargé"
+ko_slugs=0
+for slug in simple-custom-post-order updraftplus wordfence wordpress-seo wp-smushit duplicate-page contact-form-7; do
+  grep -qs "'$slug'" "$REC" || { ko "extension absente du catalogue : $slug"; ko_slugs=$((ko_slugs+1)); }
+done
+[ "$ko_slugs" -eq 0 ] && ok "catalogue complet (7 extensions gratuites)"
+if [ -f "$REC" ]; then
+  grep -qs "current_user_can" "$REC" && grep -qs "wp_nonce_url" "$REC" && grep -qs "check_admin_referer" "$REC" \
+    && ok "actions sécurisées (capacités + nonces)" \
+    || ko "actions d'installation insuffisamment sécurisées"
+  grep -qs "scporder_options" "$REC" && grep -qs "updraft_interval" "$REC" \
+    && ok "configuration automatique (SCPOrder + UpdraftPlus) présente" \
+    || ko "configuration automatique des extensions absente"
+  grep -qs "admin_post_ika_ext_action" "$REC" \
+    && ok "endpoint admin-post d'installation/activation présent" \
+    || ko "endpoint admin-post manquant"
+fi
+if find "$THEME" -name '*.zip' -o -name '*.tar.gz' | grep -q .; then
+  ko "des extensions sont embarquées en archive dans le thème (à proscrire)"
+else
+  ok "aucune extension embarquée (téléchargement depuis wordpress.org)"
 fi
 
 # --- Synthèse -------------------------------------------------------------

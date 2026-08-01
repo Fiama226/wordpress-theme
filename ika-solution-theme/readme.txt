@@ -4,7 +4,7 @@ Contributors: ikasolution
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.4.0
+Stable tag: 1.5.0
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Tags: custom-menu, featured-images, translation-ready, full-width-template, custom-logo, threaded-comments
@@ -140,6 +140,24 @@ Contrôler la qualité du thème :        bash tools/audit-theme.sh
   d'une icône flèche pour une finition cohérente.
 * Migration v7 automatique : met à niveau le contenu existant vers la parité
   statique sans écraser les modifications faites dans l'administration.
+
+= 1.5.0 =
+* Nouvelle page `Apparence > Extensions IKA` : installation et activation en
+  un clic des extensions gratuites recommandées (Simple Custom Post Order,
+  UpdraftPlus, Wordfence, Yoast SEO, Smush, Duplicate Page, Contact Form 7),
+  directement depuis wordpress.org — aucune extension embarquée dans le
+  thème. Inclut un guide de réglages conseillés en français, avec liens
+  directs vers chaque page de réglages.
+* Configuration automatique par le thème (sans jamais écraser un réglage
+  déjà personnalisé) : glisser-déposer Simple Custom Post Order activé sur
+  les 7 types de contenus IKA ; sauvegarde hebdomadaire UpdraftPlus
+  (fichiers + base, 4 exemplaires conservés). Application immédiate après
+  chaque activation, vérification régulière en tâche de fond, et bouton
+  « Appliquer maintenant ».
+* Notification d'accompagnement dans l'admin (masquable) tant que les
+  extensions ne sont pas toutes actives.
+* Rappel affiché de ne pas installer WP Mail SMTP (le thème possède déjà
+  `Réglages > Email (SMTP)` — utiliser les deux provoquerait des conflits).
 
 = 1.0.0 =
 * Version initiale.
