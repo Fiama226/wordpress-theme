@@ -487,21 +487,16 @@
       <p class="max-w-sm text-sm leading-7 text-slate-600">Solutions logicielles, systèmes, paiement, infrastructure et services numériques.</p>
     </div>
     <div class="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-      <div class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean">
-        <span class="text-xl font-black text-ikaBlue">Microsoft</span>
+         <div class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean">
+        <img class="max-h-14 max-w-full object-contain" src="assets/images/microsoft.png" alt="Microsoft">
       </div>
       <div class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean">
         <img class="max-h-14 max-w-full object-contain" src="assets/images/odoo.png" alt="Odoo">
       </div>
       <div class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean">
-        <img class="max-h-16 max-w-full object-contain" src="assets/images/abdi.jpg" alt="ABDI">
+        <img class="max-h-16 max-w-full object-contain" src="assets/images/paloalto.svg" alt="Palo Alto">
       </div>
-      <div class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean">
-        <img class="max-h-16 max-w-full object-contain" src="assets/images/arcep.png" alt="ARCEP">
-      </div>
-      <div class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean">
-        <img class="max-h-14 max-w-full object-contain" src="assets/images/coris.jpg" alt="coris">
-      </div>
+
       <div class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean">
         <img class="max-h-20 max-w-full object-contain" src="assets/images/fortinet.png" alt="Fortinet">
       </div>
@@ -531,21 +526,21 @@
     <div class="clients-track">
       <!-- Groupe 1 -->
       <div class="clients-group">
-        <div class="client-logo"><img src="assets/images/clients/APEC.png" alt="Client 1"></div>
-        <div class="client-logo"><img src="assets/images/clients/coris.jpg" alt="Client 2"></div>
-        <div class="client-logo"><img src="assets/images/clients/Lonab.png" alt="Client 3"></div>
-        <div class="client-logo"><img src="assets/images/clients/ONEA.jpg" alt="Client 4"></div>
-        <div class="client-logo"><img src="assets/images/clients/Sonatur.png" alt="Client 5"></div>
-        <div class="client-logo"><img src="assets/images/clients/sonabhy.png" alt="Client 6"></div>
+        <div class="client-logo"><img src="assets/images/clients/Sonatur.png" alt="SONATUR"></div>
+        <div class="client-logo"><img src="assets/images/clients/sonabhy.png" alt="SONABHY"></div>
+        <div class="client-logo"><img src="assets/images/clients/ONEA.jpg" alt="ONEA"></div>
+        <div class="client-logo"><img src="assets/images/clients/Lonab.png" alt="LONAB"></div>
+        <div class="client-logo"><img src="assets/images/clients/coris.jpg" alt="CORIS BANK"></div>
+        <div class="client-logo"><img src="assets/images/clients/APEC.png" alt="APEC"></div>
       </div>
       <!-- Groupe 2 (copie identique, pour la boucle infinie) -->
       <div class="clients-group">
-        <div class="client-logo"><img src="assets/images/clients/APEC.png" alt="Client 1"></div>
-        <div class="client-logo"><img src="assets/images/clients/coris.jpg" alt="Client 2"></div>
-        <div class="client-logo"><img src="assets/images/clients/Lonab.png" alt="Client 3"></div>
-        <div class="client-logo"><img src="assets/images/clients/ONEA.jpg" alt="Client 4"></div>
-        <div class="client-logo"><img src="assets/images/clients/Sonatur.png" alt="Client 5"></div>
-        <div class="client-logo"><img src="assets/images/clients/sonabhy.png" alt="Client 6"></div>
+        <div class="client-logo"><img src="assets/images/clients/Sonatur.png" alt="SONATUR"></div>
+        <div class="client-logo"><img src="assets/images/clients/sonabhy.png" alt="SONABHY"></div>
+        <div class="client-logo"><img src="assets/images/clients/ONEA.jpg" alt="ONEA"></div>
+        <div class="client-logo"><img src="assets/images/clients/Lonab.png" alt="LONAB"></div>
+        <div class="client-logo"><img src="assets/images/clients/coris.jpg" alt="CORIS BANK"></div>
+        <div class="client-logo"><img src="assets/images/clients/APEC.png" alt="APEC"></div>
       </div>
     </div>
   </div>
