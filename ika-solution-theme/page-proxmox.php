@@ -1,3 +1,4 @@
+<?php /* Template Name: Proxmox */ ?>
 <?php
 /**
  * Page Proxmox — contenu rédigé en propre par IKA SOLUTION (août 2026).
@@ -7,11 +8,24 @@
  * le même périmètre fonctionnel — Proxmox Virtual Environment, Proxmox
  * Backup Server et Proxmox Mail Gateway — et la présentation par onglets.
  *
+ * @package ika-solution
  */
 
-  function pmx_h($value) {
-    return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
-  }
+if ( ! function_exists( 'ika_pmx_contact_subjects' ) ) {
+	/**
+	 * Sujets du formulaire de contact propres à la page Proxmox.
+	 *
+	 * @return string[]
+	 */
+	function ika_pmx_contact_subjects() {
+		return array(
+			__( 'Proxmox Virtual Environment (virtualisation)', 'ika-solution' ),
+			__( 'Proxmox Backup Server (sauvegarde)', 'ika-solution' ),
+			__( 'Proxmox Mail Gateway (sécurité messagerie)', 'ika-solution' ),
+			__( 'Autre demande liée à Proxmox', 'ika-solution' ),
+		);
+	}
+}
 
 /**
  * Rend un groupe d'onglets (boutons + panneaux de cartes).
@@ -24,21 +38,21 @@ function pmx_render_tabs( $group_id, $tabs ) {
 	<div class="mt-10" data-pmx-tabs>
 		<div class="flex flex-wrap gap-2.5" role="tablist">
 			<?php foreach ( $tabs as $pmx_tab ) : ?>
-			<button type="button" role="tab" class="pmx-tab rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-black text-ikaBlue transition hover:border-ikaBlue" data-pmx-target="<?php echo pmx_h( $group_id . '-' . $pmx_tab['id'] ); ?>" aria-selected="false">
-				<span aria-hidden="true"><?php echo pmx_h( $pmx_tab['icon'] ); ?></span> <?php echo pmx_h( $pmx_tab['label'] ); ?>
+			<button type="button" role="tab" class="pmx-tab rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-black text-ikaBlue transition hover:border-ikaBlue" data-pmx-target="<?php echo esc_attr( $group_id . '-' . $pmx_tab['id'] ); ?>" aria-selected="false">
+				<span aria-hidden="true"><?php echo esc_html( $pmx_tab['icon'] ); ?></span> <?php echo esc_html( $pmx_tab['label'] ); ?>
 			</button>
 			<?php endforeach; ?>
 		</div>
 		<?php foreach ( $tabs as $pmx_tab ) : ?>
-		<div id="<?php echo pmx_h( $group_id . '-' . $pmx_tab['id'] ); ?>" class="pmx-panel mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3" role="tabpanel" hidden>
+		<div id="<?php echo esc_attr( $group_id . '-' . $pmx_tab['id'] ); ?>" class="pmx-panel mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3" role="tabpanel" hidden>
 			<?php foreach ( $pmx_tab['items'] as $pmx_item ) : ?>
 			<article class="flex h-full flex-col rounded-2xl bg-white p-6 shadow-clean transition hover:-translate-y-1 hover:shadow-premium">
-				<h3 class="text-lg font-black leading-snug text-ikaBlue"><?php echo pmx_h( $pmx_item['title'] ); ?></h3>
-				<p class="mt-3 flex-1 text-sm leading-7 text-slate-600"><?php echo pmx_h( $pmx_item['text'] ); ?></p>
+				<h3 class="text-lg font-black leading-snug text-ikaBlue"><?php echo esc_html( $pmx_item['title'] ); ?></h3>
+				<p class="mt-3 flex-1 text-sm leading-7 text-slate-600"><?php echo esc_html( $pmx_item['text'] ); ?></p>
 				<?php if ( ! empty( $pmx_item['links'] ) ) : ?>
 				<div class="mt-4 flex flex-wrap gap-2">
 					<?php foreach ( $pmx_item['links'] as $pmx_link ) : ?>
-					<a class="rounded-full bg-ikaSoft px-4 py-2 text-xs font-black text-ikaBlue transition hover:bg-ikaBlue hover:text-white" href="<?php echo pmx_h( $pmx_link[1] ); ?>" target="_blank" rel="noopener"><?php echo pmx_h( $pmx_link[0] ); ?> ↗</a>
+					<a class="rounded-full bg-ikaSoft px-4 py-2 text-xs font-black text-ikaBlue transition hover:bg-ikaBlue hover:text-white" href="<?php echo esc_url( $pmx_link[1] ); ?>" target="_blank" rel="noopener"><?php echo esc_html( $pmx_link[0] ); ?> ↗</a>
 					<?php endforeach; ?>
 				</div>
 				<?php endif; ?>
@@ -437,9 +451,7 @@ $pmx_pmg_tabs = array(
 	),
 );
 
-  $pageTitle = 'Proxmox | IKA SOLUTION LTD';
-  $pageDescription = 'Virtualisation open source avec Proxmox : consolidation de serveurs (KVM et LXC), sauvegardes dédupliquées et chiffrées, passerelle anti-spam et antivirus.';
-  include 'header.php';
+get_header();
 ?>
 
 <main class="bg-white pt-32">
@@ -447,12 +459,12 @@ $pmx_pmg_tabs = array(
   <!-- ===================== HERO ===================== -->
   <section class="relative overflow-hidden bg-ikaBlueDark text-white">
     <div class="absolute inset-0">
-      <img class="h-full w-full object-cover opacity-25" src="<?php echo pmx_h('assets/images/proxmox-hero.jpg'); ?>" alt="Infrastructure virtualisée Proxmox">
+      <img class="h-full w-full object-cover opacity-25" src="<?php echo esc_url( ika_asset( 'images/proxmox-hero.jpg' ) ); ?>" alt="Infrastructure virtualisée Proxmox">
       <div class="absolute inset-0 bg-ikaBlueDark/80" aria-hidden="true"></div>
     </div>
     <div class="relative mx-auto grid min-h-[560px] max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.05fr_.95fr] lg:items-center lg:px-8">
       <div>
-        <a href="<?php echo pmx_h('index.php#expertises'); ?>" class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white hover:text-ikaBlue"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>Retour aux expertises</a>
+        <a href="<?php echo esc_url( home_url( '/#expertises' ) ); ?>" class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white hover:text-ikaBlue"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>Retour aux expertises</a>
         <p class="mt-8 text-sm font-black uppercase tracking-[0.2em] text-red-200">Virtualisation open source</p>
         <h1 class="mt-4 text-4xl font-black leading-tight tracking-normal sm:text-5xl lg:text-6xl">Proxmox : la plateforme de virtualisation sans coûts de licence.</h1>
         <p class="mt-6 max-w-3xl text-lg leading-8 text-white/85">IKA SOLUTION déploie et maintient la suite Proxmox — Virtual Environment, Backup Server et Mail Gateway — pour consolider vos serveurs, sécuriser vos sauvegardes et filtrer votre messagerie, avec des briques 100 % open source et un accompagnement local.</p>
@@ -469,7 +481,7 @@ $pmx_pmg_tabs = array(
       <div class="hidden lg:block">
         <div class="relative">
           <div class="absolute -left-5 -top-5 h-28 w-28 rounded-3xl bg-ikaRed"></div>
-          <img class="relative h-[430px] w-full rounded-[2rem] object-cover shadow-premium" src="<?php echo pmx_h('assets/images/proxmox-hero.jpg'); ?>" alt="Salle serveur virtualisée sous Proxmox">
+          <img class="relative h-[430px] w-full rounded-[2rem] object-cover shadow-premium" src="<?php echo esc_url( ika_asset( 'images/proxmox-hero.jpg' ) ); ?>" alt="Salle serveur virtualisée sous Proxmox">
           <div class="absolute -bottom-6 right-6 rounded-2xl bg-white p-5 text-ikaInk shadow-premium">
             <p class="text-sm font-black uppercase tracking-[0.16em] text-ikaRed">Open source</p>
             <p class="mt-2 text-2xl font-black text-ikaBlueDark">0 FCFA de licence</p>
@@ -489,9 +501,9 @@ $pmx_pmg_tabs = array(
           <p class="mt-5 text-base leading-8 text-slate-600">Proxmox VE réunit sur une même plateforme deux technologies complémentaires : la virtualisation complète KVM et les conteneurs LXC. Machines virtuelles, réseaux, stockage, sauvegardes et haute disponibilité se gèrent depuis une interface web unique, sans agent à installer.</p>
           <p class="mt-4 text-base leading-8 text-slate-600">Chez IKA SOLUTION, nous l’utilisons pour consolider les serveurs de nos clients : moins de matériel, des ressources mutualisées et une administration simple à reprendre en main.</p>
           <div class="mt-6 flex flex-wrap items-center gap-6">
-            <img class="h-8 w-auto opacity-60 transition hover:opacity-100" src="<?php echo pmx_h('assets/images/proxmox/logo-debian.png'); ?>" alt="Debian GNU/Linux" loading="lazy">
-            <img class="h-11 w-auto opacity-60 transition hover:opacity-100" src="<?php echo pmx_h('assets/images/proxmox/logo-kvm.png'); ?>" alt="KVM — virtualisation complète" loading="lazy">
-            <img class="h-9 w-auto opacity-60 transition hover:opacity-100" src="<?php echo pmx_h('assets/images/proxmox/logo-lxc.png'); ?>" alt="LXC — conteneurs Linux" loading="lazy">
+            <img class="h-8 w-auto opacity-60 transition hover:opacity-100" src="<?php echo esc_url( ika_asset( 'images/proxmox/logo-debian.png' ) ); ?>" alt="Debian GNU/Linux" loading="lazy">
+            <img class="h-11 w-auto opacity-60 transition hover:opacity-100" src="<?php echo esc_url( ika_asset( 'images/proxmox/logo-kvm.png' ) ); ?>" alt="KVM — virtualisation complète" loading="lazy">
+            <img class="h-9 w-auto opacity-60 transition hover:opacity-100" src="<?php echo esc_url( ika_asset( 'images/proxmox/logo-lxc.png' ) ); ?>" alt="LXC — conteneurs Linux" loading="lazy">
           </div>
         </div>
         <div class="reveal overflow-hidden rounded-[2rem] bg-ikaSoft shadow-premium">
@@ -501,7 +513,7 @@ $pmx_pmg_tabs = array(
             <span class="h-3 w-3 rounded-full bg-green-500"></span>
             <span class="ml-3 text-xs font-bold text-slate-500">Proxmox VE — vue résumée d’un hôte</span>
           </div>
-          <img class="block w-full" src="<?php echo pmx_h('assets/images/Proxmox-VE-7-1-Host-Summary.svg'); ?>" alt="Interface web de Proxmox Virtual Environment" loading="lazy">
+          <img class="block w-full" src="<?php echo esc_url( ika_asset( 'images/Proxmox-VE-7-1-Host-Summary.svg' ) ); ?>" alt="Interface web de Proxmox Virtual Environment" loading="lazy">
         </div>
       </div>
 
@@ -513,7 +525,7 @@ $pmx_pmg_tabs = array(
   <section class="bg-ikaSoft py-16 sm:py-20">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="grid gap-8 rounded-[2rem] bg-ikaBlueDark p-8 text-white shadow-premium sm:p-10 lg:grid-cols-[auto_1fr_auto] lg:items-center">
-        <img class="h-12 w-auto" src="<?php echo pmx_h('assets/images/proxmox/logo-ceph.png'); ?>" alt="Ceph" loading="lazy">
+        <img class="h-12 w-auto" src="<?php echo esc_url( ika_asset( 'images/proxmox/logo-ceph.png' ) ); ?>" alt="Ceph" loading="lazy">
         <div>
           <h3 class="text-2xl font-black">Stockage distribué Ceph, intégré à l’interface Proxmox.</h3>
           <p class="mt-3 text-sm leading-7 text-white/80">Auto-réparateur et sans point unique de défaillance, un cluster Ceph se déploie sur du matériel standard et grandit avec vos besoins — idéal pour des infrastructures hyperconvergées.</p>
@@ -529,7 +541,7 @@ $pmx_pmg_tabs = array(
   <!-- ===================== PROXMOX BACKUP SERVER ===================== -->
   <section id="proxmox-backup" class="relative overflow-hidden bg-ikaBlueDark py-16 text-white sm:py-20">
     <div class="absolute inset-0">
-      <img class="h-full w-full object-cover opacity-20" src="<?php echo pmx_h('assets/images/proxmox-backup.jpg'); ?>" alt="Protection des données">
+      <img class="h-full w-full object-cover opacity-20" src="<?php echo esc_url( ika_asset( 'images/proxmox-backup.jpg' ) ); ?>" alt="Protection des données">
       <div class="absolute inset-0 bg-ikaBlueDark/85" aria-hidden="true"></div>
     </div>
     <div class="relative mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[1.05fr_.95fr] lg:items-center lg:px-8">
@@ -543,7 +555,7 @@ $pmx_pmg_tabs = array(
         <a href="#contact" class="mt-8 inline-flex rounded-full bg-ikaRed px-7 py-4 text-sm font-extrabold text-white shadow-clean transition hover:bg-red-700">Sécuriser mes sauvegardes</a>
       </div>
       <div class="hidden lg:block">
-        <img class="h-[400px] w-full rounded-[2rem] object-cover shadow-premium" src="<?php echo pmx_h('assets/images/proxmox-backup.jpg'); ?>" alt="Protection des données avec Proxmox Backup Server">
+        <img class="h-[400px] w-full rounded-[2rem] object-cover shadow-premium" src="<?php echo esc_url( ika_asset( 'images/proxmox-backup.jpg' ) ); ?>" alt="Protection des données avec Proxmox Backup Server">
       </div>
     </div>
   </section>
@@ -563,7 +575,7 @@ $pmx_pmg_tabs = array(
           <span class="h-3 w-3 rounded-full bg-green-500"></span>
           <span class="ml-3 text-xs font-bold text-slate-500">Proxmox Backup Server — tableau de bord</span>
         </div>
-        <img class="block w-full" src="<?php echo pmx_h('assets/images/proxmox/proxmox-backup-server-dashboard.png'); ?>" alt="Tableau de bord de Proxmox Backup Server" loading="lazy">
+        <img class="block w-full" src="<?php echo esc_url( ika_asset( 'images/proxmox/proxmox-backup-server-dashboard.png' ) ); ?>" alt="Tableau de bord de Proxmox Backup Server" loading="lazy">
       </div>
 
       <?php pmx_render_tabs( 'pbs', $pmx_pbs_tabs ); ?>
@@ -596,7 +608,7 @@ $pmx_pmg_tabs = array(
             <span class="h-3 w-3 rounded-full bg-green-500"></span>
             <span class="ml-3 text-xs font-bold text-slate-500">Positionnement de la passerelle dans le réseau</span>
           </div>
-          <img class="block w-full" src="<?php echo pmx_h('assets/images/proxmox/proxmox-mail-gateway-infrastructure.png'); ?>" alt="Schéma d’architecture : Proxmox Mail Gateway entre le pare-feu et le serveur de messagerie" loading="lazy">
+          <img class="block w-full" src="<?php echo esc_url( ika_asset( 'images/proxmox/proxmox-mail-gateway-infrastructure.png' ) ); ?>" alt="Schéma d’architecture : Proxmox Mail Gateway entre le pare-feu et le serveur de messagerie" loading="lazy">
         </div>
       </div>
 
@@ -627,54 +639,16 @@ $pmx_pmg_tabs = array(
     </div>
   </section>
 
-  <!-- ===================== CONTACT ===================== -->
-  <section id="contact" class="bg-ikaBlueDark py-16 text-white sm:py-20">
-    <div class="relative mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[.9fr_1.1fr] lg:items-center lg:px-8">
-      <div>
-        <p class="text-sm font-black uppercase tracking-[0.2em] text-red-200">Contact</p>
-        <h2 class="mt-4 text-3xl font-black leading-tight sm:text-4xl">Parlez-nous de votre projet Proxmox.</h2>
-        <p class="mt-5 max-w-xl text-base leading-8 text-white/85">Virtualisation des serveurs, sauvegardes dédupliquées ou protection de la messagerie : décrivez votre besoin, un expert IKA SOLUTION vous répond avec une proposition claire et chiffrée.</p>
-      </div>
-      <form class="relative grid gap-4 rounded-[2rem] bg-white p-7 text-ikaInk shadow-premium sm:p-8" action="contact-submit.php" method="post">
-        <input type="hidden" name="type" value="contact">
-        <input type="hidden" name="redirect" value="proxmox.php#contact">
-        <input type="hidden" name="page" value="Proxmox">
-        <input type="hidden" name="form_time" value="<?= time() ?>">
-        <div class="absolute left-[-9999px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
-          <label>Ne pas remplir ce champ <input type="text" name="site_web" tabindex="-1" autocomplete="off" value=""></label>
-        </div>
-        <?php if (isset($_GET['mail'], $_GET['notice'])): ?>
-          <div class="rounded-2xl <?= $_GET['mail'] === 'success' ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800' ?> p-4 text-sm font-bold">
-            <?= htmlspecialchars((string) $_GET['notice'], ENT_QUOTES, 'UTF-8') ?>
-          </div>
-        <?php endif; ?>
-        <div class="grid gap-4 sm:grid-cols-2">
-          <label class="grid gap-2 text-sm font-bold text-slate-700">Nom
-            <input class="min-h-[3.25rem] rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-ikaBlue" name="nom" type="text" placeholder="Votre nom" required>
-          </label>
-          <label class="grid gap-2 text-sm font-bold text-slate-700">Téléphone
-            <input class="min-h-[3.25rem] rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-ikaBlue" name="telephone" type="tel" placeholder="+226">
-          </label>
-        </div>
-        <label class="grid gap-2 text-sm font-bold text-slate-700">Email
-          <input class="min-h-[3.25rem] rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-ikaBlue" name="email" type="email" placeholder="vous@entreprise.com" required>
-        </label>
-        <label class="grid gap-2 text-sm font-bold text-slate-700">Solution concernée
-          <select class="min-h-[3.25rem] rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-ikaBlue" name="besoin">
-            <option>Proxmox Virtual Environment (virtualisation)</option>
-            <option>Proxmox Backup Server (sauvegarde)</option>
-            <option>Proxmox Mail Gateway (sécurité messagerie)</option>
-            <option>Autre demande liée à Proxmox</option>
-          </select>
-        </label>
-        <label class="grid gap-2 text-sm font-bold text-slate-700">Message
-          <textarea class="min-h-28 rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-ikaBlue" name="message" placeholder="Décrivez votre projet" required></textarea>
-        </label>
-        <button class="h-10 w-fit whitespace-nowrap rounded-full bg-ikaRed px-4 text-xs font-extrabold text-white shadow-clean transition hover:bg-red-700" type="submit">Envoyer la demande</button>
-      </form>
-    </div>
-  </section>
+  <?php
+  // Bloc contact commun au thème, avec les sujets adaptés à cette page
+  // et sans la carte Google Maps (comme sur la page d'origine).
+  $GLOBALS['ika_contact_hide_map'] = true;
+  add_filter( 'ika_contact_subjects', 'ika_pmx_contact_subjects' );
+  get_template_part( 'template-parts/contact' );
+  remove_filter( 'ika_contact_subjects', 'ika_pmx_contact_subjects' );
+  unset( $GLOBALS['ika_contact_hide_map'] );
+  ?>
 
 </main>
 
-<?php include 'footer.php'; ?>
+<?php get_footer(); ?>

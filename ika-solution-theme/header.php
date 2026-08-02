@@ -57,13 +57,13 @@
       ?>
       <!-- Repli : affiché uniquement si aucun menu n'est assigné dans WordPress. -->
       <div class="hidden items-center gap-6 text-sm font-bold text-slate-700 xl:flex">
-        <a class="transition hover:text-ikaBlue" href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'Accueil', 'ika-solution' ); ?></a>
-        <a class="transition hover:text-ikaBlue" href="<?php echo esc_url( ika_page_url( 'presentation' ) ); ?>"><?php esc_html_e( 'Société', 'ika-solution' ); ?></a>
-        <a class="transition hover:text-ikaBlue" href="<?php echo esc_url( ika_page_url( 'equipe' ) ); ?>"><?php esc_html_e( 'Équipe', 'ika-solution' ); ?></a>
-        <a class="transition hover:text-ikaBlue" href="<?php echo esc_url( home_url( '/#expertises' ) ); ?>"><?php esc_html_e( 'Expertise', 'ika-solution' ); ?></a>
-        <a class="transition hover:text-ikaBlue" href="<?php echo esc_url( ika_page_url( 'realisations' ) ); ?>"><?php esc_html_e( 'Réalisations', 'ika-solution' ); ?></a>
-        <a class="transition hover:text-ikaBlue" href="<?php echo esc_url( home_url( '/#produits' ) ); ?>"><?php esc_html_e( 'Solutions', 'ika-solution' ); ?></a>
-        <a class="transition hover:text-ikaBlue" href="<?php echo esc_url( ika_page_url( 'actualites' ) ); ?>"><?php esc_html_e( 'Actualités', 'ika-solution' ); ?></a>
+        <a class="transition hover:text-ikaBlue <?php echo esc_attr( ika_nav_active( 'accueil' ) ); ?>" href="<?php echo esc_url( home_url( '/#top' ) ); ?>"><?php esc_html_e( 'Accueil', 'ika-solution' ); ?></a>
+        <a class="transition hover:text-ikaBlue <?php echo esc_attr( ika_nav_active( 'presentation' ) ); ?>" href="<?php echo esc_url( ika_page_url( 'presentation' ) ); ?>"><?php esc_html_e( 'Société', 'ika-solution' ); ?></a>
+        <a class="transition hover:text-ikaBlue <?php echo esc_attr( ika_nav_active( 'equipe' ) ); ?>" href="<?php echo esc_url( ika_page_url( 'equipe' ) ); ?>"><?php esc_html_e( 'Équipe', 'ika-solution' ); ?></a>
+        <a class="transition hover:text-ikaBlue <?php echo esc_attr( ika_nav_active( 'expertises' ) ); ?>" href="<?php echo esc_url( home_url( '/#expertises' ) ); ?>"><?php esc_html_e( 'Expertise', 'ika-solution' ); ?></a>
+        <a class="transition hover:text-ikaBlue <?php echo esc_attr( ika_nav_active( 'realisations' ) ); ?>" href="<?php echo esc_url( ika_page_url( 'realisations' ) ); ?>"><?php esc_html_e( 'Réalisations', 'ika-solution' ); ?></a>
+        <a class="transition hover:text-ikaBlue <?php echo esc_attr( ika_nav_active( 'solutions' ) ); ?>" href="<?php echo esc_url( home_url( '/#produits' ) ); ?>"><?php esc_html_e( 'Solutions', 'ika-solution' ); ?></a>
+        <a class="transition hover:text-ikaBlue <?php echo esc_attr( ika_nav_active( 'actualites' ) ); ?>" href="<?php echo esc_url( ika_page_url( 'actualites' ) ); ?>"><?php esc_html_e( 'Actualités', 'ika-solution' ); ?></a>
         <a class="rounded-full bg-ikaRed px-5 py-3 text-white shadow-clean transition hover:bg-red-700" href="<?php echo esc_url( home_url( '/#contact' ) ); ?>"><?php esc_html_e( 'Demander un devis', 'ika-solution' ); ?></a>
         <a class="transition hover:text-ikaBlue" href="<?php echo esc_url( home_url( '/#contact' ) ); ?>"><?php esc_html_e( 'Contact', 'ika-solution' ); ?></a>
       </div>
@@ -90,13 +90,13 @@
             ) );
         else :
         ?>
-        <a class="rounded-xl px-3 py-3 hover:bg-ikaSoft" href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'Accueil', 'ika-solution' ); ?></a>
-        <a class="rounded-xl px-3 py-3 hover:bg-ikaSoft" href="<?php echo esc_url( ika_page_url( 'presentation' ) ); ?>"><?php esc_html_e( 'Société', 'ika-solution' ); ?></a>
-        <a class="rounded-xl px-3 py-3 hover:bg-ikaSoft" href="<?php echo esc_url( ika_page_url( 'equipe' ) ); ?>"><?php esc_html_e( 'Équipe', 'ika-solution' ); ?></a>
-        <a class="rounded-xl px-3 py-3 hover:bg-ikaSoft" href="<?php echo esc_url( home_url( '/#expertises' ) ); ?>"><?php esc_html_e( 'Expertise', 'ika-solution' ); ?></a>
-        <a class="rounded-xl px-3 py-3 hover:bg-ikaSoft" href="<?php echo esc_url( ika_page_url( 'realisations' ) ); ?>"><?php esc_html_e( 'Réalisations', 'ika-solution' ); ?></a>
-        <a class="rounded-xl px-3 py-3 hover:bg-ikaSoft" href="<?php echo esc_url( home_url( '/#produits' ) ); ?>"><?php esc_html_e( 'Solutions', 'ika-solution' ); ?></a>
-        <a class="rounded-xl px-3 py-3 hover:bg-ikaSoft" href="<?php echo esc_url( ika_page_url( 'actualites' ) ); ?>"><?php esc_html_e( 'Actualités', 'ika-solution' ); ?></a>
+        <a class="rounded-xl px-3 py-3 hover:bg-ikaSoft <?php echo esc_attr( ika_nav_active( 'accueil', true ) ); ?>" href="<?php echo esc_url( home_url( '/#top' ) ); ?>"><?php esc_html_e( 'Accueil', 'ika-solution' ); ?></a>
+        <a class="rounded-xl px-3 py-3 hover:bg-ikaSoft <?php echo esc_attr( ika_nav_active( 'presentation', true ) ); ?>" href="<?php echo esc_url( ika_page_url( 'presentation' ) ); ?>"><?php esc_html_e( 'Société', 'ika-solution' ); ?></a>
+        <a class="rounded-xl px-3 py-3 hover:bg-ikaSoft <?php echo esc_attr( ika_nav_active( 'equipe', true ) ); ?>" href="<?php echo esc_url( ika_page_url( 'equipe' ) ); ?>"><?php esc_html_e( 'Équipe', 'ika-solution' ); ?></a>
+        <a class="rounded-xl px-3 py-3 hover:bg-ikaSoft <?php echo esc_attr( ika_nav_active( 'expertises', true ) ); ?>" href="<?php echo esc_url( home_url( '/#expertises' ) ); ?>"><?php esc_html_e( 'Expertise', 'ika-solution' ); ?></a>
+        <a class="rounded-xl px-3 py-3 hover:bg-ikaSoft <?php echo esc_attr( ika_nav_active( 'realisations', true ) ); ?>" href="<?php echo esc_url( ika_page_url( 'realisations' ) ); ?>"><?php esc_html_e( 'Réalisations', 'ika-solution' ); ?></a>
+        <a class="rounded-xl px-3 py-3 hover:bg-ikaSoft <?php echo esc_url( ika_nav_active( 'solutions', true ) ); ?>" href="<?php echo esc_url( home_url( '/#produits' ) ); ?>"><?php esc_html_e( 'Solutions', 'ika-solution' ); ?></a>
+        <a class="rounded-xl px-3 py-3 hover:bg-ikaSoft <?php echo esc_attr( ika_nav_active( 'actualites', true ) ); ?>" href="<?php echo esc_url( ika_page_url( 'actualites' ) ); ?>"><?php esc_html_e( 'Actualités', 'ika-solution' ); ?></a>
         <a class="rounded-xl px-3 py-3 text-ikaRed hover:bg-ikaSoft" href="<?php echo esc_url( home_url( '/#contact' ) ); ?>"><?php esc_html_e( 'Demander un devis', 'ika-solution' ); ?></a>
         <a class="rounded-xl px-3 py-3 hover:bg-ikaSoft" href="<?php echo esc_url( home_url( '/#contact' ) ); ?>"><?php esc_html_e( 'Contact', 'ika-solution' ); ?></a>
         <?php endif; ?>

@@ -1,5 +1,11 @@
 <?php /* Template Name: Actualites */ ?>
-<?php get_header(); ?>
+<?php
+get_header();
+
+// Nombre d'articles par page (réglable dans Apparence > Personnaliser >
+// Contenu IKA Solution > Pagination). 0 = tout afficher, sans pagination.
+$ika_per_page = max( 0, (int) ika_opt( 'ika_actualites_per_page', 9 ) );
+?>
 
   <main>
     <section class="relative overflow-hidden bg-ikaBlueDark pt-36 text-white sm:pt-40">
@@ -16,12 +22,12 @@
 
     <section class="bg-ikaSoft py-20 sm:py-28">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div id="actualitesGrid" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3" data-per-page="<?php echo esc_attr( $ika_per_page ); ?>">
           <?php
           $ika_query = new WP_Query(
             array(
               'post_type'      => 'post',
-              'posts_per_page'      => 12,
+              'posts_per_page'      => 100,
               'post_status'         => 'publish',
               'orderby'             => array( 'menu_order' => 'ASC', 'date' => 'DESC' ),
               'ignore_sticky_posts' => true,
@@ -55,6 +61,9 @@
             <p class="text-slate-600"><?php esc_html_e( 'Aucune actualité pour le moment.', 'ika-solution' ); ?></p>
           <?php endif; ?>
         </div>
+
+        <!-- Pagination côté navigateur (instantanée, sans rechargement) -->
+        <nav class="ika-pagination mt-10" data-pagination-for="actualitesGrid" aria-label="<?php esc_attr_e( 'Pagination des actualités', 'ika-solution' ); ?>" hidden></nav>
       </div>
     </section>
   </main>

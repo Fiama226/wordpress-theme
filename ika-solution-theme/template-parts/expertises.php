@@ -52,6 +52,12 @@ $dark_indices = array( 4, 5, 6, 7 );
           foreach ( $expertises as $i => $exp ) :
               $exp_img      = get_post_meta( $exp->ID, 'ika_expertise_image', true );
               $exp_url      = ika_expertise_url( $exp );
+              // Texte de la carte accueil : meta dédiée (comme le site
+              // statique) ; repli sur l'extrait si elle est vide.
+              $exp_card     = trim( (string) get_post_meta( $exp->ID, 'ika_expertise_card_text', true ) );
+              if ( '' === $exp_card ) {
+                  $exp_card = get_the_excerpt( $exp );
+              }
               $cut          = 'expertise-cut-' . chr( ord( 'a' ) + ( $i % 8 ) );
               $is_dark      = in_array( $i, $dark_indices, true );
               $translate    = isset( $translate_classes[ $i ] ) ? $translate_classes[ $i ] : '';
@@ -70,7 +76,7 @@ $dark_indices = array( 4, 5, 6, 7 );
               <img src="<?php echo esc_url( ika_asset( $exp_img ) ); ?>" alt="<?php echo esc_attr( get_the_title( $exp ) ); ?>">
             </div>
             <h3 class="mt-6 <?php echo esc_attr( $title_class ); ?>"><?php echo esc_html( get_the_title( $exp ) ); ?></h3>
-            <p class="mt-4 flex-1 <?php echo esc_attr( $text_class ); ?>"><?php echo esc_html( get_the_excerpt( $exp ) ); ?></p>
+            <p class="mt-4 flex-1 <?php echo esc_attr( $text_class ); ?>"><?php echo esc_html( $exp_card ); ?></p>
           </div>
           <?php endforeach; ?>
         </div>

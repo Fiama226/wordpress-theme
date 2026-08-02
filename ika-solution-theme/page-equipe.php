@@ -9,7 +9,7 @@
     <div class="absolute inset-0 bg-ikaBlueDark/92" aria-hidden="true"></div>
     <div class="relative mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
       <div class="max-w-4xl">
-        <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="inline-flex rounded-full border border-white/25 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white hover:text-ikaBlue">Retour à l'accueil</a>
+        <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white hover:text-ikaBlue"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>Retour à l'accueil</a>
         <p class="mt-8 text-sm font-black uppercase tracking-[0.2em] text-red-200">Notre équipe</p>
         <h1 class="mt-5 text-4xl font-black leading-[1.05] tracking-normal sm:text-5xl lg:text-6xl">Des experts passionnés au service de votre transformation digitale.</h1>
         <p class="mt-6 max-w-3xl text-lg leading-8 text-white/80 sm:text-xl">Ingénieurs, développeurs, consultants et techniciens réunis autour d'une même mission : vous offrir des solutions fiables, adaptées et durables.</p>

@@ -14,6 +14,10 @@
 $ika_shortcode = trim( (string) ika_opt( 'ika_contact_form' ) );
 $ika_maps      = ika_opt( 'ika_maps_embed' );
 $ika_notice    = ika_get_contact_notice();
+// Sur une page interne (ex : Proxmox), le formulaire renvoie vers cette même
+// page ; depuis l'accueil, vers l'ancre #contact de l'accueil.
+$ika_form_page = is_front_page() ? home_url( '/' ) : get_permalink();
+$ika_form_page = $ika_form_page ? $ika_form_page : home_url( '/' );
 ?>
     <section id="contact" class="bg-white py-14 sm:py-20">
       <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -47,7 +51,7 @@ $ika_notice    = ika_get_contact_notice();
             <?php echo do_shortcode( $ika_shortcode ); ?>
           </div>
           <?php else : ?>
-          <form class="relative reveal grid gap-4 p-6 sm:p-8" action="<?php echo esc_url( home_url( '/#contact' ) ); ?>" method="post">
+          <form class="relative reveal grid gap-4 p-6 sm:p-8" action="<?php echo esc_url( $ika_form_page . '#contact' ); ?>" method="post">
             <?php wp_nonce_field( 'ika_contact', 'ika_contact_nonce' ); ?>
             <input type="hidden" name="action" value="ika_contact">
             <input type="hidden" name="ika_page" value="<?php echo esc_attr( get_the_title() ); ?>">
@@ -87,7 +91,11 @@ $ika_notice    = ika_get_contact_notice();
           <?php endif; ?>
         </div>
 
-        <?php if ( $ika_maps ) : ?>
+        <?php
+        // Une page peut masquer la carte via $GLOBALS['ika_contact_hide_map'].
+        $ika_hide_map = ! empty( $GLOBALS['ika_contact_hide_map'] );
+        if ( $ika_maps && ! $ika_hide_map ) :
+        ?>
         <div class="reveal mt-8 overflow-hidden rounded-[2rem] bg-white shadow-premium">
           <iframe class="h-[360px] w-full sm:h-[420px]" src="<?php echo esc_url( $ika_maps ); ?>" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="<?php esc_attr_e( 'Localisation IKA SOLUTION', 'ika-solution' ); ?>"></iframe>
         </div>

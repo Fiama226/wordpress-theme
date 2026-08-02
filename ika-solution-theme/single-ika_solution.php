@@ -25,7 +25,7 @@ $use_cases = ika_get_list_meta( $post_id, 'ika_use_cases' );
   <section class="relative overflow-hidden bg-ikaBlueDark text-white">
     <div class="relative mx-auto grid min-h-[560px] max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_.95fr] lg:items-center lg:px-8">
       <div>
-        <a href="<?php echo esc_url( home_url( '/#produits' ) ); ?>" class="inline-flex rounded-full border border-white/25 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white hover:text-ikaBlue">Retour aux solutions</a>
+        <a href="<?php echo esc_url( home_url( '/#produits' ) ); ?>" class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white hover:text-ikaBlue"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>Retour aux solutions</a>
         <p class="mt-8 text-sm font-black uppercase tracking-[0.2em] text-red-200"><?php echo ika_h( $eyebrow ); ?></p>
         <h1 class="mt-4 text-5xl font-black leading-tight tracking-normal sm:text-6xl"><?php echo ika_h( $name ); ?></h1>
         <p class="mt-6 max-w-3xl text-lg leading-8 text-white/85"><?php echo ika_h( $intro ); ?></p>

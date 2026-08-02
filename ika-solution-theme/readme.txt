@@ -4,7 +4,7 @@ Contributors: ikasolution
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.3.0
+Stable tag: 1.5.0
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Tags: custom-menu, featured-images, translation-ready, full-width-template, custom-logo, threaded-comments
@@ -110,6 +110,54 @@ Contrôler la qualité du thème :        bash tools/audit-theme.sh
 * À l'activation, toutes les images du site (+ la brochure PDF) sont importées
   dans la médiathèque WordPress ; les templates utilisent automatiquement ces
   copies. Import idempotent, réparable depuis l'administration si interrompu.
+
+= 1.4.0 =
+* Navigation : l'entrée de la page courante est soulignée et colorée en bleu
+  (menu de repli et menus WordPress personnalisés, desktop et mobile).
+* Héros internes : l'image de fond des pages Équipe, Réalisations et
+  Actualités est de nouveau visible à 10 %, exactement comme sur le site
+  statique (le style maison `bg-ikaBlueDark/92` — absent du CDN Tailwind — la
+  masquait entièrement).
+* Expertises : contenus des 8 pages identiques au site statique (accroches,
+  capacités, process, livrables) ; texte de carte accueil éditable
+  séparément (nouveau champ « Texte de la carte »).
+* Partenaires : liste identique au site statique (Microsoft avec logo, Odoo,
+  Palo Alto, Fortinet, Proxmox) ; chaque logo peut avoir un lien optionnel —
+  renseigné = cliquable (ex : Proxmox → page /proxmox), vide = non cliquable.
+  Même mécanisme pour les logos clients.
+* Clients : ordre d'affichage et libellés identiques au site statique.
+* Nouvelle page « Proxmox » (créée automatiquement à l'activation) : contenu
+  entièrement réécrit (anti-plagiat) avec la présentation par onglets —
+  Virtual Environment, Backup Server, Mail Gateway — et formulaire de
+  contact aux sujets adaptés.
+* Pagination instantanée sur les pages Réalisations et Actualités (sans
+  rechargement, compatible avec les filtres) ; nombre d'éléments par page
+  réglable dans `Personnaliser > Contenu IKA Solution > Pagination`.
+* SMTP administrable : nouvelle page `Réglages > Email (SMTP)` (hôte, port,
+  chiffrement, authentification, expéditeur) avec bouton d'envoi d'un email
+  de test — plus aucun identifiant codé en dur dans un fichier.
+* Liens « Retour à l'accueil / aux expertises / aux solutions » : ajout
+  d'une icône flèche pour une finition cohérente.
+* Migration v7 automatique : met à niveau le contenu existant vers la parité
+  statique sans écraser les modifications faites dans l'administration.
+
+= 1.5.0 =
+* Nouvelle page `Apparence > Extensions IKA` : installation et activation en
+  un clic des extensions gratuites recommandées (Simple Custom Post Order,
+  UpdraftPlus, Wordfence, Yoast SEO, Smush, Duplicate Page, Contact Form 7),
+  directement depuis wordpress.org — aucune extension embarquée dans le
+  thème. Inclut un guide de réglages conseillés en français, avec liens
+  directs vers chaque page de réglages.
+* Configuration automatique par le thème (sans jamais écraser un réglage
+  déjà personnalisé) : glisser-déposer Simple Custom Post Order activé sur
+  les 7 types de contenus IKA ; sauvegarde hebdomadaire UpdraftPlus
+  (fichiers + base, 4 exemplaires conservés). Application immédiate après
+  chaque activation, vérification régulière en tâche de fond, et bouton
+  « Appliquer maintenant ».
+* Notification d'accompagnement dans l'admin (masquable) tant que les
+  extensions ne sont pas toutes actives.
+* Rappel affiché de ne pas installer WP Mail SMTP (le thème possède déjà
+  `Réglages > Email (SMTP)` — utiliser les deux provoquerait des conflits).
 
 = 1.0.0 =
 * Version initiale.

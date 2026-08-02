@@ -3,6 +3,10 @@
  * Template part : clients (section « clients »).
  * Carrousel infini pleine largeur, alimenté par le CPT ika_client.
  *
+ * Chaque client peut avoir un lien (meta ika_client_url) :
+ * renseigné → le logo est cliquable (nouvel onglet pour les URL externes) ;
+ * vide      → le logo s'affiche sans lien.
+ *
  * @package ika-solution
  */
 
@@ -18,6 +22,8 @@ $ika_clients = get_posts(
 if ( ! $ika_clients ) {
 	return;
 }
+
+update_postmeta_cache( wp_list_pluck( $ika_clients, 'ID' ) );
 ?>
 <section id="clients" class="bg-white py-20 sm:py-28 overflow-hidden">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -41,8 +47,15 @@ if ( ! $ika_clients ) {
           if ( ! $ika_logo ) {
             continue;
           }
+          $ika_link = trim( (string) get_post_meta( $ika_client->ID, 'ika_client_url', true ) );
+          $ika_url  = $ika_link ? ika_slide_url( $ika_link ) : '';
+          $ika_img  = '<img src="' . esc_url( ika_asset( $ika_logo ) ) . '" alt="' . esc_attr( get_the_title( $ika_client ) ) . '" loading="lazy">';
         ?>
-        <div class="client-logo"><img src="<?php echo esc_url( ika_asset( $ika_logo ) ); ?>" alt="<?php echo esc_attr( get_the_title( $ika_client ) ); ?>" loading="lazy"></div>
+        <?php if ( $ika_url ) : ?>
+        <a class="client-logo" href="<?php echo esc_url( $ika_url ); ?>"<?php echo preg_match( '#^https?://#i', $ika_url ) ? ' target="_blank" rel="noopener"' : ''; ?><?php echo $ika_group ? ' tabindex="-1"' : ''; ?>><?php echo $ika_img; // phpcs:ignore -- contenu déjà échappé. ?></a>
+        <?php else : ?>
+        <div class="client-logo"><?php echo $ika_img; // phpcs:ignore -- contenu déjà échappé. ?></div>
+        <?php endif; ?>
         <?php endforeach; ?>
       </div>
       <?php endfor; ?>

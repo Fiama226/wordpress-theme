@@ -2,6 +2,10 @@
 <?php
   get_header();
 
+  // Nombre de cartes par page (réglable dans Apparence > Personnaliser >
+  // Contenu IKA Solution > Pagination). 0 = tout afficher, sans pagination.
+  $ika_per_page = max( 0, (int) ika_opt( 'ika_realisations_per_page', 9 ) );
+
   $typeLabels = array(
     'app'       => __( 'Application web & mobile', 'ika-solution' ),
     'site'      => __( 'Site web', 'ika-solution' ),
@@ -44,7 +48,7 @@
       <div class="absolute inset-0 bg-ikaBlueDark/92" aria-hidden="true"></div>
       <div class="relative mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
         <div class="max-w-4xl">
-          <a href="<?php echo esc_url( home_url( '/#realisations' ) ); ?>" class="inline-flex rounded-full border border-white/25 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white hover:text-ikaBlue">Retour à l’accueil</a>
+          <a href="<?php echo esc_url( home_url( '/#realisations' ) ); ?>" class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white hover:text-ikaBlue"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>Retour à l’accueil</a>
           <p class="mt-8 text-sm font-black uppercase tracking-[0.2em] text-red-200">Réalisations</p>
           <h1 class="mt-5 text-4xl font-black leading-[1.05] tracking-normal sm:text-5xl lg:text-6xl">Des projets métiers, intranets et plateformes livrés pour des organisations exigeantes.</h1>
           <p class="mt-6 max-w-3xl text-lg leading-8 text-white/80 sm:text-xl">IKA SOLUTION accompagne banques, institutions, services publics, plateformes nationales et entreprises dans la digitalisation de leurs processus critiques.</p>
@@ -69,7 +73,7 @@
           <?php endforeach; ?>
         </div>
 
-        <div id="realisationGrid" class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div id="realisationGrid" class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3" data-per-page="<?php echo esc_attr( $ika_per_page ); ?>" data-filter-bar="filterBar">
           <?php foreach ($realisations as $i => $realisation): ?>
             <article class="realisation-card flex h-full flex-col rounded-2xl bg-ikaSoft p-7 shadow-clean transition hover:-translate-y-1 hover:shadow-premium" data-type="<?= htmlspecialchars($realisation['type'], ENT_QUOTES, 'UTF-8') ?>">
               <div class="flex items-center gap-2">
@@ -89,6 +93,9 @@
             </article>
           <?php endforeach; ?>
         </div>
+
+        <!-- Pagination côté navigateur (instantanée, compatible filtres) -->
+        <nav class="ika-pagination mt-10" data-pagination-for="realisationGrid" aria-label="<?php esc_attr_e( 'Pagination des réalisations', 'ika-solution' ); ?>" hidden></nav>
       </div>
     </section>
 

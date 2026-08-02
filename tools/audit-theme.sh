@@ -94,7 +94,9 @@ done
 
 # --- 7. Liens .php en dur (404 sous WordPress) ----------------------------
 section "7. Liens en dur vers des .php"
-hits=$(grep -rnoP 'href="\K(?!https?://)[^"]*\.php[^"]*' "$THEME" --include=*.php 2>/dev/null)
+# Les href construits dynamiquement via admin_url() (admin-post.php, pages
+# d'admin comme themes.php?page=…) ne sont pas des liens en dur : exclus.
+hits=$(grep -rnoP 'href="\K(?!https?://)(?!.*admin-post\.php)(?!.*admin_url\s*\()[^"]*\.php[^"]*' "$THEME" --include=*.php 2>/dev/null)
 if [ -n "$hits" ]; then
   echo "$hits" | while read -r l; do warn "lien .php : $l"; done
   warnings=$((warnings+1))
@@ -179,6 +181,117 @@ grep -qsE "^[^/*]*[^a-z_]get_page_by_title\(" "$THEME/functions.php" \
 grep -qs "echo date(" "$THEME/footer.php" \
   && warn "date() ignore le fuseau du site : utiliser wp_date()" \
   || ok "gestion des dates correcte"
+
+# --- 13. État actif de la navigation (entrée courante soulignée/bleue) ----
+section "13. État actif de la navigation"
+if grep -qs "function ika_nav_active" "$THEME/functions.php" \
+   && [ "$(grep -c 'ika_nav_active(' "$THEME/header.php")" -ge 14 ]; then
+  ok "ika_nav_active() appliquée au menu de repli (desktop + mobile)"
+else
+  ko "état actif absent du menu de repli (entrée courante non soulignée)"
+fi
+grep -qs "current-menu-item" "$THEME/style.css" \
+  && ok "état actif stylé pour les menus WordPress personnalisés" \
+  || ko "aucun style pour .current-menu-item (menu WP assigné)"
+
+# --- 14. Parité partenaires / clients avec le site statique ---------------
+section "14. Parité partenaires & clients"
+for asset in images/microsoft.png images/paloalto.svg; do
+  [ -f "$THEME/assets/$asset" ] || ko "asset partenaire manquant : assets/$asset"
+done
+grep -qs "'palo-alto'" "$THEME/functions.php" && ok "partenaire Palo Alto seedé" || ko "Palo Alto absent du seed partenaires"
+grep -qs "images/microsoft.png" "$THEME/functions.php" && ok "logo Microsoft seedé" || ko "logo Microsoft absent du seed partenaires"
+if grep -qsE "'(abdi|arcep)' *=> *array" "$THEME/functions.php"; then
+  ko "ABDI/ARCEP seedés alors qu'ils sont absents du site statique"
+else
+  ok "pas de partenaire hors-statique dans le seed (ABDI/ARCEP)"
+fi
+grep -qs "ika_partenaire_url" "$THEME/template-parts/partenaires.php" \
+  && ok "liens optionnels sur les logos partenaires" \
+  || ko "logos partenaires non cliquables (meta url non utilisée)"
+grep -qs "ika_client_url" "$THEME/template-parts/clients.php" \
+  && ok "liens optionnels sur les logos clients" \
+  || ko "logos clients non cliquables (meta url non utilisée)"
+grep -qs "'CORIS BANK'" "$THEME/functions.php" && ok "libellé CORIS BANK conforme au statique" || warn "libellé client Coris différent du statique"
+
+# --- 15. Pagination Réalisations & Actualités -----------------------------
+section "15. Pagination (réglable depuis l'admin)"
+grep -qs "ika_realisations_per_page" "$THEME/inc/customizer.php" \
+  && grep -qs "ika_actualites_per_page" "$THEME/inc/customizer.php" \
+  && ok "réglages « nombre par page » dans le Customizer" \
+  || ko "réglages de pagination absents du Customizer"
+grep -qs 'data-per-page' "$THEME/page-realisations.php" \
+  && grep -qs 'data-per-page' "$THEME/page-actualites.php" \
+  && ok "grilles data-per-page branchées sur les réglages" \
+  || ko "data-per-page absent des pages Réalisations/Actualités"
+grep -qs "data-pagination-for" "$THEME/assets/js/theme.js" \
+  && ok "pagination JS (compatible filtres) présente" \
+  || ko "module de pagination absent de theme.js"
+
+# --- 16. SMTP administrable -----------------------------------------------
+section "16. Réglages SMTP dans l'admin"
+grep -qs "inc/smtp-settings.php" "$THEME/functions.php" \
+  && ok "inc/smtp-settings.php chargé" \
+  || ko "inc/smtp-settings.php non chargé par functions.php"
+[ -f "$THEME/inc/smtp-settings.php" ] \
+  && grep -qs "phpmailer_init" "$THEME/inc/smtp-settings.php" \
+  && grep -qs "add_options_page" "$THEME/inc/smtp-settings.php" \
+  && ok "page Réglages ▸ Email (SMTP) + hook phpmailer_init" \
+  || ko "configuration SMTP incomplète"
+
+# --- 17. Page Proxmox (réécrite, anti-plagiat) -----------------------------
+section "17. Page Proxmox"
+[ -f "$THEME/page-proxmox.php" ] && ok "page-proxmox.php présent" || ko "page-proxmox.php absent"
+grep -qs "'page-proxmox.php'" "$THEME/functions.php" \
+  && ok "page Proxmox créée à l'activation" \
+  || ko "page Proxmox non enregistrée dans les pages par défaut"
+for f in logo-debian.png logo-kvm.png logo-lxc.png logo-ceph.png proxmox-backup-server-dashboard.png proxmox-mail-gateway-infrastructure.png; do
+  [ -f "$THEME/assets/images/proxmox/$f" ] || ko "image Proxmox manquante : assets/images/proxmox/$f"
+done
+ok "visuels Proxmox présents"
+for f in "$THEME/page-proxmox.php" "$ROOT/proxmox.php"; do
+  if grep -qiE "nktek|KVM est la technologie de virtualisation Linux leader de l" "$f"; then
+    ko "texte suspect (copié d'une source externe) détecté dans $f"
+  else
+    ok "$(basename "$f") : aucun texte repris de la source externe"
+  fi
+done
+
+# --- 18. Régression héros : overlay opacité hors-échelle Tailwind ----------
+section "18. Images de fond des héros internes"
+if grep -qsE '\.bg-ikaBlueDark\\/9[28]\b' "$THEME/style.css"; then
+  ko "style.css redéfinit bg-ikaBlueDark/92 : masque l'image de fond (différent du statique, où la classe est inerte)"
+else
+  ok "overlay /92 non redéfini (image de fond visible à 10 %, comme sur le statique)"
+fi
+
+# --- 19. Extensions recommandées (installation/configuration par le thème) -
+section "19. Extensions recommandées"
+REC="$THEME/inc/recommended-plugins.php"
+[ -f "$REC" ] && grep -qs "inc/recommended-plugins.php" "$THEME/functions.php" \
+  && ok "module inc/recommended-plugins.php chargé par functions.php" \
+  || ko "inc/recommended-plugins.php absent ou non chargé"
+ko_slugs=0
+for slug in simple-custom-post-order updraftplus wordfence wordpress-seo wp-smushit duplicate-page contact-form-7; do
+  grep -qs "'$slug'" "$REC" || { ko "extension absente du catalogue : $slug"; ko_slugs=$((ko_slugs+1)); }
+done
+[ "$ko_slugs" -eq 0 ] && ok "catalogue complet (7 extensions gratuites)"
+if [ -f "$REC" ]; then
+  grep -qs "current_user_can" "$REC" && grep -qs "wp_nonce_url" "$REC" && grep -qs "check_admin_referer" "$REC" \
+    && ok "actions sécurisées (capacités + nonces)" \
+    || ko "actions d'installation insuffisamment sécurisées"
+  grep -qs "scporder_options" "$REC" && grep -qs "updraft_interval" "$REC" \
+    && ok "configuration automatique (SCPOrder + UpdraftPlus) présente" \
+    || ko "configuration automatique des extensions absente"
+  grep -qs "admin_post_ika_ext_action" "$REC" \
+    && ok "endpoint admin-post d'installation/activation présent" \
+    || ko "endpoint admin-post manquant"
+fi
+if find "$THEME" -name '*.zip' -o -name '*.tar.gz' | grep -q .; then
+  ko "des extensions sont embarquées en archive dans le thème (à proscrire)"
+else
+  ok "aucune extension embarquée (téléchargement depuis wordpress.org)"
+fi
 
 # --- Synthèse -------------------------------------------------------------
 printf '\n%s────────────────────────────────────────────%s\n' "$BLD" "$RST"
