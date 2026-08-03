@@ -704,61 +704,15 @@ function ika_customize_register( $wp_customize ) {
 				)
 			);
 
-			$wp_customize->add_control(
-				$key,
-				array(
-					'label'   => $label,
-					'section' => $section_id,
-					'type'    => $type,
-				)
-		
-		'ika_sec_solution_detail' => array(
-			'title'  => __( 'Page détail d’une solution', 'ika-solution' ),
-			'fields' => array(
-				'ika_solution_hero_back' => array( __( 'Hero — libellé du bouton retour', 'ika-solution' ), 'text' ),
-				'ika_solution_pres_eyebrow' => array( __( 'Présentation — surtitre', 'ika-solution' ), 'text' ),
-				'ika_solution_pres_title' => array( __( 'Présentation — titre (utilise %s pour le nom de la solution)', 'ika-solution' ), 'text' ),
-				'ika_solution_feat_eyebrow' => array( __( 'Fonctionnalités — surtitre', 'ika-solution' ), 'text' ),
-				'ika_solution_feat_title' => array( __( 'Fonctionnalités — titre (utilise %s pour le nom)', 'ika-solution' ), 'text' ),
-				'ika_solution_cases_eyebrow' => array( __( 'Cas d’usage — surtitre', 'ika-solution' ), 'text' ),
-				'ika_solution_cases_title' => array( __( 'Cas d’usage — titre', 'ika-solution' ), 'text' ),
-				'ika_solution_benefits_eyebrow' => array( __( 'Bénéfices — surtitre', 'ika-solution' ), 'text' ),
-				'ika_solution_benefits_title' => array( __( 'Bénéfices — titre', 'ika-solution' ), 'text' ),
-				'ika_solution_cta_eyebrow' => array( __( 'Bloc contact — surtitre (utilise %s pour le nom)', 'ika-solution' ), 'text' ),
-				'ika_solution_cta_title' => array( __( 'Bloc contact — titre', 'ika-solution' ), 'text' ),
-				'ika_solution_cta_text' => array( __( 'Bloc contact — texte', 'ika-solution' ), 'textarea' ),
-				'ika_solution_cta_cf7_note' => array( __( 'Bloc contact — note si CF7 absent', 'ika-solution' ), 'text' ),
-				'ika_solution_cta_button' => array( __( 'Bloc contact — bouton', 'ika-solution' ), 'text' ),
-				'ika_solution_other_eyebrow' => array( __( 'Autres solutions — surtitre', 'ika-solution' ), 'text' ),
-				'ika_solution_other_title' => array( __( 'Autres solutions — titre', 'ika-solution' ), 'text' ),
-				'ika_solution_other_link' => array( __( 'Autres solutions — libellé du lien', 'ika-solution' ), 'text' ),
-			),
-		),
-		'ika_sec_expertise_detail' => array(
-			'title'  => __( 'Page détail d’une expertise', 'ika-solution' ),
-			'fields' => array(
-				'ika_expertise_hero_back' => array( __( 'Hero — libellé du bouton retour', 'ika-solution' ), 'text' ),
-				'ika_expertise_badge_title' => array( __( 'Hero — badge ligne 1', 'ika-solution' ), 'text' ),
-				'ika_expertise_badge_subtitle' => array( __( 'Hero — badge ligne 2', 'ika-solution' ), 'text' ),
-				'ika_expertise_intervention_eyebrow' => array( __( 'Notre intervention — surtitre', 'ika-solution' ), 'text' ),
-				'ika_expertise_intervention_title' => array( __( 'Notre intervention — titre', 'ika-solution' ), 'text' ),
-				'ika_expertise_cap_eyebrow' => array( __( 'Capacités — surtitre', 'ika-solution' ), 'text' ),
-				'ika_expertise_cap_title' => array( __( 'Capacités — titre', 'ika-solution' ), 'text' ),
-				'ika_expertise_cap_cta' => array( __( 'Capacités — libellé du bouton', 'ika-solution' ), 'text' ),
-				'ika_expertise_process_eyebrow' => array( __( 'Méthode — surtitre', 'ika-solution' ), 'text' ),
-				'ika_expertise_process_title' => array( __( 'Méthode — titre', 'ika-solution' ), 'text' ),
-				'ika_expertise_process_note' => array( __( 'Méthode — note sous chaque étape', 'ika-solution' ), 'text' ),
-				'ika_expertise_deliv_eyebrow' => array( __( 'Livrables — surtitre', 'ika-solution' ), 'text' ),
-				'ika_expertise_deliv_title' => array( __( 'Livrables — titre', 'ika-solution' ), 'text' ),
-				'ika_expertise_cta_eyebrow' => array( __( 'Bloc contact — surtitre', 'ika-solution' ), 'text' ),
-				'ika_expertise_cta_title' => array( __( 'Bloc contact — titre', 'ika-solution' ), 'text' ),
-				'ika_expertise_cta_button' => array( __( 'Bloc contact — bouton', 'ika-solution' ), 'text' ),
-				'ika_expertise_other_eyebrow' => array( __( 'Autres expertises — surtitre', 'ika-solution' ), 'text' ),
-				'ika_expertise_other_title' => array( __( 'Autres expertises — titre', 'ika-solution' ), 'text' ),
-				'ika_expertise_other_link' => array( __( 'Autres expertises — libellé du lien', 'ika-solution' ), 'text' ),
-			),
-		),
-	);
+				$wp_customize->add_control(
+					$key,
+					array(
+						'label'   => $label,
+						'section' => $section_id,
+						'type'    => $type,
+					)
+				);
+			}
 		}
 	}
 }
