@@ -704,15 +704,14 @@ function ika_customize_register( $wp_customize ) {
 				)
 			);
 
-				$wp_customize->add_control(
-					$key,
-					array(
-						'label'   => $label,
-						'section' => $section_id,
-						'type'    => $type,
-					)
-				);
-			}
+			$wp_customize->add_control(
+				$key,
+				array(
+					'label'   => $label,
+					'section' => $section_id,
+					'type'    => $type,
+				)
+			);
 		}
 	}
 }
