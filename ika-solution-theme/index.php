@@ -20,12 +20,12 @@ get_header();
               <a href="<?php the_permalink(); ?>" class="hover:text-ikaBlue"><?php the_title(); ?></a>
             </h2>
             <div class="text-sm text-slate-600 mb-4"><?php the_excerpt(); ?></div>
-            <a href="<?php the_permalink(); ?>" class="text-sm font-extrabold text-ikaRed hover:underline">Lire la suite &rarr;</a>
+            <a href="<?php the_permalink(); ?>" class="text-sm font-extrabold text-ikaRed hover:underline"><?php echo esc_html( ika_opt( 'ika_index_read_more' ) ); ?> &rarr;</a>
           </article>
         <?php endwhile; ?>
       </div>
     <?php else : ?>
-      <p class="text-slate-600">Aucun contenu trouvé.</p>
+      <p class="text-slate-600"><?php echo esc_html( ika_opt( 'ika_index_empty' ) ); ?></p>
     <?php endif; ?>
   </div>
 </main>

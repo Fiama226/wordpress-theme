@@ -31,6 +31,7 @@ réactiver le thème ne duplique rien.
 | Équipe | **Membres d'équipe** |
 | Clients | **Clients** |
 | Partenaires | **Partenaires** |
+| Onglets de la page Proxmox (fiches VE, PBS, PMG) | **Onglets Proxmox** |
 | Actualités | **Articles** |
 | Adresse, téléphones, email, WhatsApp | **Apparence > Personnaliser > Contenu IKA Solution** |
 | Chiffres clés, textes « Qui sommes-nous », footer | idem |
@@ -38,6 +39,10 @@ réactiver le thème ne duplique rien.
 | Hébergement (textes, offres, carte domaine .bf) | **Personnaliser > Accueil — Hébergement, cloud et domaines** |
 | Bandeau défilant de mots-clés | **Personnaliser > Accueil — Bandeau défilant** |
 | Section « Méthode » | **Personnaliser > Accueil — Méthode** |
+| Pages Équipe, Réalisations, Actualités, Société | **Personnaliser > Page Équipe / Page Réalisations / Page Actualités / Page Société…** |
+| Page Proxmox (hero, sections, badges, liens) | **Personnaliser > Page Proxmox** |
+| Pages détail Solution & Expertise | **Personnaliser > Page détail d'une solution / d'une expertise** |
+| Bandeau support WhatsApp (footer) | **Personnaliser > Footer — bandeau support** |
 | Logo | **Apparence > Personnaliser > Identité du site** |
 | Menus | **Apparence > Menus** (emplacements : header, footer société, footer solutions) |
 

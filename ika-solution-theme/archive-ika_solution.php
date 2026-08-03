@@ -7,8 +7,8 @@ get_header();
 ?>
 <main class="bg-white pt-32 py-16">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-    <p class="text-sm font-black uppercase tracking-[0.2em] text-ikaRed">Nos solutions</p>
-    <h1 class="mt-4 text-4xl font-black text-ikaBlueDark sm:text-5xl">Solutions logicielles métiers</h1>
+    <p class="text-sm font-black uppercase tracking-[0.2em] text-ikaRed"><?php echo esc_html( ika_opt( 'ika_solutions_archive_eyebrow' ) ); ?></p>
+    <h1 class="mt-4 text-4xl font-black text-ikaBlueDark sm:text-5xl"><?php echo esc_html( ika_opt( 'ika_solutions_archive_title' ) ); ?></h1>
     <div class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
       <?php if ( have_posts() ) : while ( have_posts() ) : the_post();
         $image = get_post_meta( get_the_ID(), 'ika_image', true );

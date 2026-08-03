@@ -4,10 +4,57 @@ Réponse au rapport `AUDIT-THEME.md`. Les 21 actions planifiées ont été réal
 
 **Résultat de `bash tools/audit-theme.sh` :**
 
-| | Avant | Après (v1.1.0) | Après (v1.2.0) | Après (v1.4.0) | Après (v1.5.0) | Après (v1.6.0) |
-|---|---:|---:|---:|---:|---:|---:|
-| Bloquants | **13** | **0** | **0** | **0** | **0** | **0** |
-| Avertissements | 26 | 2 | **0** | **0** | **0** | **0** |
+| | Avant | Après (v1.1.0) | Après (v1.2.0) | Après (v1.4.0) | Après (v1.5.0) | Après (v1.6.0) | Après (v1.7.0) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Bloquants | **13** | **0** | **0** | **0** | **0** | **0** | **0** |
+| Avertissements | 26 | 2 | **0** | **0** | **0** | **0** | **0** |
+
+## Mise à jour v1.7.0 — 100 % du contenu éditable depuis l'administration
+
+Audit complet des 38 fichiers PHP du thème : plus aucun texte visible
+n'est codé en dur dans les templates (hors piège anti-spam du formulaire
+et replis techniques volontaires). Nouveaux contenus rendus éditables :
+
+### Page Proxmox (auparavant entièrement codée en dur)
+
+- **Nouveau type de contenu « Onglets Proxmox »** : les 38 fiches des
+  onglets VE / PBS / PMG (titre, texte, icône, nom d'onglet, jusqu'à
+  2 liens documentaires) sont créées automatiquement à l'activation et
+  modifiables depuis l'admin (menu **Onglets Proxmox**), triables par
+  glisser-déposer avec Simple Custom Post Order. Repli automatique sur
+  le contenu d'origine si l'admin est vide.
+- **Personnaliser > Page Proxmox** : hero (surtitre, titre, texte,
+  badges, boutons, pastille statistique), sections Virtual Environment,
+  Ceph (textes + liens), Backup Server, Fonctionnalités PBS, Mail
+  Gateway (textes, badges, lien documentation), et les 3 étapes du bloc
+  « Votre projet Proxmox ».
+- Meta box : nouveau type de champ `select` dans le système générique.
+
+### Pages Équipe, Réalisations, Actualités, Société
+
+- **Page Équipe** : hero, sections Profil / Équipe / Valeurs (3 cartes),
+  image de fond — tout est éditable.
+- **Page Réalisations** : hero, titre de section, bouton, libellé du
+  filtre « Toutes ».
+- **Page Actualités** : hero (surtitre, titre, texte).
+- **Page Société** : surtitre du hero, libellés Vision / Mission /
+  Valeurs, texte alternatif de l'image.
+- **Archive des solutions** : surtitre et titre.
+
+### Pages détail Solution & Expertise
+
+- Toutes les étiquettes de sections (Présentation, Fonctionnalités,
+  Cas d'usage, Bénéfices, Méthode, Livrables, Autres…), les textes des
+  blocs contact et les libellés de boutons sont éditables (certains
+  champs acceptent `%s` = nom de la solution / de l'expertise).
+
+### Divers
+
+- Footer : bandeau support WhatsApp (libellé + 3 messages alternés).
+- Template par défaut : « Lire la suite » et « Aucun contenu trouvé ».
+- Correctif : double préfixe `assets/images/…` dans la page Proxmox
+  (image du tableau de bord PBS invisible → 404).
+- Simple Custom Post Order inclut désormais `ika_pmx_tab`.
 
 ## Mise à jour v1.6.0 — parité stricte avec le statique + contenu 100 % éditable
 

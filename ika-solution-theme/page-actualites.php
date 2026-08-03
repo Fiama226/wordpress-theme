@@ -13,9 +13,9 @@ $ika_per_page = max( 0, (int) ika_opt( 'ika_actualites_per_page', 9 ) );
       <div class="absolute inset-0 bg-ikaBlueDark/92" aria-hidden="true"></div>
       <div class="relative mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
         <div class="reveal max-w-3xl">
-          <p class="text-sm font-black uppercase tracking-[0.2em] text-red-200">Actualités</p>
-          <h1 class="mt-5 text-4xl font-black leading-[1.05] tracking-normal sm:text-5xl lg:text-6xl">Toutes nos actualités</h1>
-          <p class="mt-6 text-lg leading-8 text-white/80 sm:text-xl">Retrouvez les sujets qui structurent la transformation digitale locale : cloud, sécurité, présence numérique, outils métier et continuité de service.</p>
+          <p class="text-sm font-black uppercase tracking-[0.2em] text-red-200"><?php echo esc_html( ika_opt( 'ika_actualites_hero_eyebrow' ) ); ?></p>
+          <h1 class="mt-5 text-4xl font-black leading-[1.05] tracking-normal sm:text-5xl lg:text-6xl"><?php echo esc_html( ika_opt( 'ika_actualites_hero_title' ) ); ?></h1>
+          <p class="mt-6 text-lg leading-8 text-white/80 sm:text-xl"><?php echo esc_html( ika_opt( 'ika_actualites_hero_text' ) ); ?></p>
         </div>
       </div>
     </section>
