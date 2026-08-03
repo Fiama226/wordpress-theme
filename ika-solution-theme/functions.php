@@ -277,10 +277,15 @@ function ika_nav_active( $target, $mobile = false ) {
             $active = is_singular( 'ika_solution' ) || is_post_type_archive( 'ika_solution' );
             break;
         case 'actualites':
+            // is_home() est vrai sur l'accueil quand « vos derniers articles »
+            // est la page d'accueil (réglage par défaut de WordPress). On ne
+            // veut PAS que « Actualités » soit active sur l'accueil : seule la
+            // page Actualités, un article, une catégorie ou l'index des posts
+            // (hors page d'accueil) doivent l'activer.
             $active = is_page( 'actualites' )
                 || ( is_single() && 'post' === get_post_type() )
                 || is_category()
-                || is_home();
+                || ( is_home() && ! is_front_page() );
             break;
         case 'contact':
             $active = false; // ancre d'accueil gérée en JavaScript (applyNavHash).

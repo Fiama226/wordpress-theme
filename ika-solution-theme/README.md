@@ -34,6 +34,10 @@ réactiver le thème ne duplique rien.
 | Actualités | **Articles** |
 | Adresse, téléphones, email, WhatsApp | **Apparence > Personnaliser > Contenu IKA Solution** |
 | Chiffres clés, textes « Qui sommes-nous », footer | idem |
+| Badge « IKA SOLUTION », bouton « En savoir plus » | **Personnaliser > Section « Qui sommes-nous »** |
+| Hébergement (textes, offres, carte domaine .bf) | **Personnaliser > Accueil — Hébergement, cloud et domaines** |
+| Bandeau défilant de mots-clés | **Personnaliser > Accueil — Bandeau défilant** |
+| Section « Méthode » | **Personnaliser > Accueil — Méthode** |
 | Logo | **Apparence > Personnaliser > Identité du site** |
 | Menus | **Apparence > Menus** (emplacements : header, footer société, footer solutions) |
 
@@ -44,11 +48,11 @@ via l'**image mise en avant** du contenu — qui a la priorité.
 
 ## Page d'accueil
 
-`front-page.php` assemble les sections dans l'ordre du site d'origine :
+`front-page.php` assemble les sections dans l'ordre exact du site d'origine :
 
 ```
-hero · société · pourquoi · expertises · bandeau · solutions · réalisations
-hébergement · méthode · actualités · vision · partenaires · clients · contact
+hero · société · partenaires · pourquoi · expertises · bandeau · solutions
+réalisations · hébergement · méthode · actualités · vision · clients · contact
 ```
 
 Chaque section est un fichier de `template-parts/`. Une section dont le contenu

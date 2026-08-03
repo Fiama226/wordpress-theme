@@ -37,11 +37,15 @@ function ika_default_options() {
 		'ika_footer_tagline' => 'Solutions digitales, cloud, infrastructure et sécurité.',
 
 		// --- Section « Qui sommes-nous » ---
-		'ika_about_eyebrow'  => 'Qui sommes-nous',
-		'ika_about_title'    => 'La solution qui vous convient.',
-		'ika_about_text1'    => 'Créée en 2014, IKA SOLUTION LTD accompagne les entreprises, institutions et organisations dans leurs besoins en ingénierie informatique, digitalisation, réseaux, logiciels, cloud et sécurité.',
-		'ika_about_text2'    => 'Basée au Burkina Faso, l’entreprise intervient localement et accompagne aussi des missions ponctuelles dans la sous-région, notamment en Côte d’Ivoire, au Mali et au Niger.',
-		'ika_about_image'    => 'images/equipe.jpg',
+		'ika_about_eyebrow'    => 'Qui sommes-nous',
+		'ika_about_title'      => 'La solution qui vous convient.',
+		'ika_about_text1'      => 'Créée en 2014, IKA SOLUTION LTD accompagne les entreprises, institutions et organisations dans leurs besoins en ingénierie informatique, digitalisation, réseaux, logiciels, cloud et sécurité.',
+		'ika_about_text2'      => 'Basée au Burkina Faso, l’entreprise intervient localement et accompagne aussi des missions ponctuelles dans la sous-région, notamment en Côte d’Ivoire, au Mali et au Niger.',
+		'ika_about_image'      => 'images/equipe.jpg',
+		'ika_about_image_alt'  => 'Présentation IKA SOLUTION',
+		'ika_about_badge_title'    => 'IKA SOLUTION',
+		'ika_about_badge_subtitle' => 'Transformation digitale',
+		'ika_about_cta'        => 'En savoir plus',
 
 		// --- Chiffres clés ---
 		'ika_stat1_value'    => '12 ans',
@@ -57,7 +61,38 @@ function ika_default_options() {
 		'ika_contact_form'   => '',
 
 		// --- Section hébergement ---
-		'ika_hosting_url'    => 'https://ikacloud.bf',
+		'ika_hosting_url'             => 'https://ikacloud.bf',
+		'ika_hosting_eyebrow'         => 'Web, cloud et domaines',
+		'ika_hosting_title'           => 'Une infrastructure solide pour vos sites, portails et applications.',
+		'ika_hosting_text'            => 'Hébergement, VPS, domaine et administration technique pour garder vos services disponibles, rapides et alignés avec votre marché.',
+		'ika_hosting_cta'             => 'Decouvrir nos offres',
+		'ika_hosting_offer_1_title'   => 'Hébergement web',
+		'ika_hosting_offer_1_text'    => 'Sites vitrines, portails, back-offices et applications métier.',
+		'ika_hosting_offer_1_url'     => 'https://www.ikacloud.bf/shared-hosting.php',
+		'ika_hosting_offer_2_title'   => 'VPS local',
+		'ika_hosting_offer_2_text'    => 'Serveurs privés pour projets critiques et environnements applicatifs.',
+		'ika_hosting_offer_2_url'     => 'https://www.ikacloud.bf/vps-server.php',
+		'ika_hosting_offer_3_title'   => 'Sécurité SSL',
+		'ika_hosting_offer_3_text'    => 'Certificats SSL pour protéger vos sites, portails et transactions en ligne.',
+		'ika_hosting_offer_3_url'     => 'https://www.ikacloud.bf/ssl-certificates.php',
+		'ika_hosting_domain_chip'     => '.bf',
+		'ika_hosting_domain_title'    => 'Nom de domaine',
+		'ika_hosting_domain_text'     => 'Achat, configuration DNS, messagerie et maintenance technique.',
+		'ika_hosting_domain_url'      => 'https://www.ikacloud.bf/domain-search.php',
+		'ika_hosting_domain_label'    => 'Acheter un nom de domaine .bf',
+
+		// --- Bandeau défilant (mots-clés) ---
+		'ika_marquee_keywords'  => 'Audit digital, Applications métier, Hébergement web, VPS local, Cybersécurité, Portails sécurisés',
+
+		// --- Section « Méthode » (accueil) ---
+		'ika_methode_eyebrow'   => 'Méthode',
+		'ika_methode_title'     => 'Des projets cadrés, livrés et maintenus avec exigence.',
+		'ika_methode_1_title'   => 'Comprendre',
+		'ika_methode_1_text'    => 'Audit, objectifs, risques, priorités et feuille de route.',
+		'ika_methode_2_title'   => 'Construire',
+		'ika_methode_2_text'    => 'Design, développement, intégration, déploiement et documentation.',
+		'ika_methode_3_title'   => 'Maintenir',
+		'ika_methode_3_text'    => 'Support, supervision, sécurité, sauvegarde et amélioration continue.',
 
 		// --- Pagination (pages Réalisations & Actualités) ---
 		'ika_realisations_per_page' => '9',
@@ -195,11 +230,15 @@ function ika_customize_register( $wp_customize ) {
 		'ika_sec_about'   => array(
 			'title'  => __( 'Section « Qui sommes-nous »', 'ika-solution' ),
 			'fields' => array(
-				'ika_about_eyebrow' => array( __( 'Surtitre', 'ika-solution' ), 'text' ),
-				'ika_about_title'   => array( __( 'Titre', 'ika-solution' ), 'text' ),
-				'ika_about_text1'   => array( __( 'Paragraphe 1', 'ika-solution' ), 'textarea' ),
-				'ika_about_text2'   => array( __( 'Paragraphe 2', 'ika-solution' ), 'textarea' ),
-				'ika_about_image'   => array( __( 'Image (chemin relatif, ex : images/equipe.jpg)', 'ika-solution' ), 'text' ),
+				'ika_about_eyebrow'       => array( __( 'Surtitre', 'ika-solution' ), 'text' ),
+				'ika_about_title'         => array( __( 'Titre', 'ika-solution' ), 'text' ),
+				'ika_about_text1'         => array( __( 'Paragraphe 1', 'ika-solution' ), 'textarea' ),
+				'ika_about_text2'         => array( __( 'Paragraphe 2', 'ika-solution' ), 'textarea' ),
+				'ika_about_image'         => array( __( 'Image (chemin relatif, ex : images/equipe.jpg)', 'ika-solution' ), 'text' ),
+				'ika_about_image_alt'     => array( __( 'Texte alternatif de l’image', 'ika-solution' ), 'text' ),
+				'ika_about_badge_title'   => array( __( 'Badge sur l’image — ligne 1', 'ika-solution' ), 'text' ),
+				'ika_about_badge_subtitle'=> array( __( 'Badge sur l’image — ligne 2', 'ika-solution' ), 'text' ),
+				'ika_about_cta'           => array( __( 'Libellé du bouton « En savoir plus »', 'ika-solution' ), 'text' ),
 			),
 		),
 		'ika_sec_stats'   => array(
@@ -222,12 +261,11 @@ function ika_customize_register( $wp_customize ) {
 			),
 		),
 		'ika_sec_home'    => array(
-			'title'  => __( 'Section contact & hébergement', 'ika-solution' ),
+			'title'  => __( 'Section contact', 'ika-solution' ),
 			'fields' => array(
 				'ika_contact_title' => array( __( 'Titre du bloc contact', 'ika-solution' ), 'text' ),
 				'ika_contact_text'  => array( __( 'Texte du bloc contact', 'ika-solution' ), 'textarea' ),
 				'ika_contact_form'  => array( __( 'Shortcode du formulaire (ex : [contact-form-7 id="123"])', 'ika-solution' ), 'text' ),
-				'ika_hosting_url'   => array( __( 'Lien « Découvrir nos offres »', 'ika-solution' ), 'url' ),
 			),
 		),
 		'ika_sec_home_real' => array(
@@ -245,6 +283,49 @@ function ika_customize_register( $wp_customize ) {
 				'ika_home_real_3_client' => array( __( 'Carte 3 — client', 'ika-solution' ), 'text' ),
 				'ika_home_real_3_title'  => array( __( 'Carte 3 — titre', 'ika-solution' ), 'text' ),
 				'ika_home_real_3_text'   => array( __( 'Carte 3 — texte', 'ika-solution' ), 'textarea' ),
+			),
+		),
+		'ika_sec_hosting' => array(
+			'title'  => __( 'Accueil — Hébergement, cloud et domaines', 'ika-solution' ),
+			'fields' => array(
+				'ika_hosting_eyebrow'       => array( __( 'Surtitre', 'ika-solution' ), 'text' ),
+				'ika_hosting_title'         => array( __( 'Titre', 'ika-solution' ), 'text' ),
+				'ika_hosting_text'          => array( __( 'Paragraphe', 'ika-solution' ), 'textarea' ),
+				'ika_hosting_cta'           => array( __( 'Libellé du bouton « Découvrir nos offres »', 'ika-solution' ), 'text' ),
+				'ika_hosting_url'           => array( __( 'Lien du bouton « Découvrir nos offres »', 'ika-solution' ), 'url' ),
+				'ika_hosting_offer_1_title' => array( __( 'Offre 1 — titre', 'ika-solution' ), 'text' ),
+				'ika_hosting_offer_1_text'  => array( __( 'Offre 1 — texte', 'ika-solution' ), 'textarea' ),
+				'ika_hosting_offer_1_url'   => array( __( 'Offre 1 — lien', 'ika-solution' ), 'url' ),
+				'ika_hosting_offer_2_title' => array( __( 'Offre 2 — titre', 'ika-solution' ), 'text' ),
+				'ika_hosting_offer_2_text'  => array( __( 'Offre 2 — texte', 'ika-solution' ), 'textarea' ),
+				'ika_hosting_offer_2_url'   => array( __( 'Offre 2 — lien', 'ika-solution' ), 'url' ),
+				'ika_hosting_offer_3_title' => array( __( 'Offre 3 — titre', 'ika-solution' ), 'text' ),
+				'ika_hosting_offer_3_text'  => array( __( 'Offre 3 — texte', 'ika-solution' ), 'textarea' ),
+				'ika_hosting_offer_3_url'   => array( __( 'Offre 3 — lien', 'ika-solution' ), 'url' ),
+				'ika_hosting_domain_chip'   => array( __( 'Carte domaine — pastille (ex : .bf)', 'ika-solution' ), 'text' ),
+				'ika_hosting_domain_title'  => array( __( 'Carte domaine — titre', 'ika-solution' ), 'text' ),
+				'ika_hosting_domain_text'   => array( __( 'Carte domaine — texte', 'ika-solution' ), 'textarea' ),
+				'ika_hosting_domain_url'    => array( __( 'Carte domaine — lien', 'ika-solution' ), 'url' ),
+				'ika_hosting_domain_label'  => array( __( 'Carte domaine — libellé d’accessibilité', 'ika-solution' ), 'text' ),
+			),
+		),
+		'ika_sec_marquee' => array(
+			'title'  => __( 'Accueil — Bandeau défilant', 'ika-solution' ),
+			'fields' => array(
+				'ika_marquee_keywords' => array( __( 'Mots-clés séparés par des virgules', 'ika-solution' ), 'textarea' ),
+			),
+		),
+		'ika_sec_methode' => array(
+			'title'  => __( 'Accueil — Méthode', 'ika-solution' ),
+			'fields' => array(
+				'ika_methode_eyebrow' => array( __( 'Surtitre', 'ika-solution' ), 'text' ),
+				'ika_methode_title'   => array( __( 'Titre', 'ika-solution' ), 'text' ),
+				'ika_methode_1_title' => array( __( 'Étape 1 — titre', 'ika-solution' ), 'text' ),
+				'ika_methode_1_text'  => array( __( 'Étape 1 — texte', 'ika-solution' ), 'textarea' ),
+				'ika_methode_2_title' => array( __( 'Étape 2 — titre', 'ika-solution' ), 'text' ),
+				'ika_methode_2_text'  => array( __( 'Étape 2 — texte', 'ika-solution' ), 'textarea' ),
+				'ika_methode_3_title' => array( __( 'Étape 3 — titre', 'ika-solution' ), 'text' ),
+				'ika_methode_3_text'  => array( __( 'Étape 3 — texte', 'ika-solution' ), 'textarea' ),
 			),
 		),
 		'ika_sec_pagination' => array(

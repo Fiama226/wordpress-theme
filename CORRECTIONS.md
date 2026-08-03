@@ -4,10 +4,48 @@ Réponse au rapport `AUDIT-THEME.md`. Les 21 actions planifiées ont été réal
 
 **Résultat de `bash tools/audit-theme.sh` :**
 
-| | Avant | Après (v1.1.0) | Après (v1.2.0) | Après (v1.4.0) | Après (v1.5.0) |
-|---|---:|---:|---:|---:|---:|
-| Bloquants | **13** | **0** | **0** | **0** | **0** |
-| Avertissements | 26 | 2 | **0** | **0** | **0** |
+| | Avant | Après (v1.1.0) | Après (v1.2.0) | Après (v1.4.0) | Après (v1.5.0) | Après (v1.6.0) |
+|---|---:|---:|---:|---:|---:|---:|
+| Bloquants | **13** | **0** | **0** | **0** | **0** | **0** |
+| Avertissements | 26 | 2 | **0** | **0** | **0** | **0** |
+
+## Mise à jour v1.6.0 — parité stricte avec le statique + contenu 100 % éditable
+
+Retour client : « à l'installation, le thème doit afficher le site statique
+sans aucune différence ».
+
+### Navigation — « Actualités » active à tort
+
+`ika_nav_active()` activait « Actualités » sur la page d'accueil car
+`is_home()` est vrai sur l'accueil (réglage par défaut « vos derniers
+articles »). Désormais l'entrée n'est active que sur la page Actualités, un
+article, une catégorie ou l'index des posts **hors** page d'accueil
+(`is_home() && ! is_front_page()`).
+
+### Page d'accueil — positionnement identique au statique
+
+- **Ordre des sections** : « Nos partenaires » remontée en 3ᵉ position
+  (après « Qui sommes-nous », comme dans `index.php` du statique) au lieu de
+  figurer en bas de page.
+- **Espacements** : sections « Qui sommes-nous » et « Partenaires »
+  passées de `py-20 sm:py-28` à `py-10 sm:py-18` (classes exactes du
+  statique). `sm:py-18` n'existant pas dans l'échelle Tailwind par défaut,
+  le rendu est identique au statique (`py-10`) à toutes les tailles d'écran.
+
+### Contenu — complément d'éditabilité (Personnaliser > Contenu IKA Solution)
+
+Nouvelles sections de réglages (avec repli sur le texte d'origine) :
+
+- **Section « Qui sommes-nous »** : texte alternatif de l'image, badge sur
+  l'image (2 lignes), libellé du bouton « En savoir plus ».
+- **Accueil — Hébergement, cloud et domaines** : surtitre, titre, texte,
+  libellé et lien du bouton, les 3 offres (titre, texte, lien), carte
+  domaine `.bf` (pastille, titre, texte, lien, libellé d'accessibilité).
+- **Accueil — Bandeau défilant** : mots-clés séparés par des virgules.
+- **Accueil — Méthode** : surtitre, titre et les 3 étapes (titre, texte).
+
+Les filtres `ika_hosting_offers`, `ika_marquee_keywords` et
+`ika_methode_steps` restent honorés (rétro-compatibilité thèmes enfants).
 
 ## Mise à jour v1.5.0 — extensions recommandées : installation et configuration par le thème
 

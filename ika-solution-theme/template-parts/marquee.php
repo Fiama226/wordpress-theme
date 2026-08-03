@@ -2,20 +2,22 @@
 /**
  * Template part : bandeau défilant de mots-clés (entre expertises et produits).
  *
+ * Mots-clés éditables depuis Personnaliser > Contenu IKA Solution >
+ * Accueil — Bandeau défilant (séparés par des virgules).
+ * Le filtre ika_marquee_keywords reste honoré (rétro-compatibilité).
+ *
  * @package ika-solution
  */
 
-$ika_keywords = apply_filters(
-	'ika_marquee_keywords',
-	array(
-		'Audit digital',
-		'Applications métier',
-		'Hébergement web',
-		'VPS local',
-		'Cybersécurité',
-		'Portails sécurisés',
-	)
-);
+if ( has_filter( 'ika_marquee_keywords' ) ) {
+	$ika_keywords = apply_filters( 'ika_marquee_keywords', array() );
+} else {
+	$ika_keywords = array_values( array_filter( array_map( 'trim', explode( ',', (string) ika_opt( 'ika_marquee_keywords' ) ) ) ) );
+}
+
+if ( ! $ika_keywords ) {
+	return;
+}
 ?>
     <section class="overflow-hidden bg-white py-6" aria-label="<?php esc_attr_e( 'Nos domaines', 'ika-solution' ); ?>">
       <div class="flex w-max animate-marquee">
