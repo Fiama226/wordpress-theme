@@ -25,7 +25,7 @@ $use_cases = ika_get_list_meta( $post_id, 'ika_use_cases' );
   <section class="relative overflow-hidden bg-ikaBlueDark text-white">
     <div class="relative mx-auto grid min-h-[560px] max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_.95fr] lg:items-center lg:px-8">
       <div>
-        <a href="<?php echo esc_url( home_url( '/#produits' ) ); ?>" class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white hover:text-ikaBlue"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>Retour aux solutions</a>
+        <a href="<?php echo esc_url( home_url( '/#produits' ) ); ?>" class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white hover:text-ikaBlue"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg><?php echo esc_html( ika_opt( 'ika_solution_hero_back' ) ); ?></a>
         <p class="mt-8 text-sm font-black uppercase tracking-[0.2em] text-red-200"><?php echo ika_h( $eyebrow ); ?></p>
         <h1 class="mt-4 text-5xl font-black leading-tight tracking-normal sm:text-6xl"><?php echo ika_h( $name ); ?></h1>
         <p class="mt-6 max-w-3xl text-lg leading-8 text-white/85"><?php echo ika_h( $intro ); ?></p>
@@ -47,8 +47,8 @@ $use_cases = ika_get_list_meta( $post_id, 'ika_use_cases' );
   <section class="bg-white py-16 sm:py-20">
     <div class="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[.85fr_1.15fr] lg:px-8">
       <div>
-        <p class="text-sm font-black uppercase tracking-[0.2em] text-ikaRed">Présentation</p>
-        <h2 class="mt-4 text-3xl font-black leading-tight text-ikaBlueDark sm:text-4xl">Une solution pensée pour vos opérations quotidiennes.</h2>
+        <p class="text-sm font-black uppercase tracking-[0.2em] text-ikaRed"><?php echo esc_html( ika_opt( 'ika_solution_pres_eyebrow' ) ); ?></p>
+        <h2 class="mt-4 text-3xl font-black leading-tight text-ikaBlueDark sm:text-4xl"><?php echo esc_html( str_replace( '%s', $name, ika_opt( 'ika_solution_pres_title' ) ) ); ?></h2>
       </div>
       <div class="text-base leading-8 text-slate-600"><?php the_content(); ?></div>
     </div>
@@ -58,8 +58,8 @@ $use_cases = ika_get_list_meta( $post_id, 'ika_use_cases' );
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="grid gap-10 lg:grid-cols-[.8fr_1.2fr]">
         <div>
-          <p class="text-sm font-black uppercase tracking-[0.2em] text-ikaRed">Fonctionnalités</p>
-          <h2 class="mt-4 text-3xl font-black leading-tight text-ikaBlueDark sm:text-4xl">Ce que <?php echo ika_h( $name ); ?> apporte à vos équipes.</h2>
+          <p class="text-sm font-black uppercase tracking-[0.2em] text-ikaRed"><?php echo esc_html( ika_opt( 'ika_solution_feat_eyebrow' ) ); ?></p>
+          <h2 class="mt-4 text-3xl font-black leading-tight text-ikaBlueDark sm:text-4xl"><?php echo esc_html( str_replace( '%s', $name, ika_opt( 'ika_solution_feat_title' ) ) ); ?></h2>
         </div>
         <div class="grid gap-5 sm:grid-cols-2">
           <?php foreach ( $features as $index => $feature ) : ?>
@@ -76,8 +76,8 @@ $use_cases = ika_get_list_meta( $post_id, 'ika_use_cases' );
   <section class="bg-white py-16 sm:py-20">
     <div class="mx-auto grid max-w-7xl gap-8 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
       <div class="rounded-[2rem] bg-ikaBlueDark p-7 text-white shadow-premium sm:p-10">
-        <p class="text-sm font-black uppercase tracking-[0.2em] text-red-200">Cas d’usage</p>
-        <h2 class="mt-4 text-3xl font-black">Pour quels contextes ?</h2>
+        <p class="text-sm font-black uppercase tracking-[0.2em] text-red-200"><?php echo esc_html( ika_opt( 'ika_solution_cases_eyebrow' ) ); ?></p>
+        <h2 class="mt-4 text-3xl font-black"><?php echo esc_html( ika_opt( 'ika_solution_cases_title' ) ); ?></h2>
         <div class="mt-8 grid gap-4 sm:grid-cols-2">
           <?php foreach ( $use_cases as $use_case ) : ?>
             <div class="rounded-2xl border border-white/15 bg-white/10 p-5"><p class="font-black"><?php echo ika_h( $use_case ); ?></p></div>
@@ -85,8 +85,8 @@ $use_cases = ika_get_list_meta( $post_id, 'ika_use_cases' );
         </div>
       </div>
       <div class="rounded-[2rem] bg-ikaSoft p-7 sm:p-10">
-        <p class="text-sm font-black uppercase tracking-[0.2em] text-ikaRed">Bénéfices</p>
-        <h2 class="mt-4 text-3xl font-black text-ikaBlueDark">Pourquoi choisir cette solution ?</h2>
+        <p class="text-sm font-black uppercase tracking-[0.2em] text-ikaRed"><?php echo esc_html( ika_opt( 'ika_solution_benefits_eyebrow' ) ); ?></p>
+        <h2 class="mt-4 text-3xl font-black text-ikaBlueDark"><?php echo esc_html( ika_opt( 'ika_solution_benefits_title' ) ); ?></h2>
         <div class="mt-8 grid gap-4">
           <?php foreach ( $benefits as $benefit ) : ?>
             <div class="rounded-2xl bg-white p-5 shadow-clean"><p class="font-black text-ikaBlue"><?php echo ika_h( $benefit ); ?></p></div>
@@ -99,9 +99,9 @@ $use_cases = ika_get_list_meta( $post_id, 'ika_use_cases' );
   <section id="interesse" class="bg-ikaBlueDark py-16 text-white sm:py-20">
     <div class="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[.85fr_1.15fr] lg:items-start lg:px-8">
       <div>
-        <p class="text-sm font-black uppercase tracking-[0.2em] text-red-200">Intéressé par <?php echo ika_h( $name ); ?> ?</p>
-        <h2 class="mt-4 text-3xl font-black leading-tight sm:text-4xl">Contactez IKA SOLUTION pour une présentation ou un devis.</h2>
-        <p class="mt-5 text-base leading-8 text-white/75">Laissez vos coordonnées et décrivez votre besoin. L’équipe IKA SOLUTION pourra vous orienter sur la mise en place, l’adaptation et l’accompagnement de la solution.</p>
+        <p class="text-sm font-black uppercase tracking-[0.2em] text-red-200"><?php echo esc_html( str_replace( '%s', $name, ika_opt( 'ika_solution_cta_eyebrow' ) ) ); ?></p>
+        <h2 class="mt-4 text-3xl font-black leading-tight sm:text-4xl"><?php echo esc_html( ika_opt( 'ika_solution_cta_title' ) ); ?></h2>
+        <p class="mt-5 text-base leading-8 text-white/75"><?php echo esc_html( ika_opt( 'ika_solution_cta_text' ) ); ?></p>
       </div>
       <?php if ( function_exists( 'wpcf7_contact_form' ) ) : ?>
         <div class="rounded-[2rem] bg-white p-7 text-ikaInk shadow-premium sm:p-8">
@@ -109,8 +109,8 @@ $use_cases = ika_get_list_meta( $post_id, 'ika_use_cases' );
         </div>
       <?php else : ?>
         <div class="rounded-[2rem] bg-white p-7 text-ikaInk shadow-premium sm:p-8">
-          <p class="text-center text-sm font-bold text-slate-600">Installez Contact Form 7 pour activer le formulaire de demande.</p>
-          <a href="<?php echo esc_url( home_url( '/#contact' ) ); ?>" class="mt-4 inline-flex justify-center rounded-full bg-ikaRed px-7 py-4 text-sm font-extrabold text-white shadow-clean transition hover:bg-red-700 w-full">Contacter IKA SOLUTION</a>
+          <p class="text-center text-sm font-bold text-slate-600"><?php echo esc_html( ika_opt( 'ika_solution_cta_cf7_note' ) ); ?></p>
+          <a href="<?php echo esc_url( home_url( '/#contact' ) ); ?>" class="mt-4 inline-flex justify-center rounded-full bg-ikaRed px-7 py-4 text-sm font-extrabold text-white shadow-clean transition hover:bg-red-700 w-full"><?php echo esc_html( ika_opt( 'ika_solution_cta_button' ) ); ?></a>
         </div>
       <?php endif; ?>
     </div>
@@ -120,10 +120,10 @@ $use_cases = ika_get_list_meta( $post_id, 'ika_use_cases' );
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p class="text-sm font-black uppercase tracking-[0.2em] text-ikaRed">Autres solutions</p>
-          <h2 class="mt-4 text-3xl font-black text-ikaBlueDark sm:text-4xl">Découvrir les autres produits IKA.</h2>
+          <p class="text-sm font-black uppercase tracking-[0.2em] text-ikaRed"><?php echo esc_html( ika_opt( 'ika_solution_other_eyebrow' ) ); ?></p>
+          <h2 class="mt-4 text-3xl font-black text-ikaBlueDark sm:text-4xl"><?php echo esc_html( ika_opt( 'ika_solution_other_title' ) ); ?></h2>
         </div>
-        <a href="<?php echo esc_url( home_url( '/#produits' ) ); ?>" class="inline-flex rounded-full border border-slate-200 px-6 py-3 text-sm font-black text-ikaBlue transition hover:border-ikaBlue">Toutes les solutions</a>
+        <a href="<?php echo esc_url( home_url( '/#produits' ) ); ?>" class="inline-flex rounded-full border border-slate-200 px-6 py-3 text-sm font-black text-ikaBlue transition hover:border-ikaBlue"><?php echo esc_html( ika_opt( 'ika_solution_other_link' ) ); ?></a>
       </div>
       <div class="mt-10 grid gap-6 md:grid-cols-3">
         <?php

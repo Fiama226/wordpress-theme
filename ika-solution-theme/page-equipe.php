@@ -5,14 +5,14 @@
 
 <main>
   <section class="relative overflow-hidden bg-ikaBlueDark pt-36 text-white sm:pt-40">
-    <div class="absolute inset-0 bg-cover bg-center opacity-10" style="background-image:url('<?php echo ika_asset('images/presentation.jpg'); ?>')" aria-hidden="true"></div>
+    <div class="absolute inset-0 bg-cover bg-center opacity-10" style="background-image:url('<?php echo esc_url( ika_asset( ika_opt( 'ika_equipe_hero_image' ) ) ); ?>')" aria-hidden="true"></div>
     <div class="absolute inset-0 bg-ikaBlueDark/92" aria-hidden="true"></div>
     <div class="relative mx-auto max-w-7xl px-4 pb-20 sm:px-6 lg:px-8">
       <div class="max-w-4xl">
-        <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white hover:text-ikaBlue"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>Retour à l'accueil</a>
-        <p class="mt-8 text-sm font-black uppercase tracking-[0.2em] text-red-200">Notre équipe</p>
-        <h1 class="mt-5 text-4xl font-black leading-[1.05] tracking-normal sm:text-5xl lg:text-6xl">Des experts passionnés au service de votre transformation digitale.</h1>
-        <p class="mt-6 max-w-3xl text-lg leading-8 text-white/80 sm:text-xl">Ingénieurs, développeurs, consultants et techniciens réunis autour d'une même mission : vous offrir des solutions fiables, adaptées et durables.</p>
+        <a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white hover:text-ikaBlue"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg><?php echo esc_html( ika_opt( 'ika_equipe_hero_back' ) ); ?></a>
+        <p class="mt-8 text-sm font-black uppercase tracking-[0.2em] text-red-200"><?php echo esc_html( ika_opt( 'ika_equipe_hero_eyebrow' ) ); ?></p>
+        <h1 class="mt-5 text-4xl font-black leading-[1.05] tracking-normal sm:text-5xl lg:text-6xl"><?php echo esc_html( ika_opt( 'ika_equipe_hero_title' ) ); ?></h1>
+        <p class="mt-6 max-w-3xl text-lg leading-8 text-white/80 sm:text-xl"><?php echo esc_html( ika_opt( 'ika_equipe_hero_text' ) ); ?></p>
       </div>
     </div>
   </section>
@@ -20,9 +20,9 @@
   <section class="bg-white py-20 sm:py-28">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="reveal max-w-3xl">
-        <p class="text-sm font-black uppercase tracking-[0.2em] text-ikaRed">Profil</p>
-        <h2 class="mt-4 text-4xl font-black tracking-normal text-ikaBlueDark sm:text-5xl">Une équipe pluridisciplinaire pour des projets exigeants.</h2>
-        <p class="mt-6 text-base leading-8 text-slate-600">IKA SOLUTION réunit des compétences variées en développement, infrastructures, cybersécurité, réseaux et conseil. Chaque membre apporte son expertise pour garantir des livrables de qualité, dans les délais et en phase avec vos besoins.</p>
+        <p class="text-sm font-black uppercase tracking-[0.2em] text-ikaRed"><?php echo esc_html( ika_opt( 'ika_equipe_profil_eyebrow' ) ); ?></p>
+        <h2 class="mt-4 text-4xl font-black tracking-normal text-ikaBlueDark sm:text-5xl"><?php echo esc_html( ika_opt( 'ika_equipe_profil_title' ) ); ?></h2>
+        <p class="mt-6 text-base leading-8 text-slate-600"><?php echo esc_html( ika_opt( 'ika_equipe_profil_text' ) ); ?></p>
       </div>
     </div>
   </section>
@@ -30,8 +30,8 @@
  <section class="bg-ikaSoft py-20 sm:py-28">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="reveal text-center">
-        <p class="text-sm font-black uppercase tracking-[0.2em] text-ikaRed">Équipe</p>
-        <h2 class="mt-4 text-4xl font-black tracking-normal text-ikaBlueDark sm:text-5xl">Les talents qui font IKA SOLUTION.</h2>
+        <p class="text-sm font-black uppercase tracking-[0.2em] text-ikaRed"><?php echo esc_html( ika_opt( 'ika_equipe_team_eyebrow' ) ); ?></p>
+        <h2 class="mt-4 text-4xl font-black tracking-normal text-ikaBlueDark sm:text-5xl"><?php echo esc_html( ika_opt( 'ika_equipe_team_title' ) ); ?></h2>
       </div>
       <div class="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         <?php
@@ -68,29 +68,29 @@
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div class="grid gap-8 lg:grid-cols-[.8fr_1.2fr] lg:items-center">
         <div class="reveal">
-          <p class="text-sm font-black uppercase tracking-[0.2em] text-ikaRed">Valeurs</p>
-          <h2 class="mt-4 text-4xl font-black tracking-normal text-ikaBlueDark sm:text-5xl">Une culture d'entreprise tournée vers l'impact.</h2>
+          <p class="text-sm font-black uppercase tracking-[0.2em] text-ikaRed"><?php echo esc_html( ika_opt( 'ika_equipe_values_eyebrow' ) ); ?></p>
+          <h2 class="mt-4 text-4xl font-black tracking-normal text-ikaBlueDark sm:text-5xl"><?php echo esc_html( ika_opt( 'ika_equipe_values_title' ) ); ?></h2>
         </div>
         <div class="reveal grid gap-5">
           <div class="flex gap-5 rounded-2xl border border-slate-100 bg-ikaSoft p-6">
             <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-ikaBlue text-lg font-black text-white">01</span>
             <div>
-              <h3 class="font-black text-ikaBlue">Exigence technique</h3>
-              <p class="mt-2 text-sm leading-7 text-slate-600">Nous concevons chaque solution avec rigueur, en respectant les normes, les délais et les engagements.</p>
+              <h3 class="font-black text-ikaBlue"><?php echo esc_html( ika_opt( 'ika_equipe_value_1_title' ) ); ?></h3>
+              <p class="mt-2 text-sm leading-7 text-slate-600"><?php echo esc_html( ika_opt( 'ika_equipe_value_1_text' ) ); ?></p>
             </div>
           </div>
           <div class="flex gap-5 rounded-2xl border border-slate-100 bg-ikaSoft p-6">
             <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-ikaRed text-lg font-black text-white">02</span>
             <div>
-              <h3 class="font-black text-ikaBlue">Proximité client</h3>
-              <p class="mt-2 text-sm leading-7 text-slate-600">Nous travaillons main dans la main avec nos clients pour comprendre leurs contraintes et y répondre avec des solutions adaptées.</p>
+              <h3 class="font-black text-ikaBlue"><?php echo esc_html( ika_opt( 'ika_equipe_value_2_title' ) ); ?></h3>
+              <p class="mt-2 text-sm leading-7 text-slate-600"><?php echo esc_html( ika_opt( 'ika_equipe_value_2_text' ) ); ?></p>
             </div>
           </div>
           <div class="flex gap-5 rounded-2xl border border-slate-100 bg-ikaSoft p-6">
             <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-ikaBlue text-lg font-black text-white">03</span>
             <div>
-              <h3 class="font-black text-ikaBlue">Innovation continue</h3>
-              <p class="mt-2 text-sm leading-7 text-slate-600">Nos équipes se forment en permanence pour maîtriser les technologies les plus récentes et vous offrir le meilleur.</p>
+              <h3 class="font-black text-ikaBlue"><?php echo esc_html( ika_opt( 'ika_equipe_value_3_title' ) ); ?></h3>
+              <p class="mt-2 text-sm leading-7 text-slate-600"><?php echo esc_html( ika_opt( 'ika_equipe_value_3_text' ) ); ?></p>
             </div>
           </div>
         </div>

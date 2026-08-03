@@ -16,6 +16,7 @@ get_header();
     <?php
     get_template_part( 'template-parts/hero' );
     get_template_part( 'template-parts/about' );
+    get_template_part( 'template-parts/partenaires' );
     get_template_part( 'template-parts/pourquoi' );
     get_template_part( 'template-parts/expertises' );
     get_template_part( 'template-parts/marquee' );
@@ -25,7 +26,6 @@ get_header();
     get_template_part( 'template-parts/methode' );
     get_template_part( 'template-parts/actualites' );
     get_template_part( 'template-parts/vision' );
-    get_template_part( 'template-parts/partenaires' );
     get_template_part( 'template-parts/clients' );
     get_template_part( 'template-parts/contact' );
     ?>

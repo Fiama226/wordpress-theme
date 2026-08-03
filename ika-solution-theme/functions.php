@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Version des données de démonstration importées depuis le site statique.
 if ( ! defined( 'IKA_SOLUTION_SEED_VERSION' ) ) {
-    define( 'IKA_SOLUTION_SEED_VERSION', '2026-08-01-static-v7' );
+    define( 'IKA_SOLUTION_SEED_VERSION', '2026-08-03-static-v8' );
 }
 
 /**
@@ -277,10 +277,15 @@ function ika_nav_active( $target, $mobile = false ) {
             $active = is_singular( 'ika_solution' ) || is_post_type_archive( 'ika_solution' );
             break;
         case 'actualites':
+            // is_home() est vrai sur l'accueil quand « vos derniers articles »
+            // est la page d'accueil (réglage par défaut de WordPress). On ne
+            // veut PAS que « Actualités » soit active sur l'accueil : seule la
+            // page Actualités, un article, une catégorie ou l'index des posts
+            // (hors page d'accueil) doivent l'activer.
             $active = is_page( 'actualites' )
                 || ( is_single() && 'post' === get_post_type() )
                 || is_category()
-                || is_home();
+                || ( is_home() && ! is_front_page() );
             break;
         case 'contact':
             $active = false; // ancre d'accueil gérée en JavaScript (applyNavHash).
@@ -538,6 +543,544 @@ function ika_solution_page_exists( $title ) {
 }
 
 /**
+ * Données par défaut des onglets de la page Proxmox.
+ *
+ * Utilisées comme contenu initial (seeder) et comme repli si aucun
+ * contenu n'a encore été créé. Une fois le CPT ika_pmx_tab alimenté,
+ * ce sont les fiches de l'administration qui sont affichées.
+ *
+ * @param string $group ve | pbs | pmg
+ * @return array
+ */
+function ika_pmx_default_tabs( $group = '' ) {
+    $tabs = array();
+    $tabs["ve"] = array(
+	array(
+		'id'    => 'kvm-lxc',
+		'label' => 'KVM & Conteneurs',
+		'icon'  => '▢',
+		'items' => array(
+			array(
+				'title' => 'Une base Debian 100 % open source',
+				'text'  => 'La plateforme s’appuie sur Debian GNU/Linux et un noyau optimisé. Son code, publié sous licence GNU AGPL v3, peut être audité librement : aucune fonctionnalité cachée, aucun coût de licence, et une fiabilité éprouvée à grande échelle.',
+			),
+			array(
+				'title' => 'Virtualisation complète avec KVM',
+				'text'  => 'KVM, la technologie de virtualisation de référence sous Linux, est intégrée à Proxmox VE depuis les débuts du projet en 2008. Elle atteint des performances proches du natif sur tout processeur x86 récent (Intel VT-x ou AMD-V) et exécute Windows comme Linux avec un matériel virtuel dédié (réseau, disque, affichage).',
+			),
+			array(
+				'title' => 'Conteneurs Linux (LXC)',
+				'text'  => 'Légers et quasi instantanés au démarrage, les conteneurs partagent le noyau de l’hôte pour exécuter plusieurs environnements Linux isolés sur une même machine, avec une empreinte mémoire et disque minimale et des outils d’administration simples.',
+			),
+		),
+	),
+	array(
+		'id'    => 'gestion',
+		'label' => 'Gestion',
+		'icon'  => '⚙',
+		'items' => array(
+			array(
+				'title' => 'Administration web centralisée',
+				'text'  => 'Toutes les opérations du datacenter virtuel — VM, conteneurs, stockage, sauvegardes, haute disponibilité — se pilotent depuis une interface web unique (framework ExtJS), sans rien installer sur le poste. Historique des tâches et journaux de chaque nœud sont consultables en direct.',
+			),
+			array(
+				'title' => 'Ligne de commande complète',
+				'text'  => 'Les administrateurs habitués au shell disposent d’une CLI couvrant l’ensemble des composants, avec auto-complétion intelligente et documentation intégrée au format man.',
+			),
+			array(
+				'title' => 'Pilotage mobile',
+				'text'  => 'Une application dédiée (Android) et une version mobile HTML5 de l’interface permettent de superviser cluster, nœuds, VM et conteneurs en déplacement — console SPICE/HTML5 comprise.',
+			),
+			array(
+				'title' => 'Cluster sans serveur de gestion',
+				'text'  => 'L’architecture multi-maître autorise l’administration depuis n’importe quel nœud : inutile de déployer un serveur d’administration séparé, coûteux et complexe.',
+			),
+			array(
+				'title' => 'Configuration répliquée (pmxcfs)',
+				'text'  => 'Le système de fichiers de cluster maison synchronise la configuration sur tous les nœuds en temps réel via Corosync. Une trentaine de mégaoctets en mémoire suffisent, même pour des milliers de machines virtuelles.',
+			),
+			array(
+				'title' => 'Migration à chaud',
+				'text'  => 'Déplacez une machine virtuelle en cours d’exécution d’un nœud vers un autre, sans arrêt perceptible : idéal pour maintenir un hôte sans interrompre les services.',
+			),
+			array(
+				'title' => 'API REST documentée',
+				'text'  => 'Une API RESTful au format JSON, décrite formellement par schéma, facilite l’intégration avec vos outils d’orchestration, portails ou environnements d’hébergement.',
+			),
+			array(
+				'title' => 'Droits par rôles (ACL)',
+				'text'  => 'Attribuez des permissions fines sur chaque objet (VM, stockage, nœud) à des groupes, utilisateurs ou jetons d’API, selon des rôles prédéfinis.',
+			),
+			array(
+				'title' => 'Annuaires d’authentification',
+				'text'  => 'Connectez la plateforme à vos annuaires : Linux PAM, LDAP, Microsoft Active Directory, OpenID Connect ou serveur d’authentification intégré.',
+			),
+		),
+	),
+	array(
+		'id'    => 'ha',
+		'label' => 'Haute disponibilité',
+		'icon'  => '⟳',
+		'items' => array(
+			array(
+				'title' => 'Cluster HA prêt à l’emploi',
+				'text'  => 'En regroupant plusieurs nœuds, vos serveurs virtuels deviennent hautement disponibles : en cas de panne d’un hôte, les VM concernées basculent automatiquement, grâce à des briques Linux HA éprouvées.',
+			),
+			array(
+				'title' => 'Surveillance et bascule automatiques',
+				'text'  => 'Le gestionnaire de ressources surveille en continu VM et conteneurs et réagit dès qu’un service tombe. La protection par chien de garde (watchdog) simplifie le déploiement ; tout se configure depuis l’interface web.',
+			),
+			array(
+				'title' => 'Simulateur de panne intégré',
+				'text'  => 'Un laboratoire virtuel (3 nœuds, 6 VM) permet d’expérimenter les scénarios de bascule et de se former à la haute disponibilité sans toucher à la production.',
+			),
+		),
+	),
+	array(
+		'id'    => 'reseau',
+		'label' => 'Réseau',
+		'icon'  => '⇄',
+		'items' => array(
+			array(
+				'title' => 'Ponts, VLAN et agrégation',
+				'text'  => 'Le modèle réseau ponté fait office de commutateur logiciel (jusqu’à 4 094 ponts par hôte). Les VLAN IEEE 802.1q et l’agrégation de liens offrent la souplesse nécessaire aux architectures segmentées.',
+			),
+			array(
+				'title' => 'Open vSwitch (OVS)',
+				'text'  => 'Pour les besoins avancés, Open vSwitch peut remplacer les ponts standards : RSTP, VXLAN, OpenFlow et transport de plusieurs VLAN sur un même pont.',
+			),
+		),
+	),
+	array(
+		'id'    => 'stockage',
+		'label' => 'Stockage',
+		'icon'  => '▤',
+		'items' => array(
+			array(
+				'title' => 'Un modèle de stockage très souple',
+				'text'  => 'Les disques des VM peuvent résider sur un ou plusieurs stockages locaux ou partagés, en nombre illimité. Le stockage partagé (NFS, SAN) autorise la migration à chaud des machines entre nœuds.',
+			),
+			array(
+				'title' => 'Stockage réseau : un large choix',
+				'text'  => 'LVM sur iSCSI, iSCSI direct, NFS, SMB/CIFS, Ceph RBD, GlusterFS, CephFS ou LUN iSCSI : la plateforme s’adapte à votre équipement existant plutôt que l’inverse.',
+			),
+			array(
+				'title' => 'Stockage local maîtrisé',
+				'text'  => 'En local, vous disposez de LVM, de simples répertoires et de ZFS intégré avec ses fonctions avancées (snapshots, compression, sommes de contrôle).',
+			),
+			array(
+				'title' => 'Ceph hyperconvergé intégré',
+				'text'  => 'Déployez un stockage distribué auto-réparateur directement depuis l’interface Proxmox : Ceph RBD et CephFS tournent sur du matériel standard et montent en charge sans limite pratique. Deux liens utiles :',
+				'links' => array(
+					array( 'Cluster Ceph hyperconvergé', 'https://pve.proxmox.com/wiki/Deploy_Hyper-Converged_Ceph_Cluster' ),
+					array( 'Benchmark Ceph sous Proxmox VE', 'https://www.proxmox.com/en/downloads/item/proxmox-ve-ceph-benchmark-2020-09' ),
+				),
+			),
+		),
+	),
+	array(
+		'id'    => 'sauvegarde',
+		'label' => 'Sauvegarde',
+		'icon'  => '🛡',
+		'items' => array(
+			array(
+				'title' => 'Snapshots cohérents avec vzdump',
+				'text'  => 'L’outil intégré crée des sauvegardes cohérentes de VM et de conteneurs, en ligne, avec planification et stockages de destination multiples.',
+			),
+			array(
+				'title' => 'Couplage avec Proxmox Backup Server',
+				'text'  => 'Associé à Proxmox Backup Server, le cycle de sauvegarde devient incrémental et dédupliqué : moins de bande passante, moins d’espace consommé, et restauration à chaud des VM.',
+			),
+			array(
+				'title' => 'Restauration granulaire',
+				'text'  => 'Restaurez une VM complète, un conteneur ou seulement quelques fichiers depuis une archive, y compris pendant que la machine redémarre.',
+			),
+		),
+	),
+	array(
+		'id'    => 'parefeu',
+		'label' => 'Pare-feu',
+		'icon'  => '⛨',
+		'items' => array(
+			array(
+				'title' => 'Un pare-feu distribué',
+				'text'  => 'Définissez vos règles une fois au niveau du cluster : elles sont appliquées par chaque hôte via iptables, jusqu’au niveau de chaque interface virtuelle.',
+			),
+			array(
+				'title' => 'Macros, groupes et alias',
+				'text'  => 'Groupes de sécurité réutilisables, macros pour les protocoles courants et alias d’adresses simplifient la gestion des politiques, en IPv4 comme en IPv6.',
+			),
+		),
+	),
+);
+
+/* ---------------------------------------------------------------------------
+ * Proxmox Backup Server — onglets (textes originaux)
+ * ------------------------------------------------------------------------- */
+    $tabs["pbs"] = array(
+	array(
+		'id'    => 'backup',
+		'label' => 'Sauvegarde',
+		'icon'  => '🛡',
+		'items' => array(
+			array(
+				'title' => 'Incrémentale et dédupliquée',
+				'text'  => 'Seules les données réellement modifiées sont transférées, puis stockées en blocs uniques (taille fixe ou variable). Résultat : fenêtres de sauvegarde courtes, réseau préservé et espace disque économisé.',
+			),
+			array(
+				'title' => 'Un moteur moderne',
+				'text'  => 'Écrit en Rust et publié sous GNU AGPL, le serveur compresse avec ZSTD pour conjuguer vitesse et taux de compression élevé.',
+			),
+			array(
+				'title' => 'Planification et rétention',
+				'text'  => 'Programmez les sauvegardes de VM, conteneurs et hôtes physiques, puis laissez les politiques de rétention élaguer automatiquement les archives obsolètes.',
+			),
+		),
+	),
+	array(
+		'id'    => 'architecture',
+		'label' => 'Architecture',
+		'icon'  => '🏗',
+		'items' => array(
+			array(
+				'title' => 'Modèle client-serveur',
+				'text'  => 'Les sources à protéger envoient leurs données à un serveur central qui gère les banques de données (datastores), les rétentions et les vérifications.',
+			),
+			array(
+				'title' => 'Chiffrement côté client',
+				'text'  => 'Les données sont chiffrées avant de quitter leur source : une sauvegarde reste illisible sans vos clés, même hébergée sur une infrastructure qui ne vous appartient pas.',
+			),
+			array(
+				'title' => 'Synchronisation hors site',
+				'text'  => 'Les Remotes et Sync Jobs répliquent vos banques de données vers un second site — à la demande ou planifiés — en ne transférant que les différences depuis la dernière synchronisation.',
+			),
+		),
+	),
+	array(
+		'id'    => 'integrite',
+		'label' => 'Intégrité & sécurité',
+		'icon'  => '🔐',
+		'items' => array(
+			array(
+				'title' => 'Chiffrement AES-256 et clé RSA',
+				'text'  => 'Le chiffrement AES-256 en mode Galois/Counter garantit confidentialité et authenticité ; une clé maîtresse RSA protège les clés de chiffrement.',
+			),
+			array(
+				'title' => 'Détection de l’altération silencieuse',
+				'text'  => 'Sommes SHA-256 et index signés permettent de vérifier chaque archive et de repérer toute corruption progressive des supports (bit rot).',
+			),
+			array(
+				'title' => 'Bouclier anti-rançongiciel',
+				'text'  => 'Rôles et permissions stricts empêchent un compte compromis d’effacer ou de chiffrer l’historique des sauvegardes.',
+			),
+		),
+	),
+	array(
+		'id'    => 'restauration',
+		'label' => 'Restauration',
+		'icon'  => '⟳',
+		'items' => array(
+			array(
+				'title' => 'Restauration à chaud',
+				'text'  => 'Une VM stockée sur Proxmox Backup Server redémarre presque immédiatement : les blocs nécessaires sont copiés en priorité pendant que la machine tourne déjà.',
+			),
+			array(
+				'title' => 'Récupération fichier par fichier',
+				'text'  => 'Un shell interactif et un catalogue d’archives permettent d’extraire précisément le dossier ou le fichier recherché, sans restaurer l’intégralité.',
+			),
+			array(
+				'title' => 'Nettoyage automatique',
+				'text'  => 'Le ramasse-miettes intégré libère l’espace des blocs devenus inutiles après élagage des anciennes sauvegardes.',
+			),
+		),
+	),
+	array(
+		'id'    => 'gestion-pbs',
+		'label' => 'Gestion',
+		'icon'  => '⚙',
+		'items' => array(
+			array(
+				'title' => 'Interface web intuitive',
+				'text'  => 'La console graphique (port 8007) centralise banques de données, tâches, statistiques et journaux pour un suivi quotidien sans friction.',
+			),
+			array(
+				'title' => 'CLI et API REST',
+				'text'  => 'Toutes les opérations sont aussi réalisables en ligne de commande ou via l’API RESTful JSON, pour intégrer la sauvegarde à vos scripts.',
+			),
+		),
+	),
+	array(
+		'id'    => 'integration',
+		'label' => 'Intégration Proxmox VE',
+		'icon'  => '⟷',
+		'items' => array(
+			array(
+				'title' => 'Couple gagnant avec Proxmox VE',
+				'text'  => 'Déclaré comme stockage de sauvegarde dans Proxmox VE (avec vérification d’empreinte de certificat), le serveur devient la cible naturelle des sauvegardes planifiées.',
+			),
+			array(
+				'title' => 'Incrémental accéléré',
+				'text'  => 'Grâce au suivi des blocs modifiés côté QEMU (dirty bitmaps), les sauvegardes incrémentales des VM n’analysent que ce qui a changé.',
+			),
+			array(
+				'title' => 'Redémarrage immédiat',
+				'text'  => 'La restauration en direct relance la VM depuis l’archive pendant que les données se synchronisent en arrière-plan.',
+			),
+		),
+	),
+	array(
+		'id'    => 'bande',
+		'label' => 'Bande (Tape)',
+		'icon'  => '▦',
+		'items' => array(
+			array(
+				'title' => 'Archivage sur bandes LTO',
+				'text'  => 'Externalisez vos archives sur bandes LTO-5 et ultérieures (LTO-4 en lecture), avec chiffrement matériel et politiques de conservation.',
+			),
+			array(
+				'title' => 'Gestion complète des médias',
+				'text'  => 'L’outil pmtx pilote changeurs et bibliothèques ; un générateur d’étiquettes code-barres LTO facilite l’inventaire des cartouches.',
+			),
+		),
+	),
+);
+
+/* ---------------------------------------------------------------------------
+ * Proxmox Mail Gateway — onglets (textes originaux)
+ * ------------------------------------------------------------------------- */
+    $tabs["pmg"] = array(
+	array(
+		'id'    => 'antispam',
+		'label' => 'Anti-spam & antivirus',
+		'icon'  => '✉',
+		'items' => array(
+			array(
+				'title' => 'Un proxy devant votre messagerie',
+				'text'  => 'Installé entre le pare-feu et le serveur de messagerie, Proxmox Mail Gateway analyse l’intégralité du trafic entrant et sortant avant de le laisser passer.',
+			),
+			array(
+				'title' => 'Trois moteurs complémentaires',
+				'text'  => 'Postfix (MTA) transporte les messages, ClamAV bloque pièces jointes infectées et liens malveillants référencés, tandis que SpamAssassin attribue à chaque email un score de spam fondé sur de nombreux tests.',
+			),
+			array(
+				'title' => 'Filtrage en amont de la file d’attente',
+				'text'  => 'Les courriers indésirables sont rejetés ou supprimés avant même d’atteindre vos serveurs : charge réduite, files propres et utilisateurs protégés.',
+			),
+		),
+	),
+	array(
+		'id'    => 'filtrage',
+		'label' => 'Méthodes de filtrage',
+		'icon'  => '⚗',
+		'items' => array(
+			array(
+				'title' => 'Vérification des destinataires',
+				'text'  => 'Les messages destinés à des adresses inexistantes — l’essentiel du spam — sont rejetés dès le dialogue SMTP, ce qui élimine jusqu’à 90 % du trafic à analyser.',
+			),
+			array(
+				'title' => 'SPF, DNSBL et SURBL',
+				'text'  => 'Le contrôle des politiques d’envoi (SPF), des listes noires d’adresses IP (DNSBL) et des domaines contenus dans les URL (SURBL) bloque les sources connues de messages indésirables.',
+			),
+			array(
+				'title' => 'Filtre bayésien auto-apprenant',
+				'text'  => 'L’analyse statistique s’améliore à l’usage et affine la détection tout en limitant les faux positifs.',
+			),
+			array(
+				'title' => 'Greylisting et listes personnalisées',
+				'text'  => 'Le rejet temporaire des expéditeurs inconnus (greylisting) coupe environ la moitié du spam ; listes noires et blanches — y compris via groupes LDAP — vous donnent le dernier mot.',
+			),
+		),
+	),
+	array(
+		'id'    => 'suivi',
+		'label' => 'Suivi & journaux',
+		'icon'  => '📈',
+		'items' => array(
+			array(
+				'title' => 'Tracking Center',
+				'text'  => 'Retracez le parcours complet de chaque message en quelques secondes grâce à quatre étapes de journaux corrélés — même sur des plateformes dépassant le million d’emails par jour.',
+			),
+			array(
+				'title' => 'Une semaine d’historique et le temps réel',
+				'text'  => 'Les journaux des sept derniers jours restent consultables, et un flux temps réel affiche les cent dernières lignes pour diagnostiquer un incident en direct.',
+			),
+		),
+	),
+	array(
+		'id'    => 'cluster',
+		'label' => 'Cluster haute disponibilité',
+		'icon'  => '⟳',
+		'items' => array(
+			array(
+				'title' => 'Un cluster applicatif',
+				'text'  => 'Plusieurs passerelles forment un cluster synchronisé par tunnel VPN (maître et nœuds) : configuration mutualisée, tolérance aux pannes et montée en charge simple.',
+			),
+			array(
+				'title' => 'Répartition de charge DNS',
+				'text'  => 'Enregistrements MX multiples, round-robin DNS et PTR soigneusement renseignés assurent une distribution fluide du trafic entre les passerelles.',
+			),
+		),
+	),
+	array(
+		'id'    => 'regles',
+		'label' => 'Système de règles',
+		'icon'  => '⛁',
+		'items' => array(
+			array(
+				'title' => 'Un moteur orienté objet',
+				'text'  => 'Les règles combinent des objets réutilisables : DE (expéditeur), À (destinataire), QUAND (plage horaire), QUOI (contenu) et ACTION (que faire du message), complétés par la direction du flux.',
+			),
+			array(
+				'title' => 'Du simple au sophistiqué',
+				'text'  => 'Blocage d’une pièce jointe exécutable, quarantaine ciblée, réécriture d’objet : les cas simples se configurent en quelques clics, les politiques complexes en combinant les objets.',
+			),
+		),
+	),
+);
+    return isset( $tabs[ $group ] ) ? $tabs[ $group ] : $tabs;
+}
+
+/**
+ * Onglets de la page Proxmox issus de l'administration (CPT ika_pmx_tab).
+ *
+ * Les fiches sont groupées par « nom d'onglet » (ika_pmx_tab_label) dans
+ * l'ordre de menu_order, puis exposées dans la structure attendue par
+ * pmx_render_tabs() : id, label, icon, items[ {title, text, links} ].
+ *
+ * @param string $group ve | pbs | pmg
+ * @return array
+ */
+function ika_pmx_tabs_from_db( $group ) {
+    $posts = get_posts( array(
+        'post_type'      => 'ika_pmx_tab',
+        'posts_per_page' => -1,
+        'post_status'    => 'publish',
+        'orderby'        => 'menu_order',
+        'order'          => 'ASC',
+        'meta_key'       => 'ika_pmx_group',
+        'meta_value'     => $group,
+    ) );
+
+    if ( ! $posts ) {
+        return array();
+    }
+
+    update_postmeta_cache( wp_list_pluck( $posts, 'ID' ) );
+
+    $tabs      = array();
+    $tab_index = array();
+    foreach ( $posts as $post ) {
+        $label = trim( (string) get_post_meta( $post->ID, 'ika_pmx_tab_label', true ) );
+        if ( '' === $label ) {
+            continue;
+        }
+
+        if ( ! isset( $tab_index[ $label ] ) ) {
+            $tab_index[ $label ] = count( $tabs );
+            $id                  = sanitize_title( $label );
+            if ( '' === $id ) {
+                $id = 'onglet-' . $tab_index[ $label ];
+            }
+            $tabs[] = array(
+                'id'    => $id,
+                'label' => $label,
+                'icon'  => get_post_meta( $post->ID, 'ika_pmx_tab_icon', true ),
+                'items' => array(),
+            );
+        }
+
+        $item = array(
+            'title' => get_the_title( $post ),
+            'text'  => $post->post_content,
+        );
+
+        $links = array();
+        foreach ( array( 1, 2 ) as $n ) {
+            $l_label = trim( (string) get_post_meta( $post->ID, 'ika_pmx_link' . $n . '_label', true ) );
+            $l_url   = trim( (string) get_post_meta( $post->ID, 'ika_pmx_link' . $n . '_url', true ) );
+            if ( '' !== $l_label && '' !== $l_url ) {
+                $links[] = array( $l_label, $l_url );
+            }
+        }
+        if ( $links ) {
+            $item['links'] = $links;
+        }
+
+        $tabs[ $tab_index[ $label ] ]['items'][] = $item;
+    }
+
+    return $tabs;
+}
+
+/**
+ * Onglets d'un groupe Proxmox : contenu de l'administration si présent,
+ * sinon contenu d'origine (repli).
+ *
+ * @param string $group ve | pbs | pmg
+ * @return array
+ */
+function ika_pmx_tabs_for( $group ) {
+    $from_db = ika_pmx_tabs_from_db( $group );
+    return $from_db ? $from_db : ika_pmx_default_tabs( $group );
+}
+
+/**
+ * Seed idempotent des fiches des onglets Proxmox (CPT ika_pmx_tab).
+ *
+ * Crée les fiches d'origine uniquement si elles n'existent pas déjà
+ * (repérées par slug). Ne touche jamais aux fiches modifiées ou créées
+ * par l'utilisateur.
+ */
+function ika_seed_pmx_tabs() {
+    if ( ! post_type_exists( 'ika_pmx_tab' ) ) {
+        ika_solution_post_types();
+    }
+
+    $defaults = ika_pmx_default_tabs();
+    $order    = 0;
+
+    foreach ( $defaults as $group => $tabs ) {
+        foreach ( $tabs as $tab ) {
+            foreach ( $tab['items'] as $item_index => $item ) {
+                $slug = 'ika-pmx-' . $group . '-' . $tab['id'] . '-' . ( $item_index + 1 );
+
+                $existing = get_page_by_path( $slug, OBJECT, 'ika_pmx_tab' );
+                if ( $existing ) {
+                    $order++;
+                    continue;
+                }
+
+                $post_id = wp_insert_post( array(
+                    'post_type'    => 'ika_pmx_tab',
+                    'post_status'  => 'publish',
+                    'post_title'   => $item['title'],
+                    'post_content' => isset( $item['text'] ) ? $item['text'] : '',
+                    'post_name'    => $slug,
+                    'menu_order'   => $order,
+                ) );
+
+                if ( $post_id && ! is_wp_error( $post_id ) ) {
+                    update_post_meta( $post_id, 'ika_pmx_group', $group );
+                    update_post_meta( $post_id, 'ika_pmx_tab_label', $tab['label'] );
+                    update_post_meta( $post_id, 'ika_pmx_tab_icon', isset( $tab['icon'] ) ? $tab['icon'] : '' );
+
+                    $links = isset( $item['links'] ) ? array_values( $item['links'] ) : array();
+                    for ( $n = 1; $n <= 2; $n++ ) {
+                        $label = isset( $links[ $n - 1 ][0] ) ? $links[ $n - 1 ][0] : '';
+                        $url   = isset( $links[ $n - 1 ][1] ) ? $links[ $n - 1 ][1] : '';
+                        update_post_meta( $post_id, 'ika_pmx_link' . $n . '_label', $label );
+                        update_post_meta( $post_id, 'ika_pmx_link' . $n . '_url', $url );
+                    }
+                }
+
+                $order++;
+            }
+        }
+    }
+}
+
+
+/**
  * ----------------------------------------------------------------------------
  * Editable content infrastructure (CPTs + meta boxes)
  * Makes the previously hard-coded theme content editable from the WordPress
@@ -619,6 +1162,22 @@ $ika_meta_config = array(
             'ika_client_url'   => array( 'label' => 'Lien du logo (optionnel : vide = non cliquable, ex : https://exemple.com)', 'type' => 'text' ),
         ),
     ),
+    'ika_pmx_tab' => array(
+        'box'    => 'Fiche de l’onglet Proxmox',
+        'fields' => array(
+            'ika_pmx_group'      => array( 'label' => 'Groupe (onglets de quelle section ?)', 'type' => 'select', 'options' => array(
+                've'  => 'Proxmox Virtual Environment',
+                'pbs' => 'Proxmox Backup Server',
+                'pmg' => 'Proxmox Mail Gateway',
+            ) ),
+            'ika_pmx_tab_label'  => array( 'label' => 'Nom de l’onglet (ex : « KVM & Conteneurs » — les fiches d’un même onglet partagent le même nom)', 'type' => 'text' ),
+            'ika_pmx_tab_icon'   => array( 'label' => 'Icône de l’onglet (ex : ▢, ⚙, 🛡 — une seule fiche par onglet suffit)', 'type' => 'text' ),
+            'ika_pmx_link1_label'=> array( 'label' => 'Lien 1 — libellé (optionnel)', 'type' => 'text' ),
+            'ika_pmx_link1_url'  => array( 'label' => 'Lien 1 — URL', 'type' => 'text' ),
+            'ika_pmx_link2_label'=> array( 'label' => 'Lien 2 — libellé (optionnel)', 'type' => 'text' ),
+            'ika_pmx_link2_url'  => array( 'label' => 'Lien 2 — URL', 'type' => 'text' ),
+        ),
+    ),
 );
 
 /**
@@ -682,6 +1241,22 @@ function ika_solution_post_types() {
         'menu_icon'    => 'dashicons-images-alt2',
         'show_in_rest' => true,
     ) );
+
+    // Fiches des onglets de la page Proxmox (contenu 100 % éditable).
+    register_post_type( 'ika_pmx_tab', array(
+        'labels'       => array(
+            'name'          => __( 'Onglets Proxmox', 'ika-solution' ),
+            'singular_name' => __( 'Fiche Proxmox', 'ika-solution' ),
+            'add_new'       => __( 'Ajouter une fiche', 'ika-solution' ),
+            'edit_item'     => __( 'Modifier la fiche', 'ika-solution' ),
+        ),
+        'public'       => false,
+        'show_ui'      => true,
+        'has_archive'  => false,
+        'supports'     => array( 'title', 'editor' ),
+        'menu_icon'    => 'dashicons-admin-generic',
+        'show_in_rest' => true,
+    ) );
 }
 add_action( 'init', 'ika_solution_post_types' );
 
@@ -724,6 +1299,15 @@ function ika_solution_meta_box_render( $post ) {
             echo '<textarea id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" rows="5" style="width:100%">' . esc_textarea( $list ) . '</textarea>';
         } elseif ( 'textarea' === $field['type'] ) {
             echo '<textarea id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" rows="3" style="width:100%">' . esc_textarea( $list ) . '</textarea>';
+        } elseif ( 'select' === $field['type'] ) {
+            $options = isset( $field['options'] ) ? $field['options'] : array();
+            echo '<select id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" style="width:100%">';
+            echo '<option value="">— ' . esc_html__( 'Choisir…', 'ika-solution' ) . ' —</option>';
+            foreach ( $options as $opt_value => $opt_label ) {
+                $selected = ( (string) $value === (string) $opt_value ) ? ' selected="selected"' : '';
+                echo '<option value="' . esc_attr( $opt_value ) . '"' . $selected . '>' . esc_html( $opt_label ) . '</option>';
+            }
+            echo '</select>';
         } else {
             echo '<input id="' . esc_attr( $key ) . '" name="' . esc_attr( $key ) . '" value="' . esc_attr( $list ) . '" style="width:100%">';
         }
@@ -2049,6 +2633,7 @@ function ika_solution_seed_content() {
     ika_seed_realisations();
     ika_seed_partenaires();
     ika_seed_actualites();
+    ika_seed_pmx_tabs();
     update_option( 'ika_solution_seed_version', IKA_SOLUTION_SEED_VERSION, false );
     flush_rewrite_rules();
 }

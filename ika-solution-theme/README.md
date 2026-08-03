@@ -31,9 +31,18 @@ réactiver le thème ne duplique rien.
 | Équipe | **Membres d'équipe** |
 | Clients | **Clients** |
 | Partenaires | **Partenaires** |
+| Onglets de la page Proxmox (fiches VE, PBS, PMG) | **Onglets Proxmox** |
 | Actualités | **Articles** |
 | Adresse, téléphones, email, WhatsApp | **Apparence > Personnaliser > Contenu IKA Solution** |
 | Chiffres clés, textes « Qui sommes-nous », footer | idem |
+| Badge « IKA SOLUTION », bouton « En savoir plus » | **Personnaliser > Section « Qui sommes-nous »** |
+| Hébergement (textes, offres, carte domaine .bf) | **Personnaliser > Accueil — Hébergement, cloud et domaines** |
+| Bandeau défilant de mots-clés | **Personnaliser > Accueil — Bandeau défilant** |
+| Section « Méthode » | **Personnaliser > Accueil — Méthode** |
+| Pages Équipe, Réalisations, Actualités, Société | **Personnaliser > Page Équipe / Page Réalisations / Page Actualités / Page Société…** |
+| Page Proxmox (hero, sections, badges, liens) | **Personnaliser > Page Proxmox** |
+| Pages détail Solution & Expertise | **Personnaliser > Page détail d'une solution / d'une expertise** |
+| Bandeau support WhatsApp (footer) | **Personnaliser > Footer — bandeau support** |
 | Logo | **Apparence > Personnaliser > Identité du site** |
 | Menus | **Apparence > Menus** (emplacements : header, footer société, footer solutions) |
 
@@ -44,11 +53,11 @@ via l'**image mise en avant** du contenu — qui a la priorité.
 
 ## Page d'accueil
 
-`front-page.php` assemble les sections dans l'ordre du site d'origine :
+`front-page.php` assemble les sections dans l'ordre exact du site d'origine :
 
 ```
-hero · société · pourquoi · expertises · bandeau · solutions · réalisations
-hébergement · méthode · actualités · vision · partenaires · clients · contact
+hero · société · partenaires · pourquoi · expertises · bandeau · solutions
+réalisations · hébergement · méthode · actualités · vision · clients · contact
 ```
 
 Chaque section est un fichier de `template-parts/`. Une section dont le contenu

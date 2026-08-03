@@ -4,7 +4,7 @@ Contributors: ikasolution
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.5.0
+Stable tag: 1.7.0
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Tags: custom-menu, featured-images, translation-ready, full-width-template, custom-logo, threaded-comments
@@ -16,7 +16,10 @@ Thème WordPress sur mesure pour IKA SOLUTION LTD.
 Reproduit fidèlement le site d'origine (mise en page et animations) et rend
 l'ensemble des contenus administrables depuis WordPress : slides du hero,
 expertises, solutions logicielles, réalisations, équipe, clients, partenaires,
-actualités, coordonnées et chiffres clés.
+actualités, onglets de la page Proxmox, coordonnées et chiffres clés.
+Tous les textes des pages (Société, Équipe, Réalisations, Actualités,
+Proxmox, détails des solutions et expertises) sont éditables depuis
+Apparence > Personnaliser > Contenu IKA Solution.
 
 Tailwind CSS est compilé localement : aucune dépendance à un CDN externe.
 
@@ -63,6 +66,25 @@ Régénérer l'archive de distribution : bash tools/build-theme-zip.sh
 Contrôler la qualité du thème :        bash tools/audit-theme.sh
 
 == Changelog ==
+
+= 1.7.0 =
+* Page Proxmox entièrement éditable : nouveau type de contenu « Onglets
+  Proxmox » (58 fiches créées automatiquement) + section Personnaliser
+  dédiée (hero, sections, badges, liens).
+* Pages Équipe, Réalisations, Actualités, Société : tous les textes
+  éditables depuis le Personnalisateur.
+* Pages détail Solution et Expertise : étiquettes de sections et textes
+  des blocs contact éditables.
+* Footer : bandeau support WhatsApp éditable.
+* Correctif image tableau de bord Proxmox (double préfixe assets/).
+
+= 1.6.0 =
+* Navigation : « Actualités » n'est plus active sur l'accueil.
+* Page d'accueil : ordre des sections et espacements identiques au site
+  statique (partenaires en 3e position, py-10 sm:py-18).
+* Nouveaux contenus éditables : badge « Qui sommes-nous », hébergement
+  complet, bandeau défilant, méthode.
+
 
 = 1.1.0 =
 * Page d'accueil complète : ajout des sections réalisations, hébergement,

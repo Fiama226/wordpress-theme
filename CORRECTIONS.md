@@ -4,10 +4,95 @@ Réponse au rapport `AUDIT-THEME.md`. Les 21 actions planifiées ont été réal
 
 **Résultat de `bash tools/audit-theme.sh` :**
 
-| | Avant | Après (v1.1.0) | Après (v1.2.0) | Après (v1.4.0) | Après (v1.5.0) |
-|---|---:|---:|---:|---:|---:|
-| Bloquants | **13** | **0** | **0** | **0** | **0** |
-| Avertissements | 26 | 2 | **0** | **0** | **0** |
+| | Avant | Après (v1.1.0) | Après (v1.2.0) | Après (v1.4.0) | Après (v1.5.0) | Après (v1.6.0) | Après (v1.7.0) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| Bloquants | **13** | **0** | **0** | **0** | **0** | **0** | **0** |
+| Avertissements | 26 | 2 | **0** | **0** | **0** | **0** | **0** |
+
+## Mise à jour v1.7.0 — 100 % du contenu éditable depuis l'administration
+
+Audit complet des 38 fichiers PHP du thème : plus aucun texte visible
+n'est codé en dur dans les templates (hors piège anti-spam du formulaire
+et replis techniques volontaires). Nouveaux contenus rendus éditables :
+
+### Page Proxmox (auparavant entièrement codée en dur)
+
+- **Nouveau type de contenu « Onglets Proxmox »** : les 38 fiches des
+  onglets VE / PBS / PMG (titre, texte, icône, nom d'onglet, jusqu'à
+  2 liens documentaires) sont créées automatiquement à l'activation et
+  modifiables depuis l'admin (menu **Onglets Proxmox**), triables par
+  glisser-déposer avec Simple Custom Post Order. Repli automatique sur
+  le contenu d'origine si l'admin est vide.
+- **Personnaliser > Page Proxmox** : hero (surtitre, titre, texte,
+  badges, boutons, pastille statistique), sections Virtual Environment,
+  Ceph (textes + liens), Backup Server, Fonctionnalités PBS, Mail
+  Gateway (textes, badges, lien documentation), et les 3 étapes du bloc
+  « Votre projet Proxmox ».
+- Meta box : nouveau type de champ `select` dans le système générique.
+
+### Pages Équipe, Réalisations, Actualités, Société
+
+- **Page Équipe** : hero, sections Profil / Équipe / Valeurs (3 cartes),
+  image de fond — tout est éditable.
+- **Page Réalisations** : hero, titre de section, bouton, libellé du
+  filtre « Toutes ».
+- **Page Actualités** : hero (surtitre, titre, texte).
+- **Page Société** : surtitre du hero, libellés Vision / Mission /
+  Valeurs, texte alternatif de l'image.
+- **Archive des solutions** : surtitre et titre.
+
+### Pages détail Solution & Expertise
+
+- Toutes les étiquettes de sections (Présentation, Fonctionnalités,
+  Cas d'usage, Bénéfices, Méthode, Livrables, Autres…), les textes des
+  blocs contact et les libellés de boutons sont éditables (certains
+  champs acceptent `%s` = nom de la solution / de l'expertise).
+
+### Divers
+
+- Footer : bandeau support WhatsApp (libellé + 3 messages alternés).
+- Template par défaut : « Lire la suite » et « Aucun contenu trouvé ».
+- Correctif : double préfixe `assets/images/…` dans la page Proxmox
+  (image du tableau de bord PBS invisible → 404).
+- Simple Custom Post Order inclut désormais `ika_pmx_tab`.
+
+## Mise à jour v1.6.0 — parité stricte avec le statique + contenu 100 % éditable
+
+Retour client : « à l'installation, le thème doit afficher le site statique
+sans aucune différence ».
+
+### Navigation — « Actualités » active à tort
+
+`ika_nav_active()` activait « Actualités » sur la page d'accueil car
+`is_home()` est vrai sur l'accueil (réglage par défaut « vos derniers
+articles »). Désormais l'entrée n'est active que sur la page Actualités, un
+article, une catégorie ou l'index des posts **hors** page d'accueil
+(`is_home() && ! is_front_page()`).
+
+### Page d'accueil — positionnement identique au statique
+
+- **Ordre des sections** : « Nos partenaires » remontée en 3ᵉ position
+  (après « Qui sommes-nous », comme dans `index.php` du statique) au lieu de
+  figurer en bas de page.
+- **Espacements** : sections « Qui sommes-nous » et « Partenaires »
+  passées de `py-20 sm:py-28` à `py-10 sm:py-18` (classes exactes du
+  statique). `sm:py-18` n'existant pas dans l'échelle Tailwind par défaut,
+  le rendu est identique au statique (`py-10`) à toutes les tailles d'écran.
+
+### Contenu — complément d'éditabilité (Personnaliser > Contenu IKA Solution)
+
+Nouvelles sections de réglages (avec repli sur le texte d'origine) :
+
+- **Section « Qui sommes-nous »** : texte alternatif de l'image, badge sur
+  l'image (2 lignes), libellé du bouton « En savoir plus ».
+- **Accueil — Hébergement, cloud et domaines** : surtitre, titre, texte,
+  libellé et lien du bouton, les 3 offres (titre, texte, lien), carte
+  domaine `.bf` (pastille, titre, texte, lien, libellé d'accessibilité).
+- **Accueil — Bandeau défilant** : mots-clés séparés par des virgules.
+- **Accueil — Méthode** : surtitre, titre et les 3 étapes (titre, texte).
+
+Les filtres `ika_hosting_offers`, `ika_marquee_keywords` et
+`ika_methode_steps` restent honorés (rétro-compatibilité thèmes enfants).
 
 ## Mise à jour v1.5.0 — extensions recommandées : installation et configuration par le thème
 

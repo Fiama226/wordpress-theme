@@ -16,7 +16,7 @@
       <div class="absolute inset-0 bg-ikaBlueDark/88" aria-hidden="true"></div>
       <div class="relative mx-auto grid min-h-[76svh] max-w-7xl items-center gap-12 px-4 pb-16 sm:px-6 lg:grid-cols-[1fr_.9fr] lg:px-8">
         <div class="reveal max-w-3xl">
-          <p class="text-sm font-black uppercase tracking-[0.2em] text-red-200">IKA SOLUTION LTD</p>
+          <p class="text-sm font-black uppercase tracking-[0.2em] text-red-200"><?php echo esc_html( ika_opt( 'ika_pres_hero_eyebrow' ) ); ?></p>
           <h1 class="mt-5 text-4xl font-black leading-[1.05] tracking-normal sm:text-5xl lg:text-6xl"><?php echo esc_html( ika_opt( 'ika_pres_hero_title' ) ); ?></h1>
           <p class="mt-6 text-lg leading-8 text-white/85 sm:text-xl"><?php echo esc_html( ika_opt( 'ika_pres_hero_text1' ) ); ?></p>
           <p class="mt-4 text-base leading-8 text-white/75"><?php echo esc_html( ika_opt( 'ika_pres_hero_text2' ) ); ?></p>
@@ -37,7 +37,7 @@
         </div>
         <div class="reveal relative hidden lg:block">
           <div class="absolute -right-5 -top-5 h-28 w-28 rounded-3xl bg-ikaRed"></div>
-          <img class="relative h-[540px] w-full rounded-[2rem] object-cover shadow-premium" src="<?php echo esc_url( ika_asset( ika_opt( 'ika_pres_hero_image' ) ) ); ?>" alt="Equipe IKA SOLUTION">
+          <img class="relative h-[540px] w-full rounded-[2rem] object-cover shadow-premium" src="<?php echo esc_url( ika_asset( ika_opt( 'ika_pres_hero_image' ) ) ); ?>" alt="<?php echo esc_attr( ika_opt( 'ika_pres_hero_image_alt' ) ); ?>">
         </div>
       </div>
     </section>
@@ -63,17 +63,17 @@
         </div>
         <div class="mt-12 grid gap-6 lg:grid-cols-3">
           <article class="reveal rounded-[2rem] bg-ikaBlue p-8 text-white shadow-clean">
-            <span class="text-sm font-black uppercase tracking-[0.18em] text-red-200">Vision</span>
+            <span class="text-sm font-black uppercase tracking-[0.18em] text-red-200"><?php echo esc_html( ika_opt( 'ika_pres_vision_label' ) ); ?></span>
             <h3 class="mt-5 text-3xl font-black"><?php echo esc_html( ika_opt( 'ika_pres_vision_1_title' ) ); ?></h3>
             <p class="mt-5 text-sm leading-7 text-white/80"><?php echo esc_html( ika_opt( 'ika_pres_vision_1_text' ) ); ?></p>
           </article>
           <article class="reveal rounded-[2rem] bg-white p-8 shadow-clean">
-            <span class="text-sm font-black uppercase tracking-[0.18em] text-ikaRed">Mission</span>
+            <span class="text-sm font-black uppercase tracking-[0.18em] text-ikaRed"><?php echo esc_html( ika_opt( 'ika_pres_mission_label' ) ); ?></span>
             <h3 class="mt-5 text-3xl font-black text-ikaBlue"><?php echo esc_html( ika_opt( 'ika_pres_mission_title' ) ); ?></h3>
             <p class="mt-5 text-sm leading-7 text-slate-600"><?php echo esc_html( ika_opt( 'ika_pres_mission_text' ) ); ?></p>
           </article>
           <article class="reveal rounded-[2rem] bg-ikaRed p-8 text-white shadow-clean">
-            <span class="text-sm font-black uppercase tracking-[0.18em] text-white/75">Valeurs</span>
+            <span class="text-sm font-black uppercase tracking-[0.18em] text-white/75"><?php echo esc_html( ika_opt( 'ika_pres_values_label' ) ); ?></span>
             <h3 class="mt-5 text-3xl font-black"><?php echo esc_html( ika_opt( 'ika_pres_values_title' ) ); ?></h3>
             <p class="mt-5 text-sm leading-7 text-white/85"><?php echo esc_html( ika_opt( 'ika_pres_values_text' ) ); ?></p>
           </article>

@@ -116,6 +116,7 @@ function ika_ext_sortable_post_types() {
 			'ika_solution',
 			'ika_expertise',
 			'ika_slide',
+			'ika_pmx_tab',
 		)
 	);
 }
