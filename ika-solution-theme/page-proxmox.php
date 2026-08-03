@@ -513,7 +513,7 @@ get_header();
             <span class="h-3 w-3 rounded-full bg-green-500"></span>
             <span class="ml-3 text-xs font-bold text-slate-500">Proxmox VE — vue résumée d’un hôte</span>
           </div>
-          <img class="block w-full" src="<?php echo esc_url( ika_asset( 'images/Proxmox-VE-7-1-Host-Summary.svg' ) ); ?>" alt="Interface web de Proxmox Virtual Environment" loading="lazy">
+          <img class="block w-full" src="<?php echo esc_url( ika_asset( 'assets/images/proxmox/proxmox-backup-server-dashboard.png' ) ); ?>" alt="Interface web de Proxmox Virtual Environment" loading="lazy">
         </div>
       </div>
 

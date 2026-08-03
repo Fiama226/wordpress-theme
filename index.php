@@ -48,7 +48,7 @@
 
     </section>
 
-    <section id="societe" class="bg-white py-20 sm:py-28">
+    <section id="societe" class="bg-white py-10 sm:py-18">
       <div class="about-showcase mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[.95fr_1.05fr] lg:items-center lg:px-8">
         <div class="about-image-card reveal relative">
           <div class="absolute -left-4 -top-4 h-28 w-28 rounded-3xl bg-ikaRed"></div>
@@ -81,6 +81,38 @@
         </div>
       </div>
     </section>
+
+<section id="partenaires" class="bg-ikaSoft py-10 sm:py-18">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="reveal flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+      <div class="max-w-3xl">
+        <p class="text-sm font-black uppercase tracking-[0.2em] text-ikaRed">Nos partenaires</p>
+        <h2 class="mt-4 text-4xl font-black tracking-normal text-ikaBlueDark sm:text-5xl">Ils nous font confiance.</h2>
+      </div>
+      <p class="max-w-sm text-sm leading-7 text-slate-600">Solutions logicielles, systèmes, paiement, infrastructure et services numériques.</p>
+    </div>
+    <div class="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+         <div class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean">
+        <img class="max-h-14 max-w-full object-contain" src="assets/images/microsoft.png" alt="Microsoft">
+      </div>
+      <div class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean">
+        <img class="max-h-14 max-w-full object-contain" src="assets/images/odoo.png" alt="Odoo">
+      </div>
+      <div class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean">
+        <img class="max-h-16 max-w-full object-contain" src="assets/images/paloalto.svg" alt="Palo Alto">
+      </div>
+
+      <div class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean">
+        <img class="max-h-20 max-w-full object-contain" src="assets/images/fortinet.png" alt="Fortinet">
+      </div>
+      <div class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean">
+        <a href="proxmox.php">
+        <img class="max-h-20 max-w-full object-contain" src="assets/images/Proxmox.png" alt="Proxmox">
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
 
     <section id="pourquoi" class="relative overflow-hidden bg-ikaBlueDark py-20 text-white sm:py-28">
       <div class="absolute inset-0 bg-cover bg-center" style="background-image:url('assets/images/slide3.jpg'); opacity:.12;" aria-hidden="true"></div>
@@ -477,37 +509,7 @@
       </div>
     </section>
 
-<section id="partenaires" class="bg-ikaSoft py-20 sm:py-28">
-  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-    <div class="reveal flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-      <div class="max-w-3xl">
-        <p class="text-sm font-black uppercase tracking-[0.2em] text-ikaRed">Nos partenaires</p>
-        <h2 class="mt-4 text-4xl font-black tracking-normal text-ikaBlueDark sm:text-5xl">Ils nous font confiance.</h2>
-      </div>
-      <p class="max-w-sm text-sm leading-7 text-slate-600">Solutions logicielles, systèmes, paiement, infrastructure et services numériques.</p>
-    </div>
-    <div class="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-         <div class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean">
-        <img class="max-h-14 max-w-full object-contain" src="assets/images/microsoft.png" alt="Microsoft">
-      </div>
-      <div class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean">
-        <img class="max-h-14 max-w-full object-contain" src="assets/images/odoo.png" alt="Odoo">
-      </div>
-      <div class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean">
-        <img class="max-h-16 max-w-full object-contain" src="assets/images/paloalto.svg" alt="Palo Alto">
-      </div>
 
-      <div class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean">
-        <img class="max-h-20 max-w-full object-contain" src="assets/images/fortinet.png" alt="Fortinet">
-      </div>
-      <div class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean">
-        <a href="proxmox.php">
-        <img class="max-h-20 max-w-full object-contain" src="assets/images/Proxmox.png" alt="Proxmox">
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- ===================== CLIENTS ===================== -->
 <section id="clients" class="bg-white py-20 sm:py-28 overflow-hidden">
