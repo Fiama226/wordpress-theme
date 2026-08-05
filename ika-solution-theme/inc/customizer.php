@@ -50,9 +50,9 @@ function ika_default_options() {
 		// --- Chiffres clés ---
 		'ika_stat1_value'    => '12 ans',
 		'ika_stat1_label'    => "d'expérience",
-		'ika_stat2_value'    => '+300',
+		'ika_stat2_value'    => '+30',
 		'ika_stat2_label'    => 'clients accompagnés',
-		'ika_stat3_value'    => '+500',
+		'ika_stat3_value'    => '+70',
 		'ika_stat3_label'    => 'projets réalisés',
 
 		// --- Section contact ---
