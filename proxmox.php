@@ -479,6 +479,20 @@ $pmx_pmg_tabs = array(
     </div>
   </section>
 
+  <!-- ===================== OPEN SOURCE + REPO ENTREPRISE ===================== -->
+  <section class="bg-ikaSoft py-16 sm:py-20">
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="grid gap-8 rounded-[2rem] bg-ikaBlueDark p-8 text-white shadow-premium sm:p-10 lg:grid-cols-[auto_1fr_auto] lg:items-center">
+        <span class="flex h-16 w-16 items-center justify-center rounded-2xl bg-ikaRed text-2xl" aria-hidden="true">🛡</span>
+        <div>
+          <h3 class="text-2xl font-black">Libre et gratuit, avec un Repository Enterprise pour les entreprises.</h3>
+          <p class="mt-3 text-sm leading-7 text-white/80">Proxmox est un logiciel libre et gratuit : aucune licence à payer, un code ouvert et auditable. Pour la production, Proxmox propose une souscription au Repository Enterprise qui offre des paquets stables et testés, ainsi qu'un support d'assistance dédié pour les entreprises.</p>
+        </div>
+        <a href="https://www.proxmox.com/en/proxmox-virtual-environment/pricing" target="_blank" rel="noopener" class="inline-flex rounded-full bg-ikaRed px-6 py-3 text-sm font-black text-white transition hover:bg-red-700">Découvrir les abonnements ↗</a>
+      </div>
+    </div>
+  </section>
+
   <!-- ===================== PROXMOX VE ===================== -->
   <section id="proxmox-ve" class="bg-white py-16 sm:py-20">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

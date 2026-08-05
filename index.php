@@ -92,24 +92,21 @@
       <p class="max-w-sm text-sm leading-7 text-slate-600">Solutions logicielles, systèmes, paiement, infrastructure et services numériques.</p>
     </div>
     <div class="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-         <div class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean">
+      <a href="microsoft.php" class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean transition hover:-translate-y-1 hover:shadow-premium">
         <img class="max-h-14 max-w-full object-contain" src="assets/images/microsoft.png" alt="Microsoft">
-      </div>
-      <div class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean">
+      </a>
+      <a href="odoo.php" class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean transition hover:-translate-y-1 hover:shadow-premium">
         <img class="max-h-14 max-w-full object-contain" src="assets/images/odoo.png" alt="Odoo">
-      </div>
-      <div class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean">
+      </a>
+      <a href="paloalto.php" class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean transition hover:-translate-y-1 hover:shadow-premium">
         <img class="max-h-16 max-w-full object-contain" src="assets/images/paloalto.svg" alt="Palo Alto">
-      </div>
-
-      <div class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean">
+      </a>
+      <a href="fortinet.php" class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean transition hover:-translate-y-1 hover:shadow-premium">
         <img class="max-h-20 max-w-full object-contain" src="assets/images/fortinet.png" alt="Fortinet">
-      </div>
-      <div class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean">
-        <a href="proxmox.php">
+      </a>
+      <a href="proxmox.php" class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean transition hover:-translate-y-1 hover:shadow-premium">
         <img class="max-h-20 max-w-full object-contain" src="assets/images/Proxmox.png" alt="Proxmox">
-        </a>
-      </div>
+      </a>
     </div>
   </div>
 </section>
