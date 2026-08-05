@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return array<string,string>
  */
 function ika_default_options() {
-	return array(
+	return array_merge( array(
 		// --- Coordonnées ---
 		'ika_address'        => 'Avenue de la Dignité, Ouagadougou, Burkina Faso',
 		'ika_city'           => 'Ouagadougou, Burkina Faso',
@@ -253,6 +253,10 @@ function ika_default_options() {
 		'ika_pmx_proj_2_text' => 'Installation du cluster, migration des machines existantes, configuration du stockage, des sauvegardes et de la messagerie, sans coupure majeure.',
 		'ika_pmx_proj_3_title' => 'Exploitation & formation',
 		'ika_pmx_proj_3_text' => 'Supervision, mises à jour, documentation et transfert de compétences pour que vos équipes pilotent la plateforme en autonomie.',
+		'ika_pmx_repo_title' => 'Libre et gratuit, avec un Repository Enterprise pour les entreprises.',
+		'ika_pmx_repo_text' => 'Proxmox est un logiciel libre et gratuit : aucune licence à payer, un code ouvert et auditable. Pour la production, Proxmox propose une souscription au Repository Enterprise qui offre des paquets stables et testés, ainsi qu’un support d’assistance dédié pour les entreprises.',
+		'ika_pmx_repo_link_label' => 'Découvrir les abonnements',
+		'ika_pmx_repo_link_url' => 'https://www.proxmox.com/en/proxmox-virtual-environment/pricing',
 
 		// --- Page Réalisations (surtitre) + pages détail Solution / Expertise ---
 		'ika_realisations_section_eyebrow' => 'Réalisations',
@@ -292,7 +296,298 @@ function ika_default_options() {
 		'ika_expertise_other_eyebrow' => 'Autres expertises',
 		'ika_expertise_other_title' => 'Explorer nos domaines complémentaires.',
 		'ika_expertise_other_link' => 'Toutes les expertises',
+	), ika_partner_default_options() );
+}
+
+/**
+ * Valeurs par défaut des pages partenaires (Odoo, Fortinet, Palo Alto,
+ * Microsoft) = contenu rédigé en propre par IKA SOLUTION.
+ *
+ * @return array<string,string>
+ */
+function ika_partner_default_options() {
+	// Surtitres / titres / libellés et textes de sections par partenaire.
+	$map = array(
+		'odoo' => array(
+			'prefix' => 'ika_odoo',
+			'title'  => 'Odoo',
+			'hero_eyebrow' => 'ERP & gestion d’entreprise',
+			'hero_title'   => 'Odoo : une suite open source qui unifie vos processus métier.',
+			'hero_text'    => 'IKA SOLUTION, partenaire Odoo, déploie et maintient Odoo Community et Enterprise pour piloter ventes, CRM, comptabilité, stock, production et ressources humaines depuis une seule plateforme, avec un accompagnement local.',
+			'hero_badges'  => 'CRM & Ventes, Comptabilité, Stock & Achats, eCommerce',
+			'hero_cta_primary' => 'Parler à un expert Odoo',
+			'hero_stat_value' => 'Logiciel gratuit',
+			'suite_eyebrow' => 'Odoo Community',
+			'suite_title'   => 'Une plateforme unique, des modules qui s’emboîtent.',
+			'suite_text1'   => 'Odoo réunit CRM, ventes, comptabilité, stock, achats, production, projets et ressources humaines dans un même socle. Les modules partagent une base de données unique : une vente validée met à jour le stock, la facture et le reporting en temps réel.',
+			'suite_text2'   => 'Chez IKA SOLUTION, nous conseillons Odoo pour remplacer des outils dispersés par une solution cohérente, évolutive et maîtrisée — avec des licences Community gratuites ou des abonnements Enterprise selon vos besoins.',
+			'oss_title'     => 'Odoo Community : libre, gratuit et auditable.',
+			'oss_text'      => 'Le code est publié sous licence LGPL : aucune fonctionnalité cachée, aucun coût de licence. Vous ne payez que l’hébergement et l’accompagnement. L’abonnement Enterprise ajoute les modules avancés, le support avec SLA et les services officiels.',
+			'ent_eyebrow'   => 'Odoo Enterprise',
+			'ent_title'     => 'Les modules avancés, le support et la sérénité.',
+			'ent_text1'     => 'Odoo Enterprise ajoute plus de 40 modules métiers (Studio, Field Service, Subscriptions, Sign, Helpdesk, applications mobiles officielles…) et des services : support avec SLA, mises à niveau gérées et hébergement maîtrisé.',
+			'ent_text2'     => 'Chez IKA SOLUTION, nous évaluons avec vous le bon compromis entre Community et Enterprise pour que le coût serve réellement vos usages, sans payer de fonctionnalités inutilisées.',
+			'ent_cta'       => 'Évaluer mes besoins Odoo',
+			'ent_feat_eyebrow' => 'Odoo Enterprise',
+			'ent_feat_title'=> 'Personnaliser, sécuriser, faire évoluer.',
+			'ent_feat_text' => 'Parcourez les atouts de l’édition Enterprise : modules avancés, personnalisation Studio, support contractuel et modes d’hébergement.',
+			'proj_1_title'  => 'Audit & cadrage',
+			'proj_1_text'   => 'Cartographie de vos processus, choix des modules et arbitrage Community/Enterprise : nous posons des fondations réalistes avant tout paramétrage.',
+			'proj_2_title'  => 'Paramétrage & migration',
+			'proj_2_text'   => 'Configuration des modules, import des données existantes, intégration avec vos outils et recette : la mise en route se fait sans interrompre l’activité.',
+			'proj_3_title'  => 'Formation & support',
+			'proj_3_text'   => 'Formation des équipes, documentation, sauvegardes et montées de version : vos collaborateurs pilotent Odoo en autonomie et en confiance.',
+		),
+		'fortinet' => array(
+			'prefix' => 'ika_forti',
+			'title'  => 'Fortinet',
+			'hero_eyebrow' => 'Cybersécurité réseau',
+			'hero_title'   => 'Fortinet : une sécurité réseau unifiée, du pare-feu au cloud.',
+			'hero_text'    => 'IKA SOLUTION, partenaire Fortinet, déploie et administre FortiGate, FortiManager, FortiAnalyzer et FortiClient pour sécuriser votre périmètre, vos sites, vos accès distants et vos postes, avec une supervision locale.',
+			'hero_badges'  => 'FortiGate NGFW, Secure SD-WAN, FortiManager, FortiAnalyzer',
+			'hero_cta_primary' => 'Parler à un expert Fortinet',
+			'hero_stat_value' => 'NGFW & SD-WAN',
+			'suite_eyebrow' => 'FortiGate NGFW',
+			'suite_title'   => 'Le pare-feu nouvelle génération qui protège tout le réseau.',
+			'suite_text1'   => 'FortiGate intègre pare-feu, IPS, antivirus, contrôle applicatif, filtrage web, VPN et SD-WAN dans un seul équipement. Les flux chiffrés sont inspectés et les politiques appliquées selon l’application, l’utilisateur et le niveau de confiance.',
+			'suite_text2'   => 'Chez IKA SOLUTION, nous concevons votre architecture FortiGate : segmentation, accès distants, interconnexion de sites et supervision continue.',
+			'oss_title'     => 'Une protection coordonnée, du réseau au cloud.',
+			'oss_text'      => 'FortiGate agit au cœur du Security Fabric de Fortinet : il partage l’intelligence et l’automatisation avec FortiManager, FortiAnalyzer, FortiClient et les services FortiGuard pour une réponse cohérente aux menaces.',
+			'ent_eyebrow'   => 'Gestion & supervision',
+			'ent_title'     => 'Piloter, analyser, protéger les postes.',
+			'ent_text1'     => 'FortiManager centralise la configuration de tous vos équipements, FortiAnalyzer corrèle les journaux pour la détection et les rapports, et FortiClient protège vos postes. Les services FortiGuard alimentent l’ensemble avec une intelligence des menaces à jour.',
+			'ent_text2'     => 'Chez IKA SOLUTION, nous intégrons ces briques dans une démarche complète : durcissement, segmentation, supervision et réponse aux incidents.',
+			'ent_cta'       => 'Auditer ma sécurité réseau',
+			'ent_feat_eyebrow' => 'Écosystème Fortinet',
+			'ent_feat_title'=> 'Gérer, analyser, sécuriser, se renseigner.',
+			'ent_feat_text' => 'Parcourez les composants qui entourent FortiGate : gestion centralisée, journalisation, protection des postes et intelligence des menaces.',
+			'proj_1_title'  => 'Audit & architecture',
+			'proj_1_text'   => 'Analyse de votre exposition, dimensionnement des équipements et conception de la segmentation : nous posons les bases d’une défense cohérente.',
+			'proj_2_title'  => 'Déploiement & migration',
+			'proj_2_text'   => 'Installation des FortiGate, politiques de sécurité, VPN et SD-WAN, intégration de FortiManager et FortiAnalyzer, sans interrompre les services.',
+			'proj_3_title'  => 'Exploitation & supervision',
+			'proj_3_text'   => 'Mises à jour FortiGuard, veille sur les journaux, gestion des incidents et rapports : votre sécurité reste pilotée et documentée.',
+		),
+		'paloalto' => array(
+			'prefix' => 'ika_palo',
+			'title'  => 'Palo Alto',
+			'hero_eyebrow' => 'Cybersécurité nouvelle génération',
+			'hero_title'   => 'Palo Alto Networks : une sécurité pilotée par les applications.',
+			'hero_text'    => 'IKA SOLUTION, partenaire Palo Alto Networks, déploie et administre les pare-feux Strata (PAN-OS), les solutions Prisma (SASE et cloud) et Cortex pour protéger votre réseau, vos accès et vos environnements cloud.',
+			'hero_badges'  => 'Strata NGFW, Prisma Access, Cortex, GlobalProtect',
+			'hero_cta_primary' => 'Parler à un expert Palo Alto',
+			'hero_stat_value' => 'NGFW & cloud',
+			'suite_eyebrow' => 'Strata NGFW',
+			'suite_title'   => 'Un pare-feu qui comprend le trafic applicatif.',
+			'suite_text1'   => 'Les pare-feux Palo Alto identifient le trafic par application, utilisateur et contenu grâce à App-ID, User-ID et Content-ID. Les menaces connues et inconnues sont bloquées, y compris dans le trafic chiffré.',
+			'suite_text2'   => 'Chez IKA SOLUTION, nous déployons ces équipements avec une segmentation cohérente et une supervision continue pour protéger vos accès et vos données.',
+			'oss_title'     => 'Du réseau au cloud, jusqu’aux opérations de sécurité.',
+			'oss_text'      => 'Prisma Access sécurise les accès et le cloud, Prisma Cloud protège les workloads et Cortex automatise la détection et la réponse. La plateforme couvre tout le périmètre digital.',
+			'ent_eyebrow'   => 'Cloud & opérations',
+			'ent_title'     => 'Sécuriser le cloud, analyser et répondre.',
+			'ent_text1'     => 'Prisma Access apporte une protection SASE aux utilisateurs et aux sites, Prisma Cloud protège les workloads et les environnements multi-cloud, et Cortex automatise la détection et la réponse aux incidents.',
+			'ent_text2'     => 'Chez IKA SOLUTION, nous intégrons ces solutions selon votre maturité : renforcer le pare-feu, sécuriser le cloud ou moderniser vos opérations de sécurité.',
+			'ent_cta'       => 'Renforcer ma cybersécurité',
+			'ent_feat_eyebrow' => 'Cloud & opérations',
+			'ent_feat_title'=> 'Accéder, protéger, répondre.',
+			'ent_feat_text' => 'Parcourez les briques qui étendent le pare-feu : SASE, sécurité cloud-native et opérations de sécurité pilotées par les données.',
+			'proj_1_title'  => 'Audit & design',
+			'proj_1_text'   => 'Analyse de votre exposition, cartographie des applications et dimensionnement des pare-feux : nous concevons une architecture cohérente.',
+			'proj_2_title'  => 'Déploiement & configuration',
+			'proj_2_text'   => 'Installation des équipements, politiques de sécurité, GlobalProtect et Panorama, avec intégration de vos annuaires, sans coupure des services.',
+			'proj_3_title'  => 'Exploitation & supervision',
+			'proj_3_text'   => 'Veille, mise à jour des signatures, gestion des incidents et formation de vos équipes : la plateforme reste performante et documentée.',
+		),
+		'microsoft' => array(
+			'prefix' => 'ika_ms',
+			'title'  => 'Microsoft',
+			'hero_eyebrow' => 'Productivité & collaboration',
+			'hero_title'   => 'Microsoft 365 : la plateforme de travail de vos équipes.',
+			'hero_text'    => 'IKA SOLUTION, partenaire Microsoft, accompagne la fourniture, le déploiement et l’administration de Microsoft 365 — messagerie, collaboration, sécurité et licences — pour des équipes efficaces et protégées.',
+			'hero_badges'  => 'Exchange, Teams, SharePoint, OneDrive',
+			'hero_cta_primary' => 'Parler à un expert Microsoft',
+			'hero_stat_value' => 'Collaboration & sécurité',
+			'suite_eyebrow' => 'Microsoft 365',
+			'suite_title'   => 'Une seule suite pour collaborer, produire et sécuriser.',
+			'suite_text1'   => 'Microsoft 365 réunit messagerie, réunions, stockage, partage et applications Office dans une suite cohérente. Vos équipes travaillent ensemble, où qu’elles soient, avec des outils qui s’intègrent les uns aux autres.',
+			'suite_text2'   => 'Chez IKA SOLUTION, nous vous conseillons la bonne formule, migrons vos données et administrons l’environnement pour que vos collaborateurs adoptent la suite sereinement.',
+			'oss_title'     => 'Une sécurité intégrée, du compte au poste de travail.',
+			'oss_text'      => 'Authentification multi-facteur, accès conditionnel, protection de la messagerie et des postes : Microsoft 365 embarque les fondations de la sécurité de vos équipes.',
+			'ent_eyebrow'   => 'Plans & licences',
+			'ent_title'     => 'Choisir la bonne formule, sans surpayer.',
+			'ent_text1'     => 'Des plans Business (Basic, Standard, Premium) aux plans Enterprise (E3, E5), les licences Microsoft 365 se choisissent selon vos usages : collaboration, applications Office, sécurité et conformité.',
+			'ent_text2'     => 'Chez IKA SOLUTION, nous réalisons une revue de vos licences pour éviter les doublons, aligner les droits sur les besoins et maîtriser vos coûts de renouvellement.',
+			'ent_cta'       => 'Optimiser mes licences',
+			'ent_feat_eyebrow' => 'Plans & licences',
+			'ent_feat_title'=> 'Comprendre les offres, administrer simplement.',
+			'ent_feat_text' => 'Parcourez les familles de plans Microsoft 365 et les services d’administration que nous mettons en place pour vous.',
+			'proj_1_title'  => 'Conseil & revue des licences',
+			'proj_1_text'   => 'Analyse de vos usages, choix des plans et optimisation des licences existantes pour aligner vos coûts sur vos besoins réels.',
+			'proj_2_title'  => 'Déploiement & migration',
+			'proj_2_text'   => 'Création des comptes, migration des boîtes mail et des documents, configuration de Teams et des politiques de sécurité, sans coupure majeure.',
+			'proj_3_title'  => 'Administration & formation',
+			'proj_3_text'   => 'Gestion quotidienne, support utilisateur, supervision et formation pour que vos équipes adoptent la suite en autonomie.',
+		),
 	);
+
+	$out = array();
+	foreach ( $map as $partner => $cfg ) {
+		$p = $cfg['prefix'];
+		// Surtitres et libellés propres à chaque partenaire.
+		$out[ $p . '_hero_eyebrow' ]     = $cfg['hero_eyebrow'];
+		$out[ $p . '_hero_title' ]       = $cfg['hero_title'];
+		$out[ $p . '_hero_text' ]        = $cfg['hero_text'];
+		$out[ $p . '_hero_badges' ]      = $cfg['hero_badges'];
+		$out[ $p . '_hero_cta_primary' ] = $cfg['hero_cta_primary'];
+		$out[ $p . '_suite_eyebrow' ]    = $cfg['suite_eyebrow'];
+		$out[ $p . '_suite_title' ]      = $cfg['suite_title'];
+		$out[ $p . '_oss_title' ]        = $cfg['oss_title'];
+		$out[ $p . '_ent_eyebrow' ]      = $cfg['ent_eyebrow'];
+		$out[ $p . '_ent_feat_eyebrow' ] = $cfg['ent_feat_eyebrow'];
+		$out[ $p . '_hero_stat_value' ]  = $cfg['hero_stat_value'];
+
+		// Champs communs (mêmes valeurs pour tous les partenaires).
+		$common = array(
+			'hero_back'        => 'Retour aux expertises',
+			'hero_cta_secondary' => 'Découvrir la solution',
+			'hero_stat_label'  => 'Partenaire',
+			'suite_text1'      => 'IKA SOLUTION accompagne vos équipes sur cette solution : audit, déploiement, configuration, formation et support local.',
+			'suite_text2'      => 'Nous vous conseillons les bons choix, migrons vos données et administrons l’environnement pour que vos collaborateurs adoptent la plateforme sereinement.',
+			'suite_caption'    => $cfg['title'] . ' — vue d’ensemble',
+			'oss_text'         => 'Une vision claire de la solution, de ses éditions et des services d’accompagnement qui s’y rattachent.',
+			'oss_link1_label'  => 'Site officiel',
+			'oss_link1_url'    => 'https://www.example.com',
+			'oss_link2_label'  => 'Documentation',
+			'oss_link2_url'    => 'https://www.example.com',
+			'ent_title'        => 'Des services et des licences adaptés à vos besoins.',
+			'ent_text1'        => 'IKA SOLUTION vous aide à choisir les éditions et licences adaptées à votre organisation, sans surpayer.',
+			'ent_text2'        => 'Nous assurons la fourniture, le renouvellement et la conformité des licences ainsi que l’accompagnement de vos équipes.',
+			'ent_cta'          => 'Évaluer mes besoins',
+			'ent_feat_title'   => 'Comprendre les offres, administrer simplement.',
+			'ent_feat_text'    => 'Parcourez les éditions, licences et services d’accompagnement que nous mettons en place pour vous.',
+			'ent_feat_caption' => $cfg['title'] . ' — vue d’ensemble des offres',
+			'proj_1_text'      => 'Analyse de vos besoins, de vos usages et de vos processus : nous posons des fondations réalistes avant tout déploiement.',
+			'proj_2_text'      => 'Installation, configuration, migration de vos données et recette : la mise en route se fait sans interrompre l’activité.',
+			'proj_3_text'      => 'Formation, documentation, supervision et support continu : vos équipes pilotent la solution en autonomie et en confiance.',
+		);
+
+		// Surimpose toutes les valeurs propres au partenaire (champ → $cfg[champ]).
+		$skip  = array( 'prefix', 'title' );
+		$common_fields = array_merge(
+			array_keys( $common ),
+			array( 'hero_eyebrow', 'hero_title', 'hero_text', 'hero_badges', 'hero_cta_primary', 'hero_stat_value', 'suite_eyebrow', 'suite_title', 'suite_text1', 'suite_text2', 'oss_title', 'oss_text', 'ent_eyebrow', 'ent_title', 'ent_text1', 'ent_text2', 'ent_cta', 'ent_feat_eyebrow', 'ent_feat_title', 'ent_feat_text', 'proj_1_title', 'proj_1_text', 'proj_2_title', 'proj_2_text', 'proj_3_title', 'proj_3_text' )
+		);
+		foreach ( $common_fields as $k ) {
+			if ( in_array( $k, $skip, true ) ) {
+				continue;
+			}
+			if ( isset( $cfg[ $k ] ) ) {
+				$common[ $k ] = $cfg[ $k ];
+			}
+		}
+
+		foreach ( $common as $k => $v ) {
+			$out[ $p . '_' . $k ] = $v;
+		}
+	}
+
+	// Liens officiels par partenaire (pour la bande « site officiel »).
+	$out['ika_odoo_oss_link1_url'] = 'https://www.odoo.com/fr_FR';
+	$out['ika_forti_oss_link1_url'] = 'https://www.fortinet.com';
+	$out['ika_palo_oss_link1_url'] = 'https://www.paloaltonetworks.com';
+	$out['ika_ms_oss_link1_url'] = 'https://www.microsoft.com/fr-fr/microsoft-365';
+	$out['ika_ms_oss_link2_label'] = 'Comparer les offres';
+	$out['ika_ms_oss_link2_url'] = 'https://www.microsoft.com/fr-fr/microsoft-365/compare-microsoft-365-business-plans';
+	$out['ika_forti_oss_link2_label'] = 'Support & services';
+	$out['ika_forti_oss_link2_url'] = 'https://www.fortinet.com/support';
+	$out['ika_palo_oss_link2_label'] = 'Support & services';
+	$out['ika_palo_oss_link2_url'] = 'https://www.paloaltonetworks.com/support';
+	$out['ika_odoo_oss_link2_label'] = 'Catalogue d’applications';
+	$out['ika_odoo_oss_link2_url'] = 'https://www.odoo.com/fr_FR/app/applications';
+
+	return $out;
+}
+
+/**
+ * Définit les champs éditables des pages partenaires (personnalisateur).
+ *
+ * @return array<string,array>
+ */
+function ika_partner_sections() {
+	$defs = array(
+		'odoo' => array(
+			'id'     => 'ika_sec_odoo',
+			'title'  => 'Page Odoo',
+			'prefix' => 'ika_odoo',
+		),
+		'fortinet' => array(
+			'id'     => 'ika_sec_fortinet',
+			'title'  => 'Page Fortinet',
+			'prefix' => 'ika_forti',
+		),
+		'paloalto' => array(
+			'id'     => 'ika_sec_paloalto',
+			'title'  => 'Page Palo Alto',
+			'prefix' => 'ika_palo',
+		),
+		'microsoft' => array(
+			'id'     => 'ika_sec_microsoft',
+			'title'  => 'Page Microsoft',
+			'prefix' => 'ika_ms',
+		),
+	);
+
+	$fields = array(
+		'hero_back'          => array( 'Hero — libellé du bouton retour', 'text' ),
+		'hero_eyebrow'       => array( 'Hero — surtitre', 'text' ),
+		'hero_title'         => array( 'Hero — titre', 'text' ),
+		'hero_text'          => array( 'Hero — texte', 'textarea' ),
+		'hero_badges'        => array( 'Hero — badges (séparés par des virgules)', 'textarea' ),
+		'hero_cta_primary'   => array( 'Hero — bouton principal', 'text' ),
+		'hero_cta_secondary' => array( 'Hero — bouton secondaire', 'text' ),
+		'hero_stat_label'    => array( 'Hero — pastille statistique (libellé)', 'text' ),
+		'hero_stat_value'    => array( 'Hero — pastille statistique (valeur)', 'text' ),
+		'suite_eyebrow'      => array( 'Section 1 — surtitre', 'text' ),
+		'suite_title'        => array( 'Section 1 — titre', 'text' ),
+		'suite_text1'        => array( 'Section 1 — paragraphe 1', 'textarea' ),
+		'suite_text2'        => array( 'Section 1 — paragraphe 2', 'textarea' ),
+		'suite_caption'      => array( 'Section 1 — légende de l’image', 'text' ),
+		'oss_title'          => array( 'Bande — titre', 'text' ),
+		'oss_text'           => array( 'Bande — texte', 'textarea' ),
+		'oss_link1_label'    => array( 'Bande — lien 1 (libellé)', 'text' ),
+		'oss_link1_url'      => array( 'Bande — lien 1 (URL)', 'url' ),
+		'oss_link2_label'    => array( 'Bande — lien 2 (libellé)', 'text' ),
+		'oss_link2_url'      => array( 'Bande — lien 2 (URL)', 'url' ),
+		'ent_eyebrow'        => array( 'Section 2 — surtitre', 'text' ),
+		'ent_title'          => array( 'Section 2 — titre', 'text' ),
+		'ent_text1'          => array( 'Section 2 — paragraphe 1', 'textarea' ),
+		'ent_text2'          => array( 'Section 2 — paragraphe 2', 'textarea' ),
+		'ent_cta'            => array( 'Section 2 — bouton', 'text' ),
+		'ent_feat_eyebrow'   => array( 'Fonctionnalités 2 — surtitre', 'text' ),
+		'ent_feat_title'     => array( 'Fonctionnalités 2 — titre', 'text' ),
+		'ent_feat_text'      => array( 'Fonctionnalités 2 — texte', 'textarea' ),
+		'ent_feat_caption'   => array( 'Fonctionnalités 2 — légende de l’image', 'text' ),
+		'proj_1_title'       => array( 'Projet — étape 1 (titre)', 'text' ),
+		'proj_1_text'        => array( 'Projet — étape 1 (texte)', 'textarea' ),
+		'proj_2_title'       => array( 'Projet — étape 2 (titre)', 'text' ),
+		'proj_2_text'        => array( 'Projet — étape 2 (texte)', 'textarea' ),
+		'proj_3_title'       => array( 'Projet — étape 3 (titre)', 'text' ),
+		'proj_3_text'        => array( 'Projet — étape 3 (texte)', 'textarea' ),
+	);
+
+	$sections = array();
+	foreach ( $defs as $cfg ) {
+		$section_fields = array();
+		foreach ( $fields as $key => $conf ) {
+			$section_fields[ $cfg['prefix'] . '_' . $key ] = $conf;
+		}
+		$sections[ $cfg['id'] ] = array(
+			'title'  => $cfg['title'],
+			'fields' => $section_fields,
+		);
+	}
+
+	return $sections;
 }
 
 /**
@@ -664,9 +959,16 @@ function ika_customize_register( $wp_customize ) {
 				'ika_pmx_proj_2_text' => array( 'Projet — étape 2 (texte)', 'textarea' ),
 				'ika_pmx_proj_3_title' => array( 'Projet — étape 3 (titre)', 'text' ),
 				'ika_pmx_proj_3_text' => array( 'Projet — étape 3 (texte)', 'textarea' ),
+				'ika_pmx_repo_title' => array( 'Open source + Repo Enterprise — titre', 'text' ),
+				'ika_pmx_repo_text' => array( 'Open source + Repo Enterprise — texte', 'textarea' ),
+				'ika_pmx_repo_link_label' => array( 'Open source + Repo Enterprise — libellé du lien', 'text' ),
+				'ika_pmx_repo_link_url' => array( 'Open source + Repo Enterprise — URL du lien', 'url' ),
 			),
 		),
 	);
+
+	// Sections des pages partenaires (Odoo, Fortinet, Palo Alto, Microsoft).
+	$sections = array_merge( $sections, ika_partner_sections() );
 
 	$priority = 10;
 	foreach ( $sections as $section_id => $section ) {

@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Version des données de démonstration importées depuis le site statique.
 if ( ! defined( 'IKA_SOLUTION_SEED_VERSION' ) ) {
-    define( 'IKA_SOLUTION_SEED_VERSION', '2026-08-03-static-v8' );
+    define( 'IKA_SOLUTION_SEED_VERSION', '2026-08-05-partners-v9' );
 }
 
 /**
@@ -478,6 +478,22 @@ function ika_solution_create_default_pages() {
         'Proxmox'      => array(
             'template' => 'page-proxmox.php',
             'slug'     => 'proxmox',
+        ),
+        'Odoo'         => array(
+            'template' => 'page-odoo.php',
+            'slug'     => 'odoo',
+        ),
+        'Fortinet'     => array(
+            'template' => 'page-fortinet.php',
+            'slug'     => 'fortinet',
+        ),
+        'Palo Alto'    => array(
+            'template' => 'page-paloalto.php',
+            'slug'     => 'paloalto',
+        ),
+        'Microsoft'    => array(
+            'template' => 'page-microsoft.php',
+            'slug'     => 'microsoft',
         ),
     );
 
@@ -1081,6 +1097,558 @@ function ika_seed_pmx_tabs() {
 
 
 /**
+ * Rend un groupe d'onglets (boutons + panneaux de cartes), commun à toutes
+ * les pages partenaires. Style identique à la page Proxmox.
+ *
+ * @param string $group_id Préfixe unique du groupe (ex : 'odoo-comm').
+ * @param array  $tabs     Onglets : id, label, icon, items[ {title, text, links[]} ].
+ */
+function ika_partner_render_tabs( $group_id, $tabs ) {
+	?>
+	<div class="mt-10" data-pmx-tabs>
+		<div class="flex flex-wrap gap-2.5" role="tablist">
+			<?php foreach ( $tabs as $ika_tab ) : ?>
+			<button type="button" role="tab" class="pmx-tab rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-black text-ikaBlue transition hover:border-ikaBlue" data-pmx-target="<?php echo esc_attr( $group_id . '-' . $ika_tab['id'] ); ?>" aria-selected="false">
+				<span aria-hidden="true"><?php echo esc_html( $ika_tab['icon'] ); ?></span> <?php echo esc_html( $ika_tab['label'] ); ?>
+			</button>
+			<?php endforeach; ?>
+		</div>
+		<?php foreach ( $tabs as $ika_tab ) : ?>
+		<div id="<?php echo esc_attr( $group_id . '-' . $ika_tab['id'] ); ?>" class="pmx-panel mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3" role="tabpanel" hidden>
+			<?php foreach ( $ika_tab['items'] as $ika_item ) : ?>
+			<article class="flex h-full flex-col rounded-2xl bg-white p-6 shadow-clean transition hover:-translate-y-1 hover:shadow-premium">
+				<h3 class="text-lg font-black leading-snug text-ikaBlue"><?php echo esc_html( $ika_item['title'] ); ?></h3>
+				<p class="mt-3 flex-1 text-sm leading-7 text-slate-600"><?php echo esc_html( $ika_item['text'] ); ?></p>
+				<?php if ( ! empty( $ika_item['links'] ) ) : ?>
+				<div class="mt-4 flex flex-wrap gap-2">
+					<?php foreach ( $ika_item['links'] as $ika_link ) : ?>
+					<a class="rounded-full bg-ikaSoft px-4 py-2 text-xs font-black text-ikaBlue transition hover:bg-ikaBlue hover:text-white" href="<?php echo esc_url( $ika_link[1] ); ?>" target="_blank" rel="noopener"><?php echo esc_html( $ika_link[0] ); ?> ↗</a>
+					<?php endforeach; ?>
+				</div>
+				<?php endif; ?>
+			</article>
+			<?php endforeach; ?>
+		</div>
+		<?php endforeach; ?>
+	</div>
+	<?php
+}
+
+/**
+ * Données par défaut des onglets des pages partenaires (Odoo, Fortinet,
+ * Palo Alto, Microsoft). Contenu rédigé en propre par IKA SOLUTION.
+ *
+ * Utilisé comme contenu initial (seeder) et comme repli tant que l'admin
+ * n'a pas créé de fiches. Une fois le CPT ika_partner_tab alimenté, ce sont
+ * les fiches de l'administration qui sont affichées.
+ *
+ * @param string $partner odoo | fortinet | paloalto | microsoft
+ * @return array<string,array>
+ */
+function ika_partner_default_tabs( $partner = '' ) {
+	$tabs = array();
+
+	/* -------------------------------------------------------------
+	 * ODOO
+	 * ------------------------------------------------------------- */
+	$tabs['odoo']['comm'] = array(
+		array(
+			'id'    => 'ventes-crm',
+			'label' => 'Ventes & CRM',
+			'icon'  => '▢',
+			'items' => array(
+				array( 'title' => 'CRM : piloter votre pipeline', 'text' => 'Suivez chaque opportunité, organisez les activités commerciales, automatisez les relances et analysez vos taux de conversion dans une interface unique et simple.' ),
+				array( 'title' => 'Ventes & commandes', 'text' => 'Devis, commandes, tarifs par client, remises et abonnements : la chaîne de vente est suivie de bout en bout, avec des états et des rapports toujours à jour.' ),
+				array( 'title' => 'Point de vente (POS)', 'text' => 'Encaissez en caisse, tablette ou mobile, gérez plusieurs boutiques et suivez vos ventes en temps réel, reliées automatiquement à la comptabilité et au stock.' ),
+			),
+		),
+		array(
+			'id'    => 'comptabilite',
+			'label' => 'Comptabilité',
+			'icon'  => '▤',
+			'items' => array(
+				array( 'title' => 'Écritures et facturation', 'text' => 'Factures clients, notes de frais, paiements et rapprochement : les opérations comptables s’alimentent automatiquement depuis les ventes, achats et dépenses.' ),
+				array( 'title' => 'Plan comptable local', 'text' => 'Odoo propose des plans comptables adaptés à de nombreux pays, avec les règles de TVA, les libellés et les états attendus par votre contexte réglementaire.' ),
+				array( 'title' => 'États financiers', 'text' => 'Bilan, compte de résultat, balance âgée et journaux sont générés et exportables, pour un suivi comptable clair et un partage simple avec votre expert.' ),
+			),
+		),
+		array(
+			'id'    => 'stock-achats',
+			'label' => 'Stock & Achats',
+			'icon'  => '⇄',
+			'items' => array(
+				array( 'title' => 'Gestion de stock multi-entrepôts', 'text' => 'Multi-entrepôts, lots, emplacements, traçabilité et alertes de réapprovisionnement : gardez une visibilité exacte sur vos marchandises.' ),
+				array( 'title' => 'Achats et fournisseurs', 'text' => 'Demandes de prix, commandes fournisseurs, réceptions et factures d’achat s’enchaînent avec des règles automatiques et un historique fiable.' ),
+				array( 'title' => 'Code-barres', 'text' => 'Les mouvements de stock se traitent au scan : réceptions, inventaires et expéditions deviennent rapides et moins sujets aux erreurs de saisie.' ),
+			),
+		),
+		array(
+			'id'    => 'rh',
+			'label' => 'Ressources humaines',
+			'icon'  => '⚙',
+			'items' => array(
+				array( 'title' => 'Employés et organigramme', 'text' => 'Centralisez les fiches employés, contrats, documents, congés et absences dans un espace unique, avec un organigramme clair et des droits d’accès.' ),
+				array( 'title' => 'Recrutement', 'text' => 'Publiez des offres, collectez les candidatures et suivez le processus de recrutement avec des pipelines visuels et des emails automatisés.' ),
+				array( 'title' => 'Congés & pointage', 'text' => 'Demandes de congés en ligne, validation, solde disponible et suivi du temps de travail : les équipes gagnent en autonomie et la gestion RH en lisibilité.' ),
+			),
+		),
+		array(
+			'id'    => 'production',
+			'label' => 'Production (MRP)',
+			'icon'  => '⟳',
+			'items' => array(
+				array( 'title' => 'Nomenclatures et ordres de fabrication', 'text' => 'Composez vos gammes, lancez des ordres de fabrication et déclarez la consommation de matières : la production est pilotée au plus près.' ),
+				array( 'title' => 'Planification des besoins', 'text' => 'Le MRP calcule automatiquement les besoins en matières et déclenche les ordres d’achat et de fabrication pour éviter les ruptures.' ),
+				array( 'title' => 'Qualité & maintenance', 'text' => 'Contrôles qualité aux étapes clés, équipements et maintenances planifiées : la production reste tracée et préventive.' ),
+			),
+		),
+		array(
+			'id'    => 'projets-services',
+			'label' => 'Projets & services',
+			'icon'  => '🏗',
+			'items' => array(
+				array( 'title' => 'Projets et tâches', 'text' => 'Kanban, listes, jalons et dépendances : pilotez vos projets, affectez vos équipes et suivez l’avancement dans des vues adaptées à votre méthode.' ),
+				array( 'title' => 'Temps & feuilles de temps', 'text' => 'Les feuilles de temps alimentent la facturation au temps passé et le suivi de rentabilité par projet, pour un pilotage précis de vos services.' ),
+				array( 'title' => 'Helpdesk & contrats', 'text' => 'Tickets, priorités, SLA et base de connaissances : structurez votre support interne ou client avec des réponses rapides et tracées.' ),
+			),
+		),
+		array(
+			'id'    => 'site-ecommerce',
+			'label' => 'Site web & eCommerce',
+			'icon'  => '⇄',
+			'items' => array(
+				array( 'title' => 'Constructeur de site web', 'text' => 'Créez et éditez votre site en glisser-déposer : pages vitrines, formulaires, blog et menu se gèrent sans coder, dans la même plateforme.' ),
+				array( 'title' => 'Boutique en ligne', 'text' => 'Catalogue, panier, paiements et livraison s’intègrent au stock et à la comptabilité : votre eCommerce partage les mêmes données que l’ERP.' ),
+				array( 'title' => 'Marketing & événements', 'text' => 'Emails de masse, ventes d’événements et suivi des inscriptions : développez votre audience avec des outils reliés au CRM.' ),
+			),
+		),
+		array(
+			'id'    => 'pilotage',
+			'label' => 'Pilotage & rapports',
+			'icon'  => '📈',
+			'items' => array(
+				array( 'title' => 'Tableaux de bord', 'text' => 'Chaque module propose des indicateurs et des graphiques configurables : ventes, trésorerie, stock et activité en un coup d’œil.' ),
+				array( 'title' => 'Rapports personnalisés', 'text' => 'Créez vos analyses, exportez en Excel/PDF et planifiez des envois réguliers pour diffuser les bons chiffres aux bonnes personnes.' ),
+				array( 'title' => 'Une base de données unique', 'text' => 'Tous les modules partagent PostgreSQL : une saisie dans un module met à jour automatiquement les autres, sans double encodage.' ),
+			),
+		),
+	);
+	$tabs['odoo']['ent'] = array(
+		array(
+			'id'    => 'modules-avances',
+			'label' => 'Modules avancés',
+			'icon'  => '⚙',
+			'items' => array(
+				array( 'title' => 'Studio', 'text' => 'Personnalisez formulaires, champs et rapports en glisser-déposer, sans développement : vos écrans évoluent au rythme de votre métier.' ),
+				array( 'title' => 'Applications mobiles officielles', 'text' => 'Odoo Enterprise offre des applications mobiles Android/iOS pour travailler sur vos données, vos tâches et votre messagerie depuis le terrain.' ),
+				array( 'title' => 'Modules métiers étendus', 'text' => 'Field Service, Subscriptions, Sign (signature électronique), Appointments, Helpdesk avec SLA : des briques avancées couvrent les processus exigeants.' ),
+			),
+		),
+		array(
+			'id'    => 'support-hebergement',
+			'label' => 'Support & hébergement',
+			'icon'  => '🛡',
+			'items' => array(
+				array( 'title' => 'Support avec SLA', 'text' => 'L’abonnement Enterprise inclut un support officiel d’Odoo SA avec des niveaux de service contractuels, pour sécuriser votre exploitation.' ),
+				array( 'title' => 'Mises à niveau gérées', 'text' => 'Les mises à jour et montées de version sont préparées et sécurisées, avec sauvegarde et tests, afin de limiter les risques de régression.' ),
+				array( 'title' => 'Hébergement flexible', 'text' => 'Odoo Online, Odoo.sh ou un serveur local : nous vous conseillons le mode d’hébergement adapté à votre volume, vos contraintes et votre budget.' ),
+			),
+		),
+		array(
+			'id'    => 'licences',
+			'label' => 'Licences & coûts',
+			'icon'  => '▤',
+			'items' => array(
+				array( 'title' => 'Community : libre et gratuit', 'text' => 'Odoo Community est publié sous licence LGPL : le logiciel est gratuit, son code est ouvert et auditable, et seuls les coûts d’hébergement et d’accompagnement s’appliquent.' ),
+				array( 'title' => 'Enterprise : par utilisateur', 'text' => 'L’édition Enterprise se souscrit par utilisateur et par mois, avec l’ensemble des modules officiels, le support et les services Odoo.' ),
+				array( 'title' => 'Un choix progressif', 'text' => 'Vous pouvez démarrer sur Community puis migrer vers Enterprise sans perdre vos données : nous vous aidons à arbitrer selon vos besoins réels.' ),
+			),
+		),
+	);
+
+	/* -------------------------------------------------------------
+	 * FORTINET
+	 * ------------------------------------------------------------- */
+	$tabs['fortinet']['gate'] = array(
+		array(
+			'id'    => 'parefeu',
+			'label' => 'Pare-feu nouvelle génération',
+			'icon'  => '⛨',
+			'items' => array(
+				array( 'title' => 'Un NGFW haute performance', 'text' => 'FortiGate combine filtrage étatique, IPS, antivirus, contrôle applicatif et inspection SSL dans un seul équipement, accéléré par du matériel dédié pour conserver un haut débit.' ),
+				array( 'title' => 'IPS & antivirus', 'text' => 'Le système de prévention d’intrusion détecte et bloque les exploits connus et émergents, tandis que l’antivirus scanne le trafic à la recherche de malwares.' ),
+				array( 'title' => 'Inspection SSL', 'text' => 'La majorité du trafic étant chiffrée, FortiGate décrypte et inspecte les flux HTTPS pour empêcher les menaces de se cacher dans les tunnels de navigation.' ),
+			),
+		),
+		array(
+			'id'    => 'applications',
+			'label' => 'Applications & utilisateurs',
+			'icon'  => '▢',
+			'items' => array(
+				array( 'title' => 'Contrôle applicatif', 'text' => 'Identifiez des milliers d’applications et autorisez, bloquez ou limitez le débit selon leur usage, indépendamment des ports et du chiffrement.' ),
+				array( 'title' => 'Filtrage web', 'text' => 'Catégories de sites, liste noire, contrôle des téléchargements et profils par groupe d’utilisateurs : l’accès Internet est maîtrisé et tracé.' ),
+				array( 'title' => 'ZTNA', 'text' => 'Le Zero Trust Network Access accorde un accès contextuel aux applications selon l’utilisateur, l’appareil et son niveau de conformité, sans exposer tout le réseau.' ),
+			),
+		),
+		array(
+			'id'    => 'acces',
+			'label' => 'Accès distant',
+			'icon'  => '⇄',
+			'items' => array(
+				array( 'title' => 'VPN SSL & IPsec', 'text' => 'FortiGate offre des tunnels SSL-VPN et IPsec pour les télétravailleurs et les interconnexions de sites, avec authentification et contrôle d’accès.' ),
+				array( 'title' => 'FortiClient', 'text' => 'Le client de sécurité gère le VPN, la conformité de l’appareil et la protection du poste dans un seul outil, simple à déployer à grande échelle.' ),
+				array( 'title' => 'Accès réseau Zero Trust', 'text' => 'Chaque requête est vérifiée avant accès, qu’elle vienne du bureau, du domicile ou du cloud : la même politique s’applique partout.' ),
+			),
+		),
+		array(
+			'id'    => 'sdwan',
+			'label' => 'Secure SD-WAN',
+			'icon'  => '⟳',
+			'items' => array(
+				array( 'title' => 'Des liaisons intelligentes', 'text' => 'Le SD-WAN sélectionne dynamiquement la meilleure liaison selon la santé du lien et les besoins des applications, pour un débit optimal.' ),
+				array( 'title' => 'Priorisation applicative', 'text' => 'Les applications critiques sont prioritaires, les flux sensibles chiffrés, et les liaisons de secours utilisées automatiquement en cas de panne.' ),
+				array( 'title' => 'Une sécurité intégrée', 'text' => 'NGFW, SD-WAN et routage avancé dans un même équipement : pas de boîtier séparé, une politique unique et une gestion simplifiée.' ),
+			),
+		),
+	);
+	$tabs['fortinet']['eco'] = array(
+		array(
+			'id'    => 'gestion',
+			'label' => 'FortiManager',
+			'icon'  => '⚙',
+			'items' => array(
+				array( 'title' => 'Administration centralisée', 'text' => 'FortiManager déploie des configurations, politiques et mises à jour sur l’ensemble de vos FortiGate depuis une console unique.' ),
+				array( 'title' => 'Modèles & automatisation', 'text' => 'Des modèles réutilisables garantissent une configuration cohérente sur tous les sites, avec des scripts et des APIs pour automatiser les tâches.' ),
+				array( 'title' => 'Contrôle des accès administrateurs', 'text' => 'Rôles et délégations précises permettent à chaque équipe d’agir sur son périmètre sans compromettre l’ensemble du réseau.' ),
+			),
+		),
+		array(
+			'id'    => 'analyse',
+			'label' => 'FortiAnalyzer',
+			'icon'  => '📈',
+			'items' => array(
+				array( 'title' => 'Journalisation centralisée', 'text' => 'FortiAnalyzer collecte et corrèle les journaux de sécurité et de trafic pour offrir une visibilité complète sur l’activité du réseau.' ),
+				array( 'title' => 'Rapports & tableaux de bord', 'text' => 'Des rapports réglementaires et opérationnels sont générés pour suivre les incidents, les usages et la conformité.' ),
+				array( 'title' => 'Détection et analyse', 'text' => 'Les anomalies sont mises en évidence et les données d’investigation conservées pour comprendre et répondre rapidement à un incident.' ),
+			),
+		),
+		array(
+			'id'    => 'endpoint',
+			'label' => 'FortiClient',
+			'icon'  => '🔐',
+			'items' => array(
+				array( 'title' => 'Sécurité du poste', 'text' => 'Antivirus, contrôle d’applications et protection web sur chaque poste, coordonnés avec la politique réseau globale.' ),
+				array( 'title' => 'VPN intégré', 'text' => 'Le client unique gère l’accès distant et la sécurité de l’appareil, avec une expérience simple pour l’utilisateur.' ),
+				array( 'title' => 'Conformité des appareils', 'text' => 'FortiClient vérifie l’état des postes avant l’accès au réseau et applique les correctifs nécessaires.' ),
+			),
+		),
+		array(
+			'id'    => 'intelligence',
+			'label' => 'FortiGuard',
+			'icon'  => '🛡',
+			'items' => array(
+				array( 'title' => 'Renseignements sur les menaces', 'text' => 'FortiGuard Labs met à jour en continu les signatures antivirus, IPS, antispam et les catégories de sites.' ),
+				array( 'title' => 'Protection contre les menaces zero-day', 'text' => 'Les flux d’intelligence sont intégrés au NGFW pour détecter les menaces nouvelles et les variantes connues.' ),
+				array( 'title' => 'Un service par abonnement', 'text' => 'Les services FortiGuard se souscrivent par équipement et par an ; nous vous conseillons le bon niveau selon votre exposition.' ),
+			),
+		),
+	);
+
+	/* -------------------------------------------------------------
+	 * PALO ALTO
+	 * ------------------------------------------------------------- */
+	$tabs['paloalto']['ngfw'] = array(
+		array(
+			'id'    => 'appid',
+			'label' => 'App-ID & utilisateurs',
+			'icon'  => '▢',
+			'items' => array(
+				array( 'title' => 'App-ID : identifier les applications', 'text' => 'Le pare-feu identifie les applications par leur trafic réel, pas seulement par le port, même quand elles se déguisent ou utilisent le chiffrement.' ),
+				array( 'title' => 'Politiques par application', 'text' => 'Autorisez, bloquez ou restreignez chaque application selon vos besoins, indépendamment du port ou du protocole, pour un contrôle fin.' ),
+				array( 'title' => 'User-ID & Device-ID', 'text' => 'Les politiques s’appliquent aux utilisateurs et aux appareils (via Active Directory, LDAP ou agents) plutôt qu’aux seules adresses IP.' ),
+			),
+		),
+		array(
+			'id'    => 'prevention',
+			'label' => 'Prévention des menaces',
+			'icon'  => '🛡',
+			'items' => array(
+				array( 'title' => 'Threat Prevention', 'text' => 'IPS, antivirus et anti-spyware intégrés bloquent exploits, malwares et tentatives de vol d’identifiants à l’aide de signatures et d’heuristiques.' ),
+				array( 'title' => 'WildFire', 'text' => 'Les fichiers suspects sont exécutés en environnement isolé (sandbox cloud) pour détecter les menaces inconnues et les variantes zero-day.' ),
+				array( 'title' => 'Filtrage d’URL & DNS Security', 'text' => 'Les catégories de sites et les domaines malveillants sont bloqués à la navigation et au niveau DNS, pour réduire la surface d’exposition.' ),
+			),
+		),
+		array(
+			'id'    => 'acces',
+			'label' => 'Accès distant',
+			'icon'  => '⇄',
+			'items' => array(
+				array( 'title' => 'GlobalProtect', 'text' => 'Le client VPN crée un tunnel sécurisé vers le réseau ou le cloud et applique des contrôles de conformité sur l’appareil avant l’accès.' ),
+				array( 'title' => 'Accès Zero Trust', 'text' => 'Chaque connexion est vérifiée selon l’utilisateur, l’appareil et le contexte, pour accorder un accès minimal et maîtrisé.' ),
+				array( 'title' => 'Même protection, partout', 'text' => 'Le télétravailleur bénéficie de la même prévention des menaces et des mêmes politiques qu’au bureau, quel que soit son point d’accès.' ),
+			),
+		),
+		array(
+			'id'    => 'pilotage',
+			'label' => 'PAN-OS & Panorama',
+			'icon'  => '📈',
+			'items' => array(
+				array( 'title' => 'PAN-OS', 'text' => 'Le système d’exploitation du pare-feu unifie règles, prévention des menaces, filtrage d’URL et journaux dans une interface cohérente.' ),
+				array( 'title' => 'Panorama', 'text' => 'La gestion centralisée déploie des politiques et des configurations sur l’ensemble des pare-feux, avec des rapports consolidés.' ),
+				array( 'title' => 'Intelligence intégrée', 'text' => 'Les signatures et l’apprentissage machine mettent à jour automatiquement le pare-feu avec les dernières informations sur les menaces.' ),
+			),
+		),
+	);
+	$tabs['paloalto']['cloud'] = array(
+		array(
+			'id'    => 'prisma-access',
+			'label' => 'Prisma Access (SASE)',
+			'icon'  => '☁',
+			'items' => array(
+				array( 'title' => 'Un accès sécurisé dans le cloud', 'text' => 'Prisma Access fournit une protection identique aux utilisateurs où qu’ils soient, via une infrastructure cloud de type SASE.' ),
+				array( 'title' => 'SSE & protection web', 'text' => 'Contrôle applicatif, filtrage web, protection contre les menaces et prévention de fuite de données s’appliquent au trafic internet et SaaS.' ),
+				array( 'title' => 'SD-WAN cloud', 'text' => 'Les sites et les utilisateurs se connectent au cloud sécurisé, avec un routage intelligent selon les applications.' ),
+			),
+		),
+		array(
+			'id'    => 'prisma-cloud',
+			'label' => 'Prisma Cloud',
+			'icon'  => '▤',
+			'items' => array(
+				array( 'title' => 'Sécurité du cloud et du code', 'text' => 'Prisma Cloud couvre les workloads cloud, les conteneurs, Kubernetes et le code applicatif pour sécuriser l’ensemble du cycle de développement.' ),
+				array( 'title' => 'Protection multi-cloud', 'text' => 'Visibilité et conformité sur AWS, Azure, Google Cloud et autres environnements, avec détection et réponse aux menaces.' ),
+				array( 'title' => 'Gouvernance des accès', 'text' => 'Les identités et les permissions cloud sont analysées pour prévenir les mauvaises configurations et les accès trop larges.' ),
+			),
+		),
+		array(
+			'id'    => 'cortex',
+			'label' => 'Cortex',
+			'icon'  => '⚙',
+			'items' => array(
+				array( 'title' => 'Détection et réponse (XDR)', 'text' => 'Cortex XDR corrèle les données des endpoints, du réseau et du cloud pour détecter et bloquer des attaques complexes.' ),
+				array( 'title' => 'Automatisation des opérations', 'text' => 'Les alertes sont triées et les actions de remédiation automatisées pour accélérer la réponse aux incidents.' ),
+				array( 'title' => 'Investigation accélérée', 'text' => 'La vue unifiée des évènements réduit le temps d’analyse et aide vos équipes à comprendre rapidement ce qui s’est passé.' ),
+			),
+		),
+	);
+
+	/* -------------------------------------------------------------
+	 * MICROSOFT
+	 * ------------------------------------------------------------- */
+	$tabs['microsoft']['collab'] = array(
+		array(
+			'id'    => 'collaboration',
+			'label' => 'Collaboration',
+			'icon'  => '▢',
+			'items' => array(
+				array( 'title' => 'Microsoft Teams', 'text' => 'Réunions, visioconférence, canaux, appels et partage de fichiers : toute l’équipe collabore en temps réel, au bureau comme à distance.' ),
+				array( 'title' => 'SharePoint Online', 'text' => 'Sites d’équipe, bibliothèques de documents et intranets : les informations sont centralisées, classées et accessibles selon les droits.' ),
+				array( 'title' => 'OneDrive & Exchange', 'text' => 'Stockage personnel dans le cloud et messagerie professionnelle avec calendrier : vos fichiers et vos échanges sont synchronisés et sécurisés.' ),
+			),
+		),
+		array(
+			'id'    => 'productivite',
+			'label' => 'Productivité',
+			'icon'  => '⚙',
+			'items' => array(
+				array( 'title' => 'Word, Excel, PowerPoint, Outlook', 'text' => 'Les applications Office installées sur vos postes ou accessibles sur le web vous permettent de créer et de partager vos documents partout.' ),
+				array( 'title' => 'Travail simultané', 'text' => 'Plusieurs personnes éditent le même document en même temps, avec l’historique des versions et la restauration simple en cas de besoin.' ),
+				array( 'title' => 'Power Automate & Power Apps', 'text' => 'Automatisez les tâches répétitives et créez de petites applications métier pour simplifier les processus de vos équipes.' ),
+			),
+		),
+		array(
+			'id'    => 'securite',
+			'label' => 'Sécurité',
+			'icon'  => '🛡',
+			'items' => array(
+				array( 'title' => 'Microsoft Defender', 'text' => 'Protection contre le phishing et les pièces jointes malveillantes pour la messagerie, et détection étendue sur les postes (EDR).' ),
+				array( 'title' => 'Microsoft Entra ID', 'text' => 'Gérez les identités et les accès avec l’authentification multi-facteur et les politiques d’accès conditionnel.' ),
+				array( 'title' => 'Protection des données', 'text' => 'Détection de fuite, classification et contrôle des informations sensibles pour renforcer la conformité de vos échanges.' ),
+			),
+		),
+	);
+	$tabs['microsoft']['plans'] = array(
+		array(
+			'id'    => 'business',
+			'label' => 'Plans Business',
+			'icon'  => '▤',
+			'items' => array(
+				array( 'title' => 'Business Basic', 'text' => 'Messagerie, Teams et applications Office en version web, pour les équipes qui collaborent essentiellement en ligne.' ),
+				array( 'title' => 'Business Standard', 'text' => 'Ajoute les applications Office installées (Word, Excel…) sur jusqu’à cinq appareils, pour une productivité complète.' ),
+				array( 'title' => 'Business Premium', 'text' => 'Renforce la sécurité : Intune pour la gestion des appareils, Defender pour la messagerie et les postes, et accès conditionnel.' ),
+			),
+		),
+		array(
+			'id'    => 'enterprise',
+			'label' => 'Plans Enterprise',
+			'icon'  => '🏗',
+			'items' => array(
+				array( 'title' => 'Microsoft 365 E3', 'text' => 'La base pour les organisations : Office, messagerie, Teams, identité et sécurité essentielles, avec des add-ons modulaires.' ),
+				array( 'title' => 'Microsoft 365 E5', 'text' => 'Sécurité et conformité avancées : EDR, audit enrichi, eDiscovery, téléphonie Teams et outils de gestion des risques.' ),
+				array( 'title' => 'Des combinaisons sur mesure', 'text' => 'Mixez les licences selon les profils et les risques : la plupart des équipes n’ont pas besoin du niveau maximum partout.' ),
+			),
+		),
+		array(
+			'id'    => 'administration',
+			'label' => 'Administration',
+			'icon'  => '⚙',
+			'items' => array(
+				array( 'title' => 'Centre d’administration', 'text' => 'Créez des comptes, attribuez des licences, gérez les groupes et les paramètres depuis une console unique.' ),
+				array( 'title' => 'Migration & réplication', 'text' => 'Importez vos boîtes mail, vos documents et vos identités existants pour une transition fluide vers Microsoft 365.' ),
+				array( 'title' => 'Support & supervision', 'text' => 'Nous assurons l’administration courante, la supervision, la gestion des licences et l’accompagnement de vos utilisateurs.' ),
+			),
+		),
+	);
+
+	if ( isset( $tabs[ $partner ] ) ) {
+		return $tabs[ $partner ];
+	}
+	return $tabs;
+}
+
+/**
+ * Onglets d'une page partenaire issus de l'administration (CPT ika_partner_tab).
+ *
+ * @param string $partner odoo | fortinet | paloalto | microsoft
+ * @param string $group   Section : comm/ent, gate/eco, ngfw/cloud, collab/plans.
+ * @return array
+ */
+function ika_partner_tabs_from_db( $partner, $group ) {
+	$posts = get_posts( array(
+		'post_type'      => 'ika_partner_tab',
+		'posts_per_page' => -1,
+		'post_status'    => 'publish',
+		'orderby'        => 'menu_order',
+		'order'          => 'ASC',
+		'meta_key'       => 'ika_partner_group',
+		'meta_value'     => $partner . '-' . $group,
+	) );
+
+	if ( ! $posts ) {
+		return array();
+	}
+
+	update_postmeta_cache( wp_list_pluck( $posts, 'ID' ) );
+
+	$tabs      = array();
+	$tab_index = array();
+	foreach ( $posts as $post ) {
+		$label = trim( (string) get_post_meta( $post->ID, 'ika_partner_tab_label', true ) );
+		if ( '' === $label ) {
+			continue;
+		}
+
+		if ( ! isset( $tab_index[ $label ] ) ) {
+			$tab_index[ $label ] = count( $tabs );
+			$id                  = sanitize_title( $label );
+			if ( '' === $id ) {
+				$id = 'onglet-' . $tab_index[ $label ];
+			}
+			$tabs[] = array(
+				'id'    => $id,
+				'label' => $label,
+				'icon'  => get_post_meta( $post->ID, 'ika_partner_tab_icon', true ),
+				'items' => array(),
+			);
+		}
+
+		$item = array(
+			'title' => get_the_title( $post ),
+			'text'  => $post->post_content,
+		);
+
+		$links = array();
+		foreach ( array( 1, 2 ) as $n ) {
+			$l_label = trim( (string) get_post_meta( $post->ID, 'ika_partner_link' . $n . '_label', true ) );
+			$l_url   = trim( (string) get_post_meta( $post->ID, 'ika_partner_link' . $n . '_url', true ) );
+			if ( '' !== $l_label && '' !== $l_url ) {
+				$links[] = array( $l_label, $l_url );
+			}
+		}
+		if ( $links ) {
+			$item['links'] = $links;
+		}
+
+		$tabs[ $tab_index[ $label ] ]['items'][] = $item;
+	}
+
+	return $tabs;
+}
+
+/**
+ * Onglets d'une section partenaire : contenu de l'administration si présent,
+ * sinon contenu d'origine (repli).
+ *
+ * @param string $partner odoo | fortinet | paloalto | microsoft
+ * @param string $group   Section.
+ * @return array
+ */
+function ika_partner_tabs_for( $partner, $group ) {
+	$from_db = ika_partner_tabs_from_db( $partner, $group );
+	if ( $from_db ) {
+		return $from_db;
+	}
+	$defaults = ika_partner_default_tabs( $partner );
+	return isset( $defaults[ $group ] ) ? $defaults[ $group ] : array();
+}
+
+/**
+ * Seed idempotent des fiches des onglets des pages partenaires (CPT
+ * ika_partner_tab). Crée les fiches d'origine uniquement si elles n'existent
+ * pas déjà (repérées par slug) ; ne touche jamais aux fiches modifiées.
+ */
+function ika_seed_partner_tabs() {
+	if ( ! post_type_exists( 'ika_partner_tab' ) ) {
+		ika_solution_post_types();
+	}
+
+	$partners = array( 'odoo', 'fortinet', 'paloalto', 'microsoft' );
+	$order    = 0;
+
+	foreach ( $partners as $partner ) {
+		$defaults = ika_partner_default_tabs( $partner );
+		foreach ( $defaults as $group => $tabs ) {
+			foreach ( $tabs as $tab ) {
+				foreach ( $tab['items'] as $item_index => $item ) {
+					$slug = 'ika-partner-' . $partner . '-' . $group . '-' . $tab['id'] . '-' . ( $item_index + 1 );
+
+					$existing = get_page_by_path( $slug, OBJECT, 'ika_partner_tab' );
+					if ( $existing ) {
+						$order++;
+						continue;
+					}
+
+					$post_id = wp_insert_post( array(
+						'post_type'    => 'ika_partner_tab',
+						'post_status'  => 'publish',
+						'post_title'   => $item['title'],
+						'post_content' => isset( $item['text'] ) ? $item['text'] : '',
+						'post_name'    => $slug,
+						'menu_order'   => $order,
+					) );
+
+					if ( $post_id && ! is_wp_error( $post_id ) ) {
+						update_post_meta( $post_id, 'ika_partner_group', $partner . '-' . $group );
+						update_post_meta( $post_id, 'ika_partner_tab_label', $tab['label'] );
+						update_post_meta( $post_id, 'ika_partner_tab_icon', isset( $tab['icon'] ) ? $tab['icon'] : '' );
+
+						$links = isset( $item['links'] ) ? array_values( $item['links'] ) : array();
+						for ( $n = 1; $n <= 2; $n++ ) {
+							$label = isset( $links[ $n - 1 ][0] ) ? $links[ $n - 1 ][0] : '';
+							$url   = isset( $links[ $n - 1 ][1] ) ? $links[ $n - 1 ][1] : '';
+							update_post_meta( $post_id, 'ika_partner_link' . $n . '_label', $label );
+							update_post_meta( $post_id, 'ika_partner_link' . $n . '_url', $url );
+						}
+					}
+
+					$order++;
+				}
+			}
+		}
+	}
+}
+
+/**
  * ----------------------------------------------------------------------------
  * Editable content infrastructure (CPTs + meta boxes)
  * Makes the previously hard-coded theme content editable from the WordPress
@@ -1178,6 +1746,27 @@ $ika_meta_config = array(
             'ika_pmx_link2_url'  => array( 'label' => 'Lien 2 — URL', 'type' => 'text' ),
         ),
     ),
+    'ika_partner_tab' => array(
+        'box'    => 'Fiche de l’onglet partenaire',
+        'fields' => array(
+            'ika_partner_group'      => array( 'label' => 'Partenaire & section', 'type' => 'select', 'options' => array(
+                'odoo-comm'      => 'Odoo — Community (Ventes, CRM, Stock…)',
+                'odoo-ent'       => 'Odoo — Enterprise (Modules avancés, licences)',
+                'fortinet-gate'  => 'Fortinet — FortiGate NGFW',
+                'fortinet-eco'   => 'Fortinet — Écosystème (Gestion, Analyse…)',
+                'paloalto-ngfw'  => 'Palo Alto — Strata NGFW',
+                'paloalto-cloud' => 'Palo Alto — Cloud & opérations (Prisma, Cortex)',
+                'microsoft-collab' => 'Microsoft 365 — Collaboration & sécurité',
+                'microsoft-plans'  => 'Microsoft 365 — Plans & licences',
+            ) ),
+            'ika_partner_tab_label'  => array( 'label' => 'Nom de l’onglet (ex : « Ventes & CRM » — les fiches d’un même onglet partagent le même nom)', 'type' => 'text' ),
+            'ika_partner_tab_icon'   => array( 'label' => 'Icône de l’onglet (ex : ▢, ⚙, 🛡 — une seule fiche par onglet suffit)', 'type' => 'text' ),
+            'ika_partner_link1_label'=> array( 'label' => 'Lien 1 — libellé (optionnel)', 'type' => 'text' ),
+            'ika_partner_link1_url'  => array( 'label' => 'Lien 1 — URL', 'type' => 'text' ),
+            'ika_partner_link2_label'=> array( 'label' => 'Lien 2 — libellé (optionnel)', 'type' => 'text' ),
+            'ika_partner_link2_url'  => array( 'label' => 'Lien 2 — URL', 'type' => 'text' ),
+        ),
+    ),
 );
 
 /**
@@ -1255,6 +1844,23 @@ function ika_solution_post_types() {
         'has_archive'  => false,
         'supports'     => array( 'title', 'editor' ),
         'menu_icon'    => 'dashicons-admin-generic',
+        'show_in_rest' => true,
+    ) );
+
+    // Fiches des onglets des pages partenaires (Odoo, Fortinet, Palo Alto,
+    // Microsoft) : contenu 100 % éditable depuis l'administration.
+    register_post_type( 'ika_partner_tab', array(
+        'labels'       => array(
+            'name'          => __( 'Onglets Partenaires', 'ika-solution' ),
+            'singular_name' => __( 'Fiche partenaire', 'ika-solution' ),
+            'add_new'       => __( 'Ajouter une fiche', 'ika-solution' ),
+            'edit_item'     => __( 'Modifier la fiche', 'ika-solution' ),
+        ),
+        'public'       => false,
+        'show_ui'      => true,
+        'has_archive'  => false,
+        'supports'     => array( 'title', 'editor' ),
+        'menu_icon'    => 'dashicons-networking',
         'show_in_rest' => true,
     ) );
 }
@@ -2140,11 +2746,12 @@ function ika_seed_realisations() {
  * le site d'origine (lien optionnel : vide = logo non cliquable).
  */
 function ika_seed_partenaires() {
+    // Lien de chaque logo = page partenaire dédiée (slug), comme Proxmox.
     $partenaires = array(
-        'microsoft' => array( 'name' => 'Microsoft', 'image' => 'images/microsoft.png', 'height' => 'max-h-14', 'url' => '' ),
-        'odoo'      => array( 'name' => 'Odoo', 'image' => 'images/odoo.png', 'height' => 'max-h-14', 'url' => '' ),
-        'palo-alto' => array( 'name' => 'Palo Alto', 'image' => 'images/paloalto.svg', 'height' => 'max-h-16', 'url' => '' ),
-        'fortinet'  => array( 'name' => 'Fortinet', 'image' => 'images/fortinet.png', 'height' => 'max-h-20', 'url' => '' ),
+        'microsoft' => array( 'name' => 'Microsoft', 'image' => 'images/microsoft.png', 'height' => 'max-h-14', 'url' => 'microsoft' ),
+        'odoo'      => array( 'name' => 'Odoo', 'image' => 'images/odoo.png', 'height' => 'max-h-14', 'url' => 'odoo' ),
+        'palo-alto' => array( 'name' => 'Palo Alto', 'image' => 'images/paloalto.svg', 'height' => 'max-h-16', 'url' => 'paloalto' ),
+        'fortinet'  => array( 'name' => 'Fortinet', 'image' => 'images/fortinet.png', 'height' => 'max-h-20', 'url' => 'fortinet' ),
         'proxmox'   => array( 'name' => 'Proxmox', 'image' => 'images/Proxmox.png', 'height' => 'max-h-20', 'url' => 'proxmox' ),
     );
     $order = 0;
@@ -2634,6 +3241,7 @@ function ika_solution_seed_content() {
     ika_seed_partenaires();
     ika_seed_actualites();
     ika_seed_pmx_tabs();
+    ika_seed_partner_tabs();
     update_option( 'ika_solution_seed_version', IKA_SOLUTION_SEED_VERSION, false );
     flush_rewrite_rules();
 }

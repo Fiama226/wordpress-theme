@@ -366,6 +366,31 @@
     }, { threshold: 0.14 });
 
     revealElements.forEach(element => observer.observe(element));
+
+    // Onglets accessibles (Proxmox + pages partenaires).
+    // Boutons .pmx-tab (data-pmx-target = id du panneau) → .pmx-panel.
+    document.querySelectorAll('[data-pmx-tabs]').forEach(group => {
+      const tabs = [...group.querySelectorAll('.pmx-tab')];
+      const panels = [...group.querySelectorAll('.pmx-panel')];
+      if (!tabs.length || !panels.length) return;
+      const activate = targetId => {
+        tabs.forEach(tab => {
+          const isActive = tab.getAttribute('data-pmx-target') === targetId;
+          tab.classList.toggle('bg-ikaBlue', isActive);
+          tab.classList.toggle('text-white', isActive);
+          tab.classList.toggle('border-ikaBlue', isActive);
+          tab.classList.toggle('border', !isActive);
+          tab.classList.toggle('border-slate-200', !isActive);
+          tab.classList.toggle('bg-white', !isActive);
+          tab.classList.toggle('text-ikaBlue', !isActive);
+          tab.setAttribute('aria-selected', String(isActive));
+          tab.setAttribute('tabindex', isActive ? '0' : '-1');
+        });
+        panels.forEach(panel => { panel.hidden = panel.id !== targetId; });
+      };
+      tabs.forEach(tab => tab.addEventListener('click', () => activate(tab.getAttribute('data-pmx-target'))));
+      activate(tabs[0].getAttribute('data-pmx-target'));
+    });
   </script>
 </body>
 </html>
