@@ -145,7 +145,7 @@ include 'header.php';
   <!-- ===================== HERO ===================== -->
   <section class="relative overflow-hidden bg-ikaBlueDark text-white">
     <div class="absolute inset-0">
-      <img class="h-full w-full object-cover opacity-25" src="<?php echo ika_h('assets/images/equipe.jpg'); ?>" alt="Productivité et collaboration avec Microsoft 365">
+      <img class="h-full w-full  opacity-25" src="<?php echo ika_h('assets/images/ms365_backgroundImage.jpg'); ?>" alt="Productivité et collaboration avec Microsoft 365">
       <div class="absolute inset-0 bg-ikaBlueDark/80" aria-hidden="true"></div>
     </div>
     <div class="relative mx-auto grid min-h-[560px] max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.05fr_.95fr] lg:items-center lg:px-8">
@@ -168,7 +168,7 @@ include 'header.php';
       <div class="hidden lg:block">
         <div class="relative">
           <div class="absolute -left-5 -top-5 h-28 w-28 rounded-3xl bg-ikaRed"></div>
-          <img class="relative h-[430px] w-full rounded-[2rem] object-cover shadow-premium" src="<?php echo ika_h('assets/images/equipe.jpg'); ?>" alt="Vos équipes au travail avec Microsoft 365">
+          <img class="relative h-[430px] w-full rounded-[2rem]  shadow-premium" src="<?php echo ika_h('assets/images/ms365_backgroundImage.jpg'); ?>" alt="Vos équipes au travail avec Microsoft 365">
           <div class="absolute -bottom-6 right-6 rounded-2xl bg-white p-5 text-ikaInk shadow-premium">
             <p class="text-sm font-black uppercase tracking-[0.16em] text-ikaRed">Microsoft 365</p>
             <p class="mt-2 text-2xl font-black text-ikaBlueDark">Collaboration &amp; sécurité</p>
@@ -187,10 +187,7 @@ include 'header.php';
           <h2 class="mt-4 text-3xl font-black leading-tight text-ikaBlueDark sm:text-4xl">Une seule suite pour collaborer, produire et sécuriser.</h2>
           <p class="mt-5 text-base leading-8 text-slate-600">Microsoft 365 réunit messagerie, réunions, stockage, partage et applications Office dans une suite cohérente. Vos équipes travaillent ensemble, où qu’elles soient, avec des outils qui s’intègrent les uns aux autres.</p>
           <p class="mt-4 text-base leading-8 text-slate-600">Chez IKA SOLUTION, nous vous conseillons la bonne formule, migrons vos données et administrons l’environnement pour que vos collaborateurs adoptent la suite sereinement.</p>
-          <div class="mt-6 flex flex-wrap items-center gap-6">
-            <img class="h-10 w-auto opacity-70 transition hover:opacity-100" src="<?php echo ika_h('assets/images/microsoft.png'); ?>" alt="Microsoft" loading="lazy">
-            <img class="h-8 w-auto opacity-60 transition hover:opacity-100" src="<?php echo ika_h('assets/images/partenaires/Microsoft_logo.svg'); ?>" alt="Logo Microsoft" loading="lazy">
-          </div>
+
         </div>
         <div class="reveal overflow-hidden rounded-[2rem] bg-ikaSoft shadow-premium">
           <div class="flex items-center gap-2 border-b border-slate-100 bg-white px-5 py-3">
@@ -199,7 +196,7 @@ include 'header.php';
             <span class="h-3 w-3 rounded-full bg-green-500"></span>
             <span class="ml-3 text-xs font-bold text-slate-500">Microsoft 365 — applications reliées</span>
           </div>
-          <img class="block w-full" src="<?php echo ika_h('assets/images/microsoft.png'); ?>" alt="Microsoft 365 : messagerie, collaboration et sécurité" loading="lazy">
+          <img class="block w-full" src="<?php echo ika_h('assets/images/Microsoft_365_app.jpg'); ?>" alt="Microsoft 365 : messagerie, collaboration et sécurité" loading="lazy">
         </div>
       </div>
 
@@ -261,7 +258,7 @@ include 'header.php';
           <span class="h-3 w-3 rounded-full bg-green-500"></span>
           <span class="ml-3 text-xs font-bold text-slate-500">Microsoft 365 — vue d’ensemble des plans</span>
         </div>
-        <img class="block w-full" src="<?php echo ika_h('assets/images/microsoft.png'); ?>" alt="Plans Microsoft 365" loading="lazy">
+        <img class="block w-full h-full" src="<?php echo ika_h('assets/images/Microsoft-365-Business-Compare.jpg'); ?>" alt="Plans Microsoft 365" loading="lazy">
       </div>
 
       <?php ika_partner_render_tabs( 'ms-plans', $ms_plans_tabs ); ?>

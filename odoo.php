@@ -240,7 +240,7 @@ include 'header.php';
   <!-- ===================== HERO ===================== -->
   <section class="relative overflow-hidden bg-ikaBlueDark text-white">
     <div class="absolute inset-0">
-      <img class="h-full w-full object-cover opacity-25" src="<?php echo ika_h('assets/images/cloud2.jpg'); ?>" alt="Gestion d’entreprise avec Odoo">
+      <img class="h-full w-full  opacity-25" src="<?php echo ika_h('assets/images/OdooBackgound.png'); ?>" alt="Gestion d’entreprise avec Odoo">
       <div class="absolute inset-0 bg-ikaBlueDark/80" aria-hidden="true"></div>
     </div>
     <div class="relative mx-auto grid min-h-[560px] max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.05fr_.95fr] lg:items-center lg:px-8">
@@ -263,7 +263,7 @@ include 'header.php';
       <div class="hidden lg:block">
         <div class="relative">
           <div class="absolute -left-5 -top-5 h-28 w-28 rounded-3xl bg-ikaRed"></div>
-          <img class="relative h-[430px] w-full rounded-[2rem] object-cover shadow-premium" src="<?php echo ika_h('assets/images/cloud2.jpg'); ?>" alt="Suite ERP Odoo pour votre entreprise">
+          <img class="relative h-[430px] w-full rounded-[2rem] object-contain shadow-premium" src="<?php echo ika_h('assets/images/Odoo_apps_page.png'); ?>" alt="Suite ERP Odoo pour votre entreprise">
           <div class="absolute -bottom-6 right-6 rounded-2xl bg-white p-5 text-ikaInk shadow-premium">
             <p class="text-sm font-black uppercase tracking-[0.16em] text-ikaRed">Community</p>
             <p class="mt-2 text-2xl font-black text-ikaBlueDark">Logiciel gratuit</p>
@@ -282,10 +282,6 @@ include 'header.php';
           <h2 class="mt-4 text-3xl font-black leading-tight text-ikaBlueDark sm:text-4xl">Une plateforme unique, des modules qui s’emboîtent.</h2>
           <p class="mt-5 text-base leading-8 text-slate-600">Odoo réunit CRM, ventes, comptabilité, stock, achats, production, projets et ressources humaines dans un même socle. Les modules partagent une base de données unique : une vente validée met à jour le stock, la facture et le reporting en temps réel.</p>
           <p class="mt-4 text-base leading-8 text-slate-600">Chez IKA SOLUTION, nous conseillons Odoo pour remplacer des outils dispersés par une solution cohérente, évolutive et maîtrisée — avec des licences Community gratuites ou des abonnements Enterprise selon vos besoins.</p>
-          <div class="mt-6 flex flex-wrap items-center gap-6">
-            <img class="h-10 w-auto opacity-70 transition hover:opacity-100" src="<?php echo ika_h('assets/images/odoo.png'); ?>" alt="Odoo" loading="lazy">
-            <img class="h-8 w-auto opacity-60 transition hover:opacity-100" src="<?php echo ika_h('assets/images/debian.png'); ?>" alt="Logiciel libre et open source" loading="lazy">
-          </div>
         </div>
         <div class="reveal overflow-hidden rounded-[2rem] bg-ikaSoft shadow-premium">
           <div class="flex items-center gap-2 border-b border-slate-100 bg-white px-5 py-3">
@@ -294,7 +290,7 @@ include 'header.php';
             <span class="h-3 w-3 rounded-full bg-green-500"></span>
             <span class="ml-3 text-xs font-bold text-slate-500">Odoo — applications reliées sur un socle commun</span>
           </div>
-          <img class="block w-full" src="<?php echo ika_h('assets/images/odoo.png'); ?>" alt="Odoo : modules métiers unifiés" loading="lazy">
+          <img class="block w-full" src="<?php echo ika_h('assets/images/shémaodoo.webp'); ?>" alt="Odoo : modules métiers unifiés" loading="lazy">
         </div>
       </div>
 
@@ -356,7 +352,7 @@ include 'header.php';
           <span class="h-3 w-3 rounded-full bg-green-500"></span>
           <span class="ml-3 text-xs font-bold text-slate-500">Odoo Enterprise — vue d’ensemble</span>
         </div>
-        <img class="block w-full" src="<?php echo ika_h('assets/images/odoo.png'); ?>" alt="Odoo Enterprise" loading="lazy">
+        <img class="block w-full" src="<?php echo ika_h('assets/images/Odoo_entreprise.png'); ?>" alt="Odoo Enterprise" loading="lazy">
       </div>
 
       <?php ika_partner_render_tabs( 'odoo-ent', $odoo_ent_tabs ); ?>

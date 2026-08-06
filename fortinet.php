@@ -226,10 +226,6 @@ include 'header.php';
           <h2 class="mt-4 text-3xl font-black leading-tight text-ikaBlueDark sm:text-4xl">Le pare-feu nouvelle génération qui protège tout le réseau.</h2>
           <p class="mt-5 text-base leading-8 text-slate-600">FortiGate intègre pare-feu, IPS, antivirus, contrôle applicatif, filtrage web, VPN et SD-WAN dans un seul équipement. Les flux chiffrés sont inspectés et les politiques appliquées selon l’application, l’utilisateur et le niveau de confiance.</p>
           <p class="mt-4 text-base leading-8 text-slate-600">Chez IKA SOLUTION, nous concevons votre architecture FortiGate : segmentation, accès distants, interconnexion de sites et supervision continue.</p>
-          <div class="mt-6 flex flex-wrap items-center gap-6">
-            <img class="h-10 w-auto opacity-70 transition hover:opacity-100" src="<?php echo ika_h('assets/images/fortinet.png'); ?>" alt="Fortinet" loading="lazy">
-            <img class="h-8 w-auto opacity-60 transition hover:opacity-100" src="<?php echo ika_h('assets/images/partenaires/Fortinet_logo.svg'); ?>" alt="Logo Fortinet" loading="lazy">
-          </div>
         </div>
         <div class="reveal overflow-hidden rounded-[2rem] bg-ikaSoft shadow-premium">
           <div class="flex items-center gap-2 border-b border-slate-100 bg-white px-5 py-3">
@@ -238,7 +234,7 @@ include 'header.php';
             <span class="h-3 w-3 rounded-full bg-green-500"></span>
             <span class="ml-3 text-xs font-bold text-slate-500">FortiGate — sécurité unifiée du réseau</span>
           </div>
-          <img class="block w-full" src="<?php echo ika_h('assets/images/fortinet.png'); ?>" alt="FortiGate : pare-feu nouvelle génération" loading="lazy">
+          <img class="block w-full" src="<?php echo ika_h('assets/images/fotigate.jpg'); ?>" alt="FortiGate : pare-feu nouvelle génération" loading="lazy">
         </div>
       </div>
 
@@ -300,7 +296,7 @@ include 'header.php';
           <span class="h-3 w-3 rounded-full bg-green-500"></span>
           <span class="ml-3 text-xs font-bold text-slate-500">Fortinet Security Fabric — vue d’ensemble</span>
         </div>
-        <img class="block w-full" src="<?php echo ika_h('assets/images/fortinet.png'); ?>" alt="Écosystème Fortinet" loading="lazy">
+        <img class="block w-full" src="<?php echo ika_h('assets/images/dashboar_fortinet.png'); ?>" alt="Écosystème Fortinet" loading="lazy">
       </div>
 
       <?php ika_partner_render_tabs( 'forti-eco', $forti_eco_tabs ); ?>

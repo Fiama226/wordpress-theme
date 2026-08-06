@@ -206,10 +206,7 @@ include 'header.php';
           <h2 class="mt-4 text-3xl font-black leading-tight text-ikaBlueDark sm:text-4xl">Un pare-feu qui comprend le trafic applicatif.</h2>
           <p class="mt-5 text-base leading-8 text-slate-600">Les pare-feux Palo Alto identifient le trafic par application, utilisateur et contenu grâce à App-ID, User-ID et Content-ID. Les menaces connues et inconnues sont bloquées, y compris dans le trafic chiffré.</p>
           <p class="mt-4 text-base leading-8 text-slate-600">Chez IKA SOLUTION, nous déployons ces équipements avec une segmentation cohérente et une supervision continue pour protéger vos accès et vos données.</p>
-          <div class="mt-6 flex flex-wrap items-center gap-6">
-            <img class="h-12 w-auto opacity-80 transition hover:opacity-100" src="<?php echo ika_h('assets/images/paloalto.svg'); ?>" alt="Palo Alto Networks" loading="lazy">
-            <img class="h-8 w-auto opacity-60 transition hover:opacity-100" src="<?php echo ika_h('assets/images/partenaires/PaloAltoNetworks_2020_Logo.svg'); ?>" alt="Logo Palo Alto Networks" loading="lazy">
-          </div>
+
         </div>
         <div class="reveal overflow-hidden rounded-[2rem] bg-ikaSoft shadow-premium">
           <div class="flex items-center gap-2 border-b border-slate-100 bg-white px-5 py-3">
@@ -218,7 +215,7 @@ include 'header.php';
             <span class="h-3 w-3 rounded-full bg-green-500"></span>
             <span class="ml-3 text-xs font-bold text-slate-500">Palo Alto Networks — sécurité pilotée par les applications</span>
           </div>
-          <img class="block w-full" src="<?php echo ika_h('assets/images/paloalto.svg'); ?>" alt="Strata : pare-feu nouvelle génération" loading="lazy">
+          <img class="block w-full" src="<?php echo ika_h('assets/images/Paronama.webp'); ?>" alt="Strata : pare-feu nouvelle génération" loading="lazy">
         </div>
       </div>
 
@@ -280,7 +277,7 @@ include 'header.php';
           <span class="h-3 w-3 rounded-full bg-green-500"></span>
           <span class="ml-3 text-xs font-bold text-slate-500">Plateforme Palo Alto Networks — vue d’ensemble</span>
         </div>
-        <img class="block w-full" src="<?php echo ika_h('assets/images/paloalto.svg'); ?>" alt="Plateforme Palo Alto Networks" loading="lazy">
+        <img class="block w-full" src="<?php echo ika_h('assets/images/paloaltonetworkscloud.jpg'); ?>" alt="Plateforme Palo Alto Networks" loading="lazy">
       </div>
 
       <?php ika_partner_render_tabs( 'palo-cloud', $palo_cloud_tabs ); ?>
