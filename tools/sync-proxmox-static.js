@@ -106,7 +106,10 @@ const staticForm = `  <!-- ===================== CONTACT ===================== -
     </div>
   </section>`;
 
-const contactRegex = /  <\?php\n  \/\/ Bloc contact commun au thème[\s\S]*?\n  \?>/;
+// Le template du thème utilise la section « contact-partner » (fond bleu
+// foncé identique au statique, formulaire traité par le thème) : on la
+// remplace ici par le formulaire contact-submit.php du site statique.
+const contactRegex = /  <!-- =+ CONTACT =+ -->\n  <\?php\n  \/\/ Section contact identique à la page statique[\s\S]*?\n  \?>/;
 if (!contactRegex.test(s)) {
   console.error('❌ Bloc contact du thème introuvable — transformation annulée.');
   process.exit(1);

@@ -27,6 +27,12 @@ que la page Proxmox : hero, sections, onglets, étapes projet, formulaire de con
   chargement ou le cache, et la première carte est activée à l'ouverture.
   Vérifié par `bash tools/audit-theme.sh` (section 20).
 - **Textes de sections** : dans *Apparence > Personnaliser > Contenu IKA
-  Solution > Page Odoo / Page Fortinet / Page Palo Alto / Page Microsoft*.
-- Le contenu d'origine est fourni par défaut (seeder + repli) et reste fidèle
-  au site statique tant que rien n'est modifié.
+  Solution > Page Odoo / Page Fortinet / Page Palo Alto / Page Microsoft /
+  Page Proxmox* (37 champs par page : hero, sections, bande, onglets, étapes
+  projet, contact).
+- Le contenu d'origine est fourni par défaut (seeder + repli) et est
+  **strictement identique** au site statique tant que rien n'est modifié :
+  vérifié page par page (textes, images, onglets) par
+  `python3 tools/compare-partner-static.py`, qui compare les rendus des 5
+  pages et renvoie un code 0 en cas d'identité (voir
+  `VERIFICATION-PAGES-PARTENAIRES-2026-08-06.md`).

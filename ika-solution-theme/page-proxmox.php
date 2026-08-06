@@ -271,14 +271,19 @@ get_header();
     </div>
   </section>
 
+  <!-- ===================== CONTACT ===================== -->
   <?php
-  // Bloc contact commun au thème, avec les sujets adaptés à cette page
-  // et sans la carte Google Maps (comme sur la page d'origine).
-  $GLOBALS['ika_contact_hide_map'] = true;
+  // Section contact identique à la page statique (fond bleu foncé, textes
+  // propres à Proxmox, mêmes champs) ; traitement par le thème
+  // (nonce + anti-spam + wp_mail) au lieu de l'ancien contact-submit.php.
+  $GLOBALS['ika_partner_contact'] = array(
+	'title' => ika_opt( 'ika_pmx_contact_title', 'Parlez-nous de votre projet Proxmox.' ),
+	'text'  => ika_opt( 'ika_pmx_contact_text', 'Virtualisation des serveurs, sauvegardes dédupliquées ou protection de la messagerie : décrivez votre besoin, un expert IKA SOLUTION vous répond avec une proposition claire et chiffrée.' ),
+  );
   add_filter( 'ika_contact_subjects', 'ika_pmx_contact_subjects' );
-  get_template_part( 'template-parts/contact' );
+  get_template_part( 'template-parts/contact-partner' );
   remove_filter( 'ika_contact_subjects', 'ika_pmx_contact_subjects' );
-  unset( $GLOBALS['ika_contact_hide_map'] );
+  unset( $GLOBALS['ika_partner_contact'] );
   ?>
 
 </main>
