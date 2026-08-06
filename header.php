@@ -246,6 +246,11 @@
     }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    /* Onglets (pages partenaires & Proxmox) : l'attribut `hidden` doit
+       primer sur `display:grid` (le .grid de Tailwind l'écraserait sinon,
+       ce qui afficherait tous les panneaux à la fois et rendrait le filtre
+       par onglets inopérant). Spécificité supérieure au .grid. */
+    .pmx-panel[hidden] { display: none !important; }
     main > section {
       position: relative;
       transition: background-color .45s ease, box-shadow .45s ease, filter .45s ease;

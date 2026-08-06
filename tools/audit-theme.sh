@@ -303,6 +303,13 @@ grep -qs "closest('.pmx-tab')\|closest(\".pmx-tab\")" "$THEME/assets/js/theme.js
 grep -qs "ikaPmxInit" "$THEME/assets/js/theme.js" \
   && ok "activation du premier onglet à l'ouverture" \
   || warn "initialisation du premier onglet non repérée"
+# Le `hidden` des panneaux doit primer sur display:grid (sinon tous les
+# panneaux sont visibles et le filtre par onglets est inopérant).
+if grep -qs "\.pmx-panel\[hidden\]" "$THEME/style.css"; then
+  ok "CSS : .pmx-panel[hidden] prime sur .grid (panneaux masqués correctement)"
+else
+  ko "CSS : .pmx-panel[hidden] absent de style.css (filtre par onglets cassé)"
+fi
 # Parité du contenu des onglets avec le site statique (représentatif).
 pmx_ko=0
 declare -A PMX_CHECK=(

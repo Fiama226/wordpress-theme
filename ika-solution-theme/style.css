@@ -474,7 +474,10 @@ footer li > a {
   cursor: not-allowed;
 }
 
-/* ─── Onglets de la page Proxmox ─── */
+/* ─── Onglets (pages partenaires & Proxmox) ─── */
+/* L'attribut `hidden` des panneaux doit primer sur `display:grid` (le
+   .grid de Tailwind l'écraserait sinon : tous les panneaux seraient visibles
+   à la fois et le filtre par onglets serait inopérant). */
 .pmx-panel[hidden] {
-  display: none;
+  display: none !important;
 }
