@@ -22,6 +22,10 @@ que la page Proxmox : hero, sections, onglets, étapes projet, formulaire de con
 - **Onglets** : chaque carte des onglets est une fiche du menu *Onglets
   Partenaires* (champ « Partenaire & section » : Odoo, Fortinet, Palo Alto,
   Microsoft). Ajoutez/modifiez/supprimez des fiches sans toucher au code.
+- **Filtrage par onglets** (boutons « Ventes & CRM », « Comptabilité », …) :
+  robuste par délégation d'événement — fonctionne quel que soit l'ordre de
+  chargement ou le cache, et la première carte est activée à l'ouverture.
+  Vérifié par `bash tools/audit-theme.sh` (section 20).
 - **Textes de sections** : dans *Apparence > Personnaliser > Contenu IKA
   Solution > Page Odoo / Page Fortinet / Page Palo Alto / Page Microsoft*.
 - Le contenu d'origine est fourni par défaut (seeder + repli) et reste fidèle
