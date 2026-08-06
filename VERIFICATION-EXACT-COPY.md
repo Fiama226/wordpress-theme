@@ -74,32 +74,52 @@ d'éventuels petits écarts visuels par rapport au statique.
 
 ### Problème constaté
 Sur les pages partenaires, la bascule entre onglets (« Ventes & CRM »,
-« Comptabilité », etc.) pouvait ne pas fonctionner.
+« Comptabilité », …) ne produisait **aucun effet visible** — sur le site
+statique **et** sur le thème.
 
-### Cause
-Le mécanisme d'activation était lié une seule fois aux boutons présents au
-moment de l'exécution du script (`theme.js`) : fragile selon l'ordre de
-chargement, le cache du fichier JS, ou un échec d'un script précédent.
+### Cause racine (bug de spécificité CSS)
+Chaque panneau est rendu avec `class="pmx-panel … grid …"` **et** l'attribut
+`hidden` :
 
-### Correctif (`assets/js/theme.js`)
-Réécriture du module des onglets avec **délégation d'événement** sur `document` :
-- un clic sur un onglet (y compris sur une icône/libellé imbriqué) est capturé ;
+```html
+<div class="pmx-panel mt-8 grid gap-5 …" hidden>
+```
+
+Tailwind génère `.grid { display: grid }` (spécificité **0,1,0**) et la règle
+preflight `[hidden]:where(:not([hidden=until-found])) { display: none }`
+(spécificité **0,1,0** — le `:where()` ne compte pas). **`.grid` arrive APRÈS**
+dans la feuille de style → à spécificité égale, `.grid` gagne et le panneau
+reste **toujours affiché** malgré `hidden`. Tous les panneaux s'affichaient donc
+en même temps, et le clic sur un onglet n'avait aucun effet visible.
+
+Vérifié empiriquement (jsdom, cascade CSS réelle) :
+- statique sans correctif → `display=grid` même avec `hidden` ;
+- avec correctif → panneau masqué correctement.
+
+### Correctif — règle CSS de spécificité supérieure
+```css
+.pmx-panel[hidden] { display: none !important; }
+```
+- **Site statique** : ajoutée dans `header.php` (le correctif y manquait).
+- **Thème** : la règle existante de `style.css` est renforcée avec `!important`.
+- **Audit** (section 20) : vérifie désormais la présence de cette règle.
+
+### Renforcement JS (déjà en place)
+`assets/js/theme.js` utilise la **délégation d'événement** sur `document` :
+- un clic sur un onglet (y compris icône/libellé imbriqué) est capturé ;
 - fonctionne quel que soit l'ordre de chargement / le cache du script ;
-- fonctionne même si les onglets sont (re)rendus après le script ;
-- le premier onglet (ou celui déjà marqué `aria-selected="true"`) est activé à
-  l'ouverture (init idempotente, immédiate + `DOMContentLoaded`).
+- le premier onglet est activé à l'ouverture (init idempotente).
 
-### Tests effectués (jsdom)
-- Groupe Odoo (2 onglets) et groupe Enterprise (2 onglets) sur la même page :
-  activation initiale correcte, bascule correcte de chaque onglet, clic sur un
-  élément imbriqué (`<span>`) correct. ✅
+### Tests effectués (jsdom, CSS + JS réels du thème)
+- Initial : seul « Ventes & CRM » est visible (`display:grid`), les autres
+  `display:none`. ✅
+- Après clic sur « Comptabilité » : seul « Comptabilité » reste visible. ✅
 
 ### Version & livrable
-- Version passée à **1.7.1** (`style.css`, `readme.txt`, `package.json`).
+- Version **1.7.1** (`style.css`, `readme.txt`, `package.json`).
 - Archive régénérée : **`ika-solution-theme.zip`** (152 fichiers).
-- Nouvelle section **20** dans `tools/audit-theme.sh` : « Onglets partenaires
-  (parité + filtrage) » — vérifie le mécanisme de délégation et la présence du
-  contenu statique dans les défauts du thème.
+- Section **20** dans `tools/audit-theme.sh` : « Onglets partenaires
+  (parité + filtrage) » — mécanisme, contenu statique et règle CSS.
 
 ---
 
