@@ -67,6 +67,15 @@ Contrôler la qualité du thème :        bash tools/audit-theme.sh
 
 == Changelog ==
 
+= 1.8.0 =
+* Pages partenaires (Odoo, Fortinet, Palo Alto, Microsoft, Proxmox)
+  désormais strictement identiques au site statique à l'installation :
+  templates réécrits depuis le HTML statique exact, 148 valeurs du
+  Customizer alignées sur le contenu d'origine, 11 images manquantes
+  ajoutées, et nouvelle section contact dédiée (fond bleu foncé, textes et
+  sujets propres à chaque partenaire, template-parts/contact-partner.php).
+  Vérification automatique : python3 tools/compare-partner-static.py.
+
 = 1.7.1 =
 * Onglets des pages partenaires (Odoo, Fortinet, Palo Alto, Microsoft) :
   refonte du mécanisme d'activation par délégation d'événement — le
