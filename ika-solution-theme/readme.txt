@@ -4,7 +4,7 @@ Contributors: ikasolution
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.7.0
+Stable tag: 1.7.1
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Tags: custom-menu, featured-images, translation-ready, full-width-template, custom-logo, threaded-comments
@@ -66,6 +66,13 @@ Régénérer l'archive de distribution : bash tools/build-theme-zip.sh
 Contrôler la qualité du thème :        bash tools/audit-theme.sh
 
 == Changelog ==
+
+= 1.7.1 =
+* Onglets des pages partenaires (Odoo, Fortinet, Palo Alto, Microsoft) :
+  refonte du mécanisme d'activation par délégation d'événement — le
+  filtrage par onglets fonctionne désormais de façon fiable quel que soit
+  l'ordre de chargement, le cache du script ou le rendu tardif du DOM.
+  Première carte activée à l'ouverture de la page.
 
 = 1.7.0 =
 * Page Proxmox entièrement éditable : nouveau type de contenu « Onglets

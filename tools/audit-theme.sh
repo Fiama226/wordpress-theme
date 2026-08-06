@@ -293,6 +293,38 @@ else
   ok "aucune extension embarquée (téléchargement depuis wordpress.org)"
 fi
 
+# --- 20. Onglets des pages partenaires (contenu + mécanisme) ---------------
+section "20. Onglets partenaires (parité + filtrage)"
+# Mécanisme de filtrage par délégation d'événement dans theme.js.
+grep -qs "closest('.pmx-tab')\|closest(\".pmx-tab\")" "$THEME/assets/js/theme.js" \
+  && grep -qs "data-pmx-tabs" "$THEME/assets/js/theme.js" \
+  && ok "filtrage par onglets : délégation d'événement (theme.js)" \
+  || ko "mécanisme de filtrage par onglets absent de theme.js"
+grep -qs "ikaPmxInit" "$THEME/assets/js/theme.js" \
+  && ok "activation du premier onglet à l'ouverture" \
+  || warn "initialisation du premier onglet non repérée"
+# Le `hidden` des panneaux doit primer sur display:grid (sinon tous les
+# panneaux sont visibles et le filtre par onglets est inopérant).
+if grep -qs "\.pmx-panel\[hidden\]" "$THEME/style.css"; then
+  ok "CSS : .pmx-panel[hidden] prime sur .grid (panneaux masqués correctement)"
+else
+  ko "CSS : .pmx-panel[hidden] absent de style.css (filtre par onglets cassé)"
+fi
+# Parité du contenu des onglets avec le site statique (représentatif).
+pmx_ko=0
+declare -A PMX_CHECK=(
+  ["odoo"]="CRM : piloter votre pipeline|Écritures et facturation|Gestion de stock multi-entrepôts"
+  ["fortinet"]="Administration centralisée|FortiClient|Détection des menaces"
+  ["paloalto"]="Prisma Access (SASE)|Un accès sécurisé dans le cloud|Contrôle applicatif"
+  ["microsoft"]="Plans Business|Business Standard|Messagerie, Teams et applications Office"
+)
+for partner in odoo fortinet paloalto microsoft; do
+  for needle in $(echo "${PMX_CHECK[$partner]}" | tr '|' '\n'); do
+    grep -qsF "$needle" "$THEME/functions.php" || { ko "onglet partenaire '$partner' : texte absent des défauts : $needle"; pmx_ko=$((pmx_ko+1)); }
+  done
+done
+[ "$pmx_ko" -eq 0 ] && ok "contenu des onglets partenaires conforme au site statique"
+
 # --- Synthèse -------------------------------------------------------------
 printf '\n%s────────────────────────────────────────────%s\n' "$BLD" "$RST"
 printf '  Bloquants : %s%d%s   Avertissements : %s%d%s\n' \

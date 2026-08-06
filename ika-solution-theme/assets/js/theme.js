@@ -502,44 +502,90 @@
 })();
 
 /**
- * Onglets accessibles de la page Proxmox.
- * Boutons .pmx-tab (attribut data-pmx-target = id du panneau) → .pmx-panel.
+ * Onglets accessibles de la page Proxmox et des pages partenaires (Odoo,
+ * Fortinet, Palo Alto, Microsoft). Boutons .pmx-tab (attribut
+ * data-pmx-target = id du panneau) → .pmx-panel.
+ *
+ * Implémentation robuste par DÉLÉGATION d'événement sur `document` :
+ * - fonctionne quel que soit l'ordre de chargement / le cache du script ;
+ * - fonctionne aussi si les onglets sont (re)rendus après ce script ;
+ * - un clic sur un élément imbriqué (icône, libellé) dans le bouton est pris
+ *   en compte ;
+ * - l'initialisation est différée jusqu'à ce que le DOM soit prêt et réactive
+ *   le premier onglet (ou celui déjà marqué aria-selected="true").
  */
 (function () {
   'use strict';
 
-  Array.prototype.forEach.call(document.querySelectorAll('[data-pmx-tabs]'), function (group) {
-    var tabs = group.querySelectorAll('.pmx-tab');
-    var panels = group.querySelectorAll('.pmx-panel');
+  function ikaPmxItems(group) {
+    return {
+      tabs: Array.prototype.slice.call(group.querySelectorAll('.pmx-tab')),
+      panels: Array.prototype.slice.call(group.querySelectorAll('.pmx-panel')),
+    };
+  }
 
-    if (!tabs.length || !panels.length) {
+  function ikaPmxActivate(group, targetId) {
+    var items = ikaPmxItems(group);
+    if (!targetId || !items.tabs.length || !items.panels.length) {
       return;
     }
-
-    function activate(targetId) {
-      Array.prototype.forEach.call(tabs, function (tab) {
-        var isActive = tab.getAttribute('data-pmx-target') === targetId;
-        tab.classList.toggle('bg-ikaBlue', isActive);
-        tab.classList.toggle('text-white', isActive);
-        tab.classList.toggle('border-ikaBlue', isActive);
-        tab.classList.toggle('border', !isActive);
-        tab.classList.toggle('border-slate-200', !isActive);
-        tab.classList.toggle('bg-white', !isActive);
-        tab.classList.toggle('text-ikaBlue', !isActive);
-        tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
-        tab.setAttribute('tabindex', isActive ? '0' : '-1');
-      });
-      Array.prototype.forEach.call(panels, function (panel) {
-        panel.hidden = panel.id !== targetId;
-      });
-    }
-
-    Array.prototype.forEach.call(tabs, function (tab) {
-      tab.addEventListener('click', function () {
-        activate(tab.getAttribute('data-pmx-target'));
-      });
+    Array.prototype.forEach.call(items.tabs, function (tab) {
+      var isActive = tab.getAttribute('data-pmx-target') === targetId;
+      tab.classList.toggle('bg-ikaBlue', isActive);
+      tab.classList.toggle('text-white', isActive);
+      tab.classList.toggle('border-ikaBlue', isActive);
+      tab.classList.toggle('border', !isActive);
+      tab.classList.toggle('border-slate-200', !isActive);
+      tab.classList.toggle('bg-white', !isActive);
+      tab.classList.toggle('text-ikaBlue', !isActive);
+      tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      tab.setAttribute('tabindex', isActive ? '0' : '-1');
     });
+    Array.prototype.forEach.call(items.panels, function (panel) {
+      panel.hidden = panel.id !== targetId;
+    });
+  }
 
-    activate(tabs[0].getAttribute('data-pmx-target'));
+  function ikaPmxInit() {
+    Array.prototype.forEach.call(document.querySelectorAll('[data-pmx-tabs]'), function (group) {
+      var items = ikaPmxItems(group);
+      if (!items.tabs.length) {
+        return;
+      }
+      var active = items.tabs[0];
+      Array.prototype.some.call(items.tabs, function (tab) {
+        if (tab.getAttribute('aria-selected') === 'true') {
+          active = tab;
+          return true;
+        }
+        return false;
+      });
+      ikaPmxActivate(group, active.getAttribute('data-pmx-target'));
+    });
+  }
+
+  // Délégation : aucun attachement direct, insensible à l'ordre de rendu.
+  document.addEventListener('click', function (event) {
+    var target = event.target;
+    if (!target || typeof target.closest !== 'function') {
+      return;
+    }
+    var tab = target.closest('.pmx-tab');
+    if (!tab) {
+      return;
+    }
+    var group = tab.closest('[data-pmx-tabs]');
+    var targetId = tab.getAttribute('data-pmx-target');
+    if (group && targetId) {
+      ikaPmxActivate(group, targetId);
+    }
   });
+
+  // Initialisation idempotente : exécutée immédiatement si le DOM est déjà
+  // prêt, et de nouveau à DOMContentLoaded pour couvrir tous les cas
+  // (re-réactiver le même onglet est sans effet).
+  ikaPmxInit();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', ikaPmxInit);
+  }
 })();
