@@ -111,7 +111,6 @@ $ika_wa_link   = 'https://wa.me/' . $ika_wa_number . '?text=' . rawurlencode( (s
   <a
     href="<?php echo esc_url( $ika_wa_link ); ?>"
     class="whatsapp-widget fixed bottom-4 right-3 z-50 flex max-w-[calc(100vw-1.5rem)] items-center gap-2 rounded-full border border-white/70 bg-white px-3 py-2 text-ikaBlueDark shadow-premium transition hover:-translate-y-1 hover:shadow-[0_22px_60px_rgba(37,211,102,.28)] sm:bottom-5 sm:right-6 sm:gap-3 sm:px-4 sm:py-3"
-    target="_blank"
     rel="noopener"
     aria-label="<?php esc_attr_e( 'Contacter IKA SOLUTION sur WhatsApp', 'ika-solution' ); ?>"
   >
