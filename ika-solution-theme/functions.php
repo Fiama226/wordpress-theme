@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Version des données de démonstration importées depuis le site statique.
 if ( ! defined( 'IKA_SOLUTION_SEED_VERSION' ) ) {
-    define( 'IKA_SOLUTION_SEED_VERSION', '2026-08-05-partners-v9' );
+    define( 'IKA_SOLUTION_SEED_VERSION', '2026-08-07-v1' );
 }
 
 /**
@@ -3222,6 +3222,10 @@ function ika_solution_migrate_to_v7() {
  * Seed all editable content (idempotent).
  */
 function ika_solution_seed_content() {
+    // Configuration du titre et du slogan (forcée à chaque activation/mise à jour du seeder).
+    update_option( 'blogname', 'IKA Solution' );
+    update_option( 'blogdescription', 'La solution qui vous convient.' );
+
     // Assure que les CPT existent avant l'import et le flush, même pendant after_switch_theme.
     ika_solution_custom_post_types();
     ika_solution_post_types();
