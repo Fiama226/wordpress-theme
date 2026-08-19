@@ -68,7 +68,7 @@ Contrôler la qualité du thème :        bash tools/audit-theme.sh
 == Changelog ==
 
 = 1.8.0 =
-* Pages partenaires (Odoo, Fortinet, Palo Alto, Microsoft, Proxmox)
+* Pages partenaires (Odoo, Fortinet, Palo Alto, Microsoft, Zimbra, Proxmox)
   désormais strictement identiques au site statique à l'installation :
   templates réécrits depuis le HTML statique exact, 148 valeurs du
   Customizer alignées sur le contenu d'origine, 11 images manquantes

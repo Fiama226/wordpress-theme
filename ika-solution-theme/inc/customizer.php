@@ -303,7 +303,7 @@ function ika_default_options() {
 
 /**
  * Valeurs par défaut des pages partenaires (Odoo, Fortinet, Palo Alto,
- * Microsoft) = contenu exact rédigé en propre par IKA SOLUTION pour le
+ * Microsoft, Zimbra) = contenu exact rédigé en propre par IKA SOLUTION pour le
  * site statique. Chaque clé est éditable dans Apparence > Personnaliser.
  *
  * @return array<string,string>
@@ -479,6 +479,48 @@ function ika_partner_default_options() {
 				'hero_badges'        => 'Exchange, Teams, SharePoint, OneDrive',
 			),
 		),
+		'zimbra' => array(
+			'prefix' => 'ika_zim',
+			'fields' => array(
+				'hero_back'          => 'Retour aux expertises',
+				'hero_eyebrow'       => 'Messagerie & collaboration',
+				'hero_title'         => 'Zimbra : votre messagerie, vos données, vos règles.',
+				'hero_text'          => 'IKA SOLUTION, partenaire Zimbra, déploie et administre Zimbra — messagerie, calendrier, chat, fichiers et bureautique — en local, en cloud privé ou en hybride, pour une souveraineté complète de vos communications.',
+				'hero_cta_primary'   => 'Parler à un expert Zimbra',
+				'hero_cta_secondary' => 'Découvrir Zimbra',
+				'hero_stat_label'    => 'Souveraineté',
+				'hero_stat_value'    => 'Vos données, vos règles',
+				'suite_eyebrow'      => 'Zimbra Collaboration',
+				'suite_title'        => 'Email, calendrier, chat et fichiers dans une seule plateforme.',
+				'suite_text1'        => 'Zimbra réunit messagerie, calendrier, contacts, chat, Briefcase et bureautique dans une interface unique. Construit sur des standards ouverts, il s’intègre à vos outils existants sans vous enfermer dans un écosystème propriétaire.',
+				'suite_text2'        => 'Chez IKA SOLUTION, nous déployons Zimbra là où vos données doivent rester : serveur local, cloud privé ou architecture hybride, avec un accompagnement de la migration jusqu’à l’exploitation.',
+				'suite_caption'      => 'Zimbra — client web de collaboration',
+				'oss_title'          => 'Open source, standards ouverts, zéro enfermement.',
+				'oss_text'           => 'Le code de Zimbra est ouvert et auditable. Vous choisissez où vivent vos boîtes mail — on-premises, cloud privé ou datacenter régional — pour rester maître de la conformité, de la résidence des données et des coûts de licence.',
+				'oss_link1_url'      => 'https://www.zimbra.com/',
+				'oss_link1_label'    => 'Découvrir Zimbra',
+				'oss_link2_url'      => 'https://www.zimbra.com/product/edition-comparison/',
+				'oss_link2_label'    => 'Comparer les éditions',
+				'plans_eyebrow'      => 'Éditions Standard & Professional',
+				'plans_title'        => 'Choisir le bon niveau, selon vos usages.',
+				'plans_text1'        => 'Zimbra Daffodil (v10) se décline en Standard et Professional. Les deux partagent le même socle collaboratif ; Professional ajoute l’interopérabilité Exchange, des options de sécurité avancées et une administration plus fine.',
+				'plans_text2'        => 'Chez IKA SOLUTION, nous cadrons le volume, les contraintes réglementaires et les outils existants pour que vous ne payiez que ce dont vos équipes ont réellement besoin.',
+				'plans_cta'          => 'Évaluer mes besoins Zimbra',
+				'plans_feat_eyebrow' => 'Éditions & administration',
+				'plans_feat_title'   => 'Standard, Professional, et une console claire.',
+				'plans_feat_text'    => 'Parcourez les éditions Zimbra et les services d’administration que nous mettons en place pour vous.',
+				'plans_feat_caption' => 'Zimbra — vue d’ensemble des éditions',
+				'proj_1_title'       => 'Audit & architecture',
+				'proj_1_text'        => 'Volume de boîtes, contraintes de résidence des données et choix Standard/Professional : nous posons une architecture réaliste avant toute installation.',
+				'proj_2_title'       => 'Déploiement & migration',
+				'proj_2_text'        => 'Installation, import des boîtes existantes, DNS, certificats et politiques de sécurité : la bascule se prépare pour limiter l’interruption de service.',
+				'proj_3_title'       => 'Exploitation & formation',
+				'proj_3_text'        => 'Supervision, sauvegardes, montées de version et formation des utilisateurs : vos équipes pilotent Zimbra en autonomie et en confiance.',
+				'contact_title'      => 'Parlez-nous de votre projet Zimbra.',
+				'contact_text'       => 'Messagerie, calendrier, migration ou hébergement local : décrivez votre besoin, un expert IKA SOLUTION vous répond avec une proposition claire et chiffrée.',
+				'hero_badges'        => 'Email, Calendrier, Chat, Briefcase',
+			),
+		),
 	);
 
 	$out = array();
@@ -516,6 +558,11 @@ function ika_partner_sections() {
 			'id'     => 'ika_sec_microsoft',
 			'title'  => 'Page Microsoft',
 			'prefix' => 'ika_ms',
+		),
+		'zimbra' => array(
+			'id'     => 'ika_sec_zimbra',
+			'title'  => 'Page Zimbra',
+			'prefix' => 'ika_zim',
 		),
 	);
 
@@ -977,7 +1024,7 @@ function ika_customize_register( $wp_customize ) {
 		),
 	);
 
-	// Sections des pages partenaires (Odoo, Fortinet, Palo Alto, Microsoft).
+	// Sections des pages partenaires (Odoo, Fortinet, Palo Alto, Microsoft, Zimbra).
 	$sections = array_merge( $sections, ika_partner_sections() );
 
 	$priority = 10;

@@ -1,7 +1,7 @@
 <?php
 /**
  * Helper partagé des pages « partenaires » du site statique
- * (Odoo, Fortinet, Palo Alto, Microsoft).
+ * (Odoo, Fortinet, Palo Alto, Microsoft, Zimbra).
  *
  * Reproduit fidèlement le rendu des onglets de la page Proxmox
  * (boutons pilules + panneaux de cartes), avec le même style Tailwind.
