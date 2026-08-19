@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // Version des données de démonstration importées depuis le site statique.
 if ( ! defined( 'IKA_SOLUTION_SEED_VERSION' ) ) {
-    define( 'IKA_SOLUTION_SEED_VERSION', '2026-08-07-v1' );
+    define( 'IKA_SOLUTION_SEED_VERSION', '2026-08-19-v1' );
 }
 
 /**
@@ -545,6 +545,10 @@ function ika_solution_create_default_pages() {
         'Microsoft'    => array(
             'template' => 'page-microsoft.php',
             'slug'     => 'microsoft',
+        ),
+        'Zimbra'       => array(
+            'template' => 'page-zimbra.php',
+            'slug'     => 'zimbra',
         ),
     );
 
@@ -1196,7 +1200,7 @@ function ika_partner_render_tabs( $group_id, $tabs ) {
  * n'a pas créé de fiches. Une fois le CPT ika_partner_tab alimenté, ce sont
  * les fiches de l'administration qui sont affichées.
  *
- * @param string $partner odoo | fortinet | paloalto | microsoft
+ * @param string $partner odoo | fortinet | paloalto | microsoft | zimbra
  * @return array<string,array>
  */
 function ika_partner_default_tabs( $partner = '' ) {
@@ -1554,6 +1558,74 @@ function ika_partner_default_tabs( $partner = '' ) {
 		),
 	);
 
+	/* -------------------------------------------------------------
+	 * ZIMBRA
+	 * ------------------------------------------------------------- */
+	$tabs['zimbra']['collab'] = array(
+		array(
+			'id'    => 'messagerie',
+			'label' => 'Email & calendrier',
+			'icon'  => '✉',
+			'items' => array(
+				array( 'title' => 'Messagerie professionnelle', 'text' => 'Une interface claire pour classer, rechercher et partager vos emails. Dossiers, filtres, recherche avancée et pièces jointes restent simples à piloter au quotidien.' ),
+				array( 'title' => 'Calendrier d’équipe', 'text' => 'Planifiez réunions, rappels et ressources (salles, équipements) avec des calendriers partagés, visibles entre services et accessibles depuis le web ou le mobile.' ),
+				array( 'title' => 'Contacts & carnet d’adresses', 'text' => 'Carnets personnels, listes de distribution et annuaire global (GAL) : vos équipes retrouvent rapidement les bons interlocuteurs, en interne comme à l’extérieur.' ),
+			),
+		),
+		array(
+			'id'    => 'collaboration',
+			'label' => 'Collaboration',
+			'icon'  => '▢',
+			'items' => array(
+				array( 'title' => 'Briefcase : fichiers centralisés', 'text' => 'Stockez, organisez et partagez vos documents dans Zimbra, avec des droits précis, un historique de versions et un accès depuis l’email, le chat ou le calendrier.' ),
+				array( 'title' => 'Chat d’entreprise', 'text' => 'Conversations individuelles, groupes, canaux et partage de fichiers : le chat reste dans le même environnement sécurisé que votre messagerie, sans outil tiers.' ),
+				array( 'title' => 'Zimbra Office', 'text' => 'Créez et éditez documents, tableurs et présentations dans le navigateur, avec collaboration en temps réel et compatibilité des formats courants (docx, xlsx, pptx, odt…).' ),
+			),
+		),
+		array(
+			'id'    => 'acces',
+			'label' => 'Accès partout',
+			'icon'  => '⇄',
+			'items' => array(
+				array( 'title' => 'Client web moderne', 'text' => 'L’interface responsive fonctionne sur ordinateur, tablette et smartphone : la même expérience, sans installer de logiciel, avec un mode hors ligne sur les navigateurs courants.' ),
+				array( 'title' => 'Mobile (ActiveSync)', 'text' => 'Email, calendrier, contacts et tâches se synchronisent en temps réel sur iOS et Android via Exchange ActiveSync, avec des politiques de gestion des appareils.' ),
+				array( 'title' => 'Outlook, EWS et bureau', 'text' => 'Zimbra Connector for Outlook, Exchange Web Services et le client Desktop permettent de travailler dans vos outils habituels, y compris hors connexion.' ),
+			),
+		),
+	);
+	$tabs['zimbra']['plans'] = array(
+		array(
+			'id'    => 'standard',
+			'label' => 'Édition Standard',
+			'icon'  => '▤',
+			'items' => array(
+				array( 'title' => 'Le socle collaboratif', 'text' => 'Interface moderne, messagerie, calendrier, tâches, Briefcase, Zimbra Office, clients POP/IMAP, CalDAV et ActiveSync : l’essentiel pour équiper vos équipes.' ),
+				array( 'title' => 'Administration complète', 'text' => 'Console web, ligne de commande, anti-spam et antivirus intégrés, annuaires LDAP et Active Directory : la plateforme se pilote sans complexité inutile.' ),
+				array( 'title' => 'Un coût maîtrisé', 'text' => 'L’édition Standard couvre la majorité des usages quotidiens. Nous vous aidons à démarrer dessus puis à passer en Professional uniquement si vos besoins l’exigent.' ),
+			),
+		),
+		array(
+			'id'    => 'professional',
+			'label' => 'Édition Professional',
+			'icon'  => '🏗',
+			'items' => array(
+				array( 'title' => 'Interopérabilité Exchange', 'text' => 'L’édition Professional ajoute l’interopérabilité Microsoft Exchange (calendrier et contacts) et des connecteurs avancés pour cohabiter avec un existant Outlook.' ),
+				array( 'title' => 'Sécurité et conformité', 'text' => 'Authentification à deux facteurs, chiffrement S/MIME, SSO SAML, archivage opposable et politiques mobiles (autoriser, bloquer, mettre en quarantaine) renforcent le contrôle.' ),
+				array( 'title' => 'Pour les organisations exigeantes', 'text' => 'Multi-tenant, administration déléguée et stockage hiérarchique (HSM) : Professional convient aux institutions, opérateurs et entreprises à forte volumétrie.' ),
+			),
+		),
+		array(
+			'id'    => 'administration',
+			'label' => 'Administration',
+			'icon'  => '⚙',
+			'items' => array(
+				array( 'title' => 'Console et délégation', 'text' => 'Créez des domaines, des comptes et des politiques depuis une console unique. Déléguez des rôles par service tout en gardant une supervision centrale.' ),
+				array( 'title' => 'Déploiement à votre convenance', 'text' => 'On-premises, cloud privé ou hybride : Zimbra s’installe où vos données doivent rester. Nous dimensionnons l’architecture selon votre volume et vos contraintes.' ),
+				array( 'title' => 'Migration & exploitation', 'text' => 'Import des boîtes existantes, sauvegardes, supervision et montées de version : IKA SOLUTION administre la plateforme et forme vos équipes à l’exploiter.' ),
+			),
+		),
+	);
+
 	if ( isset( $tabs[ $partner ] ) ) {
 		return $tabs[ $partner ];
 	}
@@ -1563,7 +1635,7 @@ function ika_partner_default_tabs( $partner = '' ) {
 /**
  * Onglets d'une page partenaire issus de l'administration (CPT ika_partner_tab).
  *
- * @param string $partner odoo | fortinet | paloalto | microsoft
+ * @param string $partner odoo | fortinet | paloalto | microsoft | zimbra
  * @param string $group   Section : comm/ent, gate/eco, ngfw/cloud, collab/plans.
  * @return array
  */
@@ -1633,7 +1705,7 @@ function ika_partner_tabs_from_db( $partner, $group ) {
  * Onglets d'une section partenaire : contenu de l'administration si présent,
  * sinon contenu d'origine (repli).
  *
- * @param string $partner odoo | fortinet | paloalto | microsoft
+ * @param string $partner odoo | fortinet | paloalto | microsoft | zimbra
  * @param string $group   Section.
  * @return array
  */
@@ -1656,7 +1728,7 @@ function ika_seed_partner_tabs() {
 		ika_solution_post_types();
 	}
 
-	$partners = array( 'odoo', 'fortinet', 'paloalto', 'microsoft' );
+	$partners = array( 'odoo', 'fortinet', 'paloalto', 'microsoft', 'zimbra' );
 	$order    = 0;
 
 	foreach ( $partners as $partner ) {
@@ -2796,8 +2868,8 @@ function ika_seed_realisations() {
  * Seed : partenaires (CPT ika_partenaire).
  *
  * Liste strictement identique au site statique : Microsoft, Odoo, Palo Alto,
- * Fortinet et Proxmox — ce dernier renvoie vers la page /proxmox, comme sur
- * le site d'origine (lien optionnel : vide = logo non cliquable).
+ * Fortinet, Proxmox et Zimbra — chaque logo renvoie vers la page partenaire
+ * dédiée (lien optionnel : vide = logo non cliquable).
  */
 function ika_seed_partenaires() {
     // Lien de chaque logo = page partenaire dédiée (slug), comme Proxmox.
@@ -2807,6 +2879,7 @@ function ika_seed_partenaires() {
         'palo-alto' => array( 'name' => 'Palo Alto', 'image' => 'images/paloalto.svg', 'height' => 'max-h-16', 'url' => 'paloalto' ),
         'fortinet'  => array( 'name' => 'Fortinet', 'image' => 'images/fortinet.png', 'height' => 'max-h-20', 'url' => 'fortinet' ),
         'proxmox'   => array( 'name' => 'Proxmox', 'image' => 'images/Proxmox.png', 'height' => 'max-h-20', 'url' => 'proxmox' ),
+        'zimbra'    => array( 'name' => 'Zimbra', 'image' => 'images/zimbra.png', 'height' => 'max-h-14', 'url' => 'zimbra' ),
     );
     $order = 0;
     foreach ( $partenaires as $slug => $data ) {
@@ -3315,3 +3388,4 @@ function ika_solution_ensure_static_site_content() {
     }
 }
 add_action( 'init', 'ika_solution_ensure_static_site_content', 30 );
+'ika_solution_ensure_static_site_content', 30 );

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """Vérifie que le rendu par défaut des pages partenaires du thème WordPress
-(odoo, fortinet, paloalto, microsoft, proxmox) est strictement identique au
+(odoo, fortinet, paloalto, microsoft, zimbra, proxmox) est strictement identique au
 site statique : textes, images et onglets.
 
 Usage : python3 tools/compare-partner-static.py
@@ -283,6 +283,7 @@ PAGE_MAP = {
     'fortinet':  {'static': os.path.join(ROOT, 'fortinet.php'),  'theme': os.path.join(THEME, 'page-fortinet.php'),  'tabs': [('forti-gate', 'forti_fortigate_tabs', 'gate'), ('forti-eco', 'forti_eco_tabs', 'eco')]},
     'paloalto':  {'static': os.path.join(ROOT, 'paloalto.php'),  'theme': os.path.join(THEME, 'page-paloalto.php'),  'tabs': [('palo-ngfw', 'palo_ngfw_tabs', 'ngfw'), ('palo-cloud', 'palo_cloud_tabs', 'cloud')]},
     'microsoft': {'static': os.path.join(ROOT, 'microsoft.php'), 'theme': os.path.join(THEME, 'page-microsoft.php'), 'tabs': [('ms-collab', 'ms_collab_tabs', 'collab'), ('ms-plans', 'ms_plans_tabs', 'plans')]},
+    'zimbra':    {'static': os.path.join(ROOT, 'zimbra.php'),    'theme': os.path.join(THEME, 'page-zimbra.php'),    'tabs': [('zim-collab', 'zim_collab_tabs', 'collab'), ('zim-plans', 'zim_plans_tabs', 'plans')]},
     'proxmox':   {'static': os.path.join(ROOT, 'proxmox.php'),   'theme': os.path.join(THEME, 'page-proxmox.php'),   'tabs': [('pmx-ve', 'pmx_ve_tabs', 've'), ('pmx-pbs', 'pmx_pbs_tabs', 'pbs'), ('pmx-pmg', 'pmx_pmg_tabs', 'pmg')]},
 }
 THEME_CONTACT_SUBJ = {
@@ -290,6 +291,7 @@ THEME_CONTACT_SUBJ = {
     'fortinet': ['FortiGate pare-feu NGFW','Secure SD-WAN multi-sites','VPN & accès distants sécurisés','FortiManager / FortiAnalyzer','Protection des postes (FortiClient)','Audit / supervision de la sécurité','Autre demande liée à Fortinet'],
     'paloalto': ['Pare-feu Strata (PAN-OS)','GlobalProtect & accès distant','Prisma Access (SASE)','Sécurité cloud (Prisma Cloud)','Détection & réponse (Cortex)','Audit / supervision de la sécurité','Autre demande liée à Palo Alto'],
     'microsoft': ['Microsoft 365 — plans Business','Microsoft 365 — plans Enterprise','Migration / déploiement Microsoft 365','Messagerie Exchange & Teams','SharePoint / intranet','Sécurité & conformité (Defender, Entra ID)','Revue & optimisation des licences','Autre demande liée à Microsoft'],
+    'zimbra': ['Messagerie Zimbra (email & calendrier)','Chat & collaboration','Briefcase & bureautique','Édition Standard','Édition Professional','Migration depuis Exchange / autre messagerie','Hébergement local / souveraineté des données','Autre demande liée à Zimbra'],
     'proxmox': ['Proxmox Virtual Environment (virtualisation)','Proxmox Backup Server (sauvegarde)','Proxmox Mail Gateway (sécurité messagerie)','Autre demande liée à Proxmox'],
 }
 

@@ -107,6 +107,9 @@
       <a href="proxmox.php" class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean transition hover:-translate-y-1 hover:shadow-premium">
         <img class="max-h-20 max-w-full object-contain" src="assets/images/Proxmox.png" alt="Proxmox">
       </a>
+      <a href="zimbra.php" class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean transition hover:-translate-y-1 hover:shadow-premium">
+        <img class="max-h-14 max-w-full object-contain" src="assets/images/zimbra.png" alt="Zimbra">
+      </a>
     </div>
   </div>
 </section>
