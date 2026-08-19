@@ -36,7 +36,7 @@ if ( ! $ika_posts ) {
             <img class="h-56 w-full object-cover" src="<?php echo esc_url( ika_post_image( $ika_post->ID, 'ika_post_image' ) ); ?>" alt="<?php echo esc_attr( get_the_title( $ika_post ) ); ?>" loading="lazy">
             <div class="flex flex-1 flex-col p-7">
               <?php if ( $ika_tag ) : ?>
-              <span class="w-fit rounded-full <?php echo esc_attr( $ika_color ); ?> px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-white"><?php echo esc_html( $ika_tag ); ?></span>
+              <span class="rounded-full <?php echo esc_attr( $ika_color ); ?> px-4 py-2 text-xs font-black uppercase tracking-[0.14em] text-white"><?php echo esc_html( $ika_tag ); ?></span>
               <?php endif; ?>
               <h3 class="mt-6 text-2xl font-black text-ikaBlue"><?php echo esc_html( get_the_title( $ika_post ) ); ?></h3>
               <p class="mt-4 flex-1 text-sm leading-7 text-slate-600"><?php echo esc_html( get_the_excerpt( $ika_post ) ); ?></p>

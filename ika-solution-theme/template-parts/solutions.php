@@ -29,7 +29,7 @@ if ( ! $solutions ) {
           </div>
           <div class="reveal flex gap-3 overflow-x-auto no-scrollbar lg:justify-end">
             <?php foreach ( $solutions as $i => $sol ) : ?>
-            <button class="product-tab whitespace-nowrap rounded-full px-5 py-3 text-sm font-black transition <?php echo $i === 0 ? 'bg-white text-ikaBlue' : 'border border-white/25 text-white'; ?>" data-product="<?php echo (int) $i; ?>"><?php echo esc_html( get_the_title( $sol ) ); ?></button>
+            <button class="product-tab whitespace-nowrap rounded-full px-5 py-3 text-sm font-black <?php echo $i === 0 ? 'bg-white text-ikaBlue' : 'border border-white/25 text-white'; ?>" data-product="<?php echo (int) $i; ?>"><?php echo esc_html( get_the_title( $sol ) ); ?></button>
             <?php endforeach; ?>
           </div>
         </div>

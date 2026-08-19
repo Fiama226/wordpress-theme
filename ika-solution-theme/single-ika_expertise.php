@@ -34,7 +34,7 @@ $deliverables = ika_get_list_meta( $post_id, 'ika_expertise_deliverables' );
     </div>
     <div class="relative mx-auto grid min-h-[560px] max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1.05fr_.95fr] lg:items-center lg:px-8">
       <div>
-        <a href="<?php echo esc_url( home_url( '/#expertises' ) ); ?>" class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white hover:text-ikaBlue"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg><?php echo esc_html( ika_opt( 'ika_expertise_hero_back' ) ); ?></a>
+        <a href="<?php echo esc_url( home_url( '/#expertises' ) ); ?>" class="inline-flex rounded-full border border-white/25 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white hover:text-ikaBlue"><?php echo esc_html( ika_opt( 'ika_expertise_hero_back' ) ); ?></a>
         <p class="mt-8 text-sm font-black uppercase tracking-[0.2em] text-red-200"><?php echo ika_h( $eyebrow ); ?></p>
         <h1 class="mt-4 text-4xl font-black leading-tight tracking-normal sm:text-5xl lg:text-6xl"><?php echo ika_h( $title ); ?></h1>
         <p class="mt-6 max-w-3xl text-lg leading-8 text-white/85"><?php echo ika_h( $intro ); ?></p>
@@ -141,11 +141,7 @@ $deliverables = ika_get_list_meta( $post_id, 'ika_expertise_deliverables' );
         <p class="text-sm font-black uppercase tracking-[0.2em] text-red-200"><?php echo esc_html( ika_opt( 'ika_expertise_cta_eyebrow' ) ); ?></p>
         <h2 class="mt-4 text-3xl font-black leading-tight sm:text-4xl"><?php echo esc_html( ika_opt( 'ika_expertise_cta_title' ) ); ?></h2>
       </div>
-      <?php if ( function_exists( 'wpcf7_contact_form' ) ) : ?>
-        <?php echo do_shortcode( '[contact-form-7 id="ika-expertise" title="Contact Expertise"]' ); ?>
-      <?php else : ?>
-        <a href="<?php echo esc_url( home_url( '/#contact' ) ); ?>" class="inline-flex justify-center rounded-full bg-ikaRed px-8 py-4 text-sm font-extrabold text-white shadow-clean transition hover:bg-red-700"><?php echo esc_html( ika_opt( 'ika_expertise_cta_button' ) ); ?></a>
-      <?php endif; ?>
+      <a href="<?php echo esc_url( home_url( '/#contact' ) ); ?>" class="inline-flex justify-center rounded-full bg-ikaRed px-8 py-4 text-sm font-extrabold text-white shadow-clean transition hover:bg-red-700"><?php echo esc_html( ika_opt( 'ika_expertise_cta_button' ) ); ?></a>
     </div>
   </section>
 

@@ -325,6 +325,27 @@ for partner in odoo fortinet paloalto microsoft; do
 done
 [ "$pmx_ko" -eq 0 ] && ok "contenu des onglets partenaires conforme au site statique"
 
+section "21. Parité de structure avec le site statique"
+# Compare balise par balise l'en-tête, le pied de page, l'accueil et chaque
+# page du thème avec la page statique correspondante (voir
+# tools/compare-structure.py). Détecte tout élément présent d'un seul côté :
+# bouton hamburger, formulaire, icône ajoutée, section oubliée…
+if command -v python3 >/dev/null 2>&1; then
+  if python3 "$ROOT/tools/compare-structure.py" >/tmp/ika-structure.log 2>&1; then
+    ok "structure identique au site statique (tools/compare-structure.py)"
+  else
+    ko "écarts de structure avec le site statique :"
+    grep -E "ÉCART" /tmp/ika-structure.log | sed 's/^/      /'
+  fi
+  if python3 "$ROOT/tools/compare-partner-static.py" >/tmp/ika-partners.log 2>&1; then
+    ok "textes des pages partenaires identiques au site statique"
+  else
+    ko "écarts de texte sur les pages partenaires (voir /tmp/ika-partners.log)"
+  fi
+else
+  warn "python3 absent : contrôles de parité non exécutés"
+fi
+
 # --- Synthèse -------------------------------------------------------------
 printf '\n%s────────────────────────────────────────────%s\n' "$BLD" "$RST"
 printf '  Bloquants : %s%d%s   Avertissements : %s%d%s\n' \
