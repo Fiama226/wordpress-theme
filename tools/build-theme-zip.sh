@@ -17,6 +17,17 @@ if command -v npm >/dev/null 2>&1 && [ -f "$THEME/package.json" ]; then
 fi
 
 [ -f "$THEME/assets/css/tailwind.css" ] || { echo "ERREUR : assets/css/tailwind.css absent."; exit 1; }
+
+# 2. Refuser de livrer un thème qui ne s'analyse pas (erreur fatale WordPress).
+echo "→ contrôle de syntaxe PHP…"
+if command -v php >/dev/null 2>&1; then
+  find "$THEME" -name '*.php' -not -path '*/node_modules/*' -print0 \
+    | xargs -0 -n1 php -l >/dev/null || { echo "ERREUR : erreur de syntaxe PHP dans le thème."; exit 1; }
+elif [ -d "$THEME/node_modules/php-parser" ]; then
+  node "$ROOT/tools/lint-php.js" || { echo "ERREUR : erreur de syntaxe PHP dans le thème."; exit 1; }
+else
+  echo "ATTENTION : ni php ni php-parser — syntaxe PHP non vérifiée."
+fi
 [ -z "$(find "$THEME" -path "$THEME/node_modules" -prune -o -type l -print)" ] || { echo "ERREUR : le thème contient des liens symboliques."; exit 1; }
 
 rm -f "$OUT"

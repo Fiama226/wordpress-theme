@@ -3388,4 +3388,3 @@ function ika_solution_ensure_static_site_content() {
     }
 }
 add_action( 'init', 'ika_solution_ensure_static_site_content', 30 );
-'ika_solution_ensure_static_site_content', 30 );

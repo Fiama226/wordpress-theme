@@ -8,9 +8,10 @@ puis corrigé les écarts trouvés.
 ## Comment (re)vérifier
 
 ```bash
+node    tools/lint-php.js                 # syntaxe PHP (une erreur = site inaccessible)
 python3 tools/compare-structure.py        # structure : balises, classes, éléments manquants
 python3 tools/compare-partner-static.py   # textes/images des pages partenaires
-bash    tools/audit-theme.sh              # audit complet (inclut les deux contrôles ci-dessus)
+bash    tools/audit-theme.sh              # audit complet (inclut les trois contrôles ci-dessus)
 ```
 
 `tools/compare-structure.py` (nouveau) compare l'en-tête, le pied de page, les
@@ -53,7 +54,8 @@ Un contrôle automatique empêche désormais ce type de régression.
 | 7 | **Accueil ▸ Actualités** | Le badge de catégorie était en `w-fit` (largeur réduite). | Largeur identique au statique. |
 | 8 | **Détail actualité** | Les commentaires s'affichaient dans une seule carte au style WordPress par défaut. | Mise en page du statique reproduite : carte « Commentaires » à gauche, formulaire « Laisser un commentaire » à droite, mêmes champs et mêmes styles — tout en conservant les **vrais commentaires WordPress** (modération incluse). |
 | 9 | **En-tête (menu mobile)** | `esc_url()` appliqué à une liste de classes CSS pour l'entrée « Solutions » : l'état actif n'était jamais appliqué. | Remplacé par `esc_attr()`. |
-| 10 | **CSS compilé** | `assets/css/tailwind.css` était périmé : les classes `min-h-32`, `min-h-36`, `mb-5` (champs des formulaires rétablis) manquaient. | Recompilé (`npm run build:css`). |
+| 10 | **`functions.php` (erreur fatale)** | Fragment de code parasite en fin de fichier (ligne 3391) : `'ika_solution_ensure_static_site_content', 30 );` seul sur sa ligne → `Parse error: syntax error, unexpected ","` et **site WordPress totalement inaccessible**. | Ligne supprimée + contrôle de syntaxe PHP automatique (`tools/lint-php.js`, section 21 de l'audit, blocage à la génération du ZIP). |
+| 11 | **CSS compilé** | `assets/css/tailwind.css` était périmé : les classes `min-h-32`, `min-h-36`, `mb-5` (champs des formulaires rétablis) manquaient. | Recompilé (`npm run build:css`). |
 
 ## Écarts volontaires conservés (plomberie WordPress)
 
@@ -69,6 +71,7 @@ Sans effet visuel par défaut, ils sont documentés et tolérés par le contrôl
 ## Résultat
 
 ```
+tools/lint-php.js                → OK (76 fichiers PHP, 0 erreur)
 tools/compare-structure.py       → OK (0 écart)
 tools/compare-partner-static.py  → OK (0 écart)
 tools/audit-theme.sh             → 0 bloquant, 0 avertissement

@@ -325,7 +325,28 @@ for partner in odoo fortinet paloalto microsoft; do
 done
 [ "$pmx_ko" -eq 0 ] && ok "contenu des onglets partenaires conforme au site statique"
 
-section "21. Parité de structure avec le site statique"
+section "21. Syntaxe PHP (erreur fatale = site inaccessible)"
+# Une seule erreur de syntaxe dans functions.php rend WordPress inaccessible.
+php_lint_done=0
+if command -v php >/dev/null 2>&1; then
+  php_ko=0
+  while IFS= read -r f; do
+    php -l "$f" >/dev/null 2>&1 || { ko "erreur de syntaxe PHP : ${f#$ROOT/}"; php_ko=$((php_ko+1)); }
+  done < <(find "$ROOT" -name '*.php' -not -path '*/node_modules/*' -not -path '*/vendor/*')
+  [ "$php_ko" -eq 0 ] && ok "aucune erreur de syntaxe PHP (php -l)"
+  php_lint_done=1
+elif [ -d "$THEME/node_modules/php-parser" ]; then
+  if node "$ROOT/tools/lint-php.js" >/tmp/ika-php-lint.log 2>&1; then
+    ok "aucune erreur de syntaxe PHP (tools/lint-php.js)"
+  else
+    ko "erreur(s) de syntaxe PHP :"
+    grep -E "ERREUR" /tmp/ika-php-lint.log | sed 's/^/      /'
+  fi
+  php_lint_done=1
+fi
+[ "$php_lint_done" -eq 1 ] || warn "ni php ni php-parser disponibles : syntaxe PHP non vérifiée (npm install dans ika-solution-theme)"
+
+section "22. Parité de structure avec le site statique"
 # Compare balise par balise l'en-tête, le pied de page, l'accueil et chaque
 # page du thème avec la page statique correspondante (voir
 # tools/compare-structure.py). Détecte tout élément présent d'un seul côté :
