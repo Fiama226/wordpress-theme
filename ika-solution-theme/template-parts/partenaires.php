@@ -49,7 +49,7 @@ update_postmeta_cache( wp_list_pluck( $ika_partners, 'ID' ) );
           : '<span class="text-xl font-black text-ikaBlue">' . esc_html( get_the_title( $ika_partner ) ) . '</span>';
       ?>
       <?php if ( $ika_url ) : ?>
-      <a class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean" href="<?php echo esc_url( $ika_url ); ?>"<?php echo preg_match( '#^https?://#i', $ika_url ) ? ' target="_blank" rel="noopener"' : ''; ?>>
+      <a class="reveal flex h-32 items-center justify-center rounded-2xl bg-white p-6 shadow-clean" href="<?php echo esc_url( $ika_url ); ?>"<?php echo preg_match( '#^https?://#i', $ika_url ) ? '  rel="noopener"' : ''; ?>>
         <?php echo $ika_card_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- contenu déjà échappé ci-dessus. ?>
       </a>
       <?php else : ?>

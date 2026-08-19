@@ -451,6 +451,57 @@ function ika_slide_url( $url ) {
 }
 
 /**
+ * Make sure a requested slug is available for a page by renaming any conflicting media attachment first.
+ *
+ * This avoids collisions with uploaded files such as paloalto.svg, which would otherwise
+ * make WordPress create the page under a suffixed slug like paloalto-2 and leave /paloalto
+ * unavailable for the page.
+ */
+function ika_solution_ensure_page_slug_available( $slug ) {
+    $conflicts = get_posts( array(
+        'name'              => $slug,
+        'post_type'        => array( 'page', 'attachment' ),
+        'post_status'      => 'any',
+        'posts_per_page'   => 1,
+        'fields'           => 'ids',
+        'no_found_rows'    => true,
+        'orderby'          => 'ID',
+        'order'            => 'ASC',
+    ) );
+
+    if ( empty( $conflicts ) ) {
+        return;
+    }
+
+    $conflict_id = (int) $conflicts[0];
+    $conflict_post = get_post( $conflict_id );
+
+    if ( ! $conflict_post || 'attachment' !== $conflict_post->post_type ) {
+        return;
+    }
+
+    $candidate = $slug;
+    $suffix = 2;
+
+    while ( get_posts( array(
+        'name'            => $candidate,
+        'post_type'      => array( 'page', 'attachment' ),
+        'post_status'    => 'any',
+        'posts_per_page' => 1,
+        'fields'         => 'ids',
+        'no_found_rows'  => true,
+    ) ) ) {
+        $candidate = $slug . '-' . $suffix;
+        $suffix++;
+    }
+
+    wp_update_post( array(
+        'ID'        => $conflict_id,
+        'post_name' => $candidate,
+    ) );
+}
+
+/**
  * Create / repair the theme's default pages.
  *
  * Les pages du site statique sont recréées automatiquement et reliées au bon
@@ -498,6 +549,7 @@ function ika_solution_create_default_pages() {
     );
 
     foreach ( $default_pages as $title => $args ) {
+        ika_solution_ensure_page_slug_available( $args['slug'] );
         $page_id = ika_solution_find_page_id( $args['slug'], $title );
 
         if ( $page_id ) {
@@ -522,7 +574,9 @@ function ika_solution_create_default_pages() {
         }
     }
 }
+add_action( 'after_setup_theme', 'ika_solution_create_default_pages' );
 add_action( 'after_switch_theme', 'ika_solution_create_default_pages' );
+add_action( 'init', 'ika_solution_create_default_pages', 20 );
 
 /**
  * Helper: find a page by slug first, then by title.
