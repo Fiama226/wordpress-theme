@@ -2,6 +2,27 @@
 
 Site statique (racine, `*.php`) + thème WordPress `ika-solution-theme`.
 
+## Contrôles de parité (le statique est la référence validée par le client)
+
+```bash
+node    tools/lint-php.js                 # syntaxe PHP (une erreur = site inaccessible)
+python3 tools/compare-structure.py        # structure : balises, classes, éléments manquants
+python3 tools/compare-partner-static.py   # textes et images des pages partenaires
+bash    tools/audit-theme.sh              # audit complet (inclut les trois contrôles ci-dessus)
+```
+
+`tools/lint-php.js` analyse les 76 fichiers PHP du dépôt (site statique + thème).
+Il utilise `php-parser` (`npm install` dans `ika-solution-theme`) ; si PHP est
+installé localement, `php -l` fait le même travail et l'audit le préfère.
+`tools/build-theme-zip.sh` refuse désormais de produire l'archive si un fichier
+PHP comporte une erreur de syntaxe.
+
+`tools/compare-structure.py` compare l'en-tête, le pied de page, les 14 sections
+de l'accueil et chaque gabarit du thème avec la page statique correspondante, et
+vérifie la présence des deux côtés des éléments d'interface critiques (bouton
+hamburger + menu mobile, raccourcis « Devis »/« Appeler », widget WhatsApp,
+formulaires). Dernier rapport : `VERIFICATION-PARITE-STATIQUE-2026-08-19.md`.
+
 ## Pages partenaires
 
 En plus de **Proxmox**, chaque partenaire dispose d'une page dédiée (même design

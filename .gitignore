@@ -20,3 +20,6 @@ assets/js/*.min.js
 .DS_Store
 Thumbs.db
 *.log
+
+# Python
+__pycache__/

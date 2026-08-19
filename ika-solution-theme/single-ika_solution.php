@@ -25,7 +25,7 @@ $use_cases = ika_get_list_meta( $post_id, 'ika_use_cases' );
   <section class="relative overflow-hidden bg-ikaBlueDark text-white">
     <div class="relative mx-auto grid min-h-[560px] max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_.95fr] lg:items-center lg:px-8">
       <div>
-        <a href="<?php echo esc_url( home_url( '/#produits' ) ); ?>" class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white hover:text-ikaBlue"><svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg><?php echo esc_html( ika_opt( 'ika_solution_hero_back' ) ); ?></a>
+        <a href="<?php echo esc_url( home_url( '/#produits' ) ); ?>" class="inline-flex rounded-full border border-white/25 bg-white/10 px-5 py-3 text-sm font-black text-white transition hover:bg-white hover:text-ikaBlue"><?php echo esc_html( ika_opt( 'ika_solution_hero_back' ) ); ?></a>
         <p class="mt-8 text-sm font-black uppercase tracking-[0.2em] text-red-200"><?php echo ika_h( $eyebrow ); ?></p>
         <h1 class="mt-4 text-5xl font-black leading-tight tracking-normal sm:text-6xl"><?php echo ika_h( $name ); ?></h1>
         <p class="mt-6 max-w-3xl text-lg leading-8 text-white/85"><?php echo ika_h( $intro ); ?></p>
@@ -103,16 +103,46 @@ $use_cases = ika_get_list_meta( $post_id, 'ika_use_cases' );
         <h2 class="mt-4 text-3xl font-black leading-tight sm:text-4xl"><?php echo esc_html( ika_opt( 'ika_solution_cta_title' ) ); ?></h2>
         <p class="mt-5 text-base leading-8 text-white/75"><?php echo esc_html( ika_opt( 'ika_solution_cta_text' ) ); ?></p>
       </div>
-      <?php if ( function_exists( 'wpcf7_contact_form' ) ) : ?>
-        <div class="rounded-[2rem] bg-white p-7 text-ikaInk shadow-premium sm:p-8">
-          <?php echo do_shortcode( '[contact-form-7 id="ika-solution" title="Contact Solution"]' ); ?>
+      <?php
+      // Formulaire natif du thème : reproduit à l'identique celui du site
+      // statique (solution-template.php). Traitement par
+      // ika_handle_contact_form() : nonce, honeypot et wp_mail().
+      $ika_sol_notice = function_exists( 'ika_get_contact_notice' ) ? ika_get_contact_notice() : null;
+      $ika_sol_action = get_permalink();
+      $ika_sol_action = $ika_sol_action ? $ika_sol_action : home_url( '/' );
+      ?>
+      <form class="relative rounded-[2rem] bg-white p-7 text-ikaInk shadow-premium sm:p-8" action="<?php echo esc_url( $ika_sol_action . '#interesse' ); ?>" method="post">
+        <?php wp_nonce_field( 'ika_contact', 'ika_contact_nonce' ); ?>
+        <input type="hidden" name="action" value="ika_contact">
+        <input type="hidden" name="ika_page" value="<?php echo esc_attr( $name ); ?>">
+        <input type="hidden" name="besoin" value="<?php echo esc_attr( $name ); ?>">
+        <div class="absolute left-[-9999px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+          <label><?php esc_html_e( 'Ne pas remplir ce champ', 'ika-solution' ); ?> <input type="text" name="ika_website" tabindex="-1" autocomplete="off" value=""></label>
         </div>
-      <?php else : ?>
-        <div class="rounded-[2rem] bg-white p-7 text-ikaInk shadow-premium sm:p-8">
-          <p class="text-center text-sm font-bold text-slate-600"><?php echo esc_html( ika_opt( 'ika_solution_cta_cf7_note' ) ); ?></p>
-          <a href="<?php echo esc_url( home_url( '/#contact' ) ); ?>" class="mt-4 inline-flex justify-center rounded-full bg-ikaRed px-7 py-4 text-sm font-extrabold text-white shadow-clean transition hover:bg-red-700 w-full"><?php echo esc_html( ika_opt( 'ika_solution_cta_button' ) ); ?></a>
+        <?php if ( $ika_sol_notice ) : ?>
+          <div class="mb-5 rounded-2xl <?php echo 'success' === $ika_sol_notice['type'] ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'; ?> p-4 text-sm font-bold">
+            <?php echo esc_html( $ika_sol_notice['message'] ); ?>
+          </div>
+        <?php endif; ?>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <label class="grid gap-2 text-sm font-bold text-slate-700"><?php esc_html_e( 'Nom', 'ika-solution' ); ?>
+            <input class="min-h-[3.25rem] rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-ikaBlue" name="nom" type="text" placeholder="<?php esc_attr_e( 'Votre nom', 'ika-solution' ); ?>" required>
+          </label>
+          <label class="grid gap-2 text-sm font-bold text-slate-700"><?php esc_html_e( 'Téléphone', 'ika-solution' ); ?>
+            <input class="min-h-[3.25rem] rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-ikaBlue" name="telephone" type="tel" placeholder="+226">
+          </label>
         </div>
-      <?php endif; ?>
+        <label class="mt-5 grid gap-2 text-sm font-bold text-slate-700"><?php esc_html_e( 'Email', 'ika-solution' ); ?>
+          <input class="min-h-[3.25rem] rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-ikaBlue" name="email" type="email" placeholder="vous@entreprise.com" required>
+        </label>
+        <label class="mt-5 grid gap-2 text-sm font-bold text-slate-700"><?php esc_html_e( 'Solution souhaitée', 'ika-solution' ); ?>
+          <input class="min-h-[3.25rem] rounded-xl border border-slate-200 bg-ikaSoft px-4 py-3 font-bold text-ikaBlueDark outline-none" name="solution_label" type="text" value="<?php echo esc_attr( $name ); ?>" readonly>
+        </label>
+        <label class="mt-5 grid gap-2 text-sm font-bold text-slate-700"><?php esc_html_e( 'Message', 'ika-solution' ); ?>
+          <textarea class="min-h-32 rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-ikaBlue" name="message" placeholder="<?php esc_attr_e( 'Expliquez votre besoin, le nombre d’utilisateurs ou le contexte de votre organisation.', 'ika-solution' ); ?>" required></textarea>
+        </label>
+        <button class="mt-6 rounded-full bg-ikaRed px-7 py-4 text-sm font-extrabold text-white shadow-clean transition hover:bg-red-700" type="submit"><?php esc_html_e( 'Envoyer la demande', 'ika-solution' ); ?></button>
+      </form>
     </div>
   </section>
 
@@ -129,7 +159,7 @@ $use_cases = ika_get_list_meta( $post_id, 'ika_use_cases' );
         <?php
         $others = get_posts( array(
             'post_type'      => 'ika_solution',
-            'posts_per_page' => 4,
+            'posts_per_page' => 3,
             'post__not_in'   => array( get_the_ID() ),
             'orderby'        => 'menu_order',
             'order'          => 'ASC',
